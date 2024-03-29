@@ -42,7 +42,7 @@ static uint8_t confirm_key_data;
 void bsp_Init(void)
 {
 
-   pro_t.mode_key_run_item_step=0xff;
+   pro_t.mode_key_run_item_step=0;
   // Buzzer_Sound_Fun_Init();
 
 
@@ -233,15 +233,15 @@ static void TFT_Pocess_Command_Handler(void)
 	   Wifi_Fast_Led_Blink();
 	
 
-	   if(pro_t.gTimer_pro_display_dht11_value > 28 &&  pro_t.wifi_led_fast_blink_flag==0){
+	   if(pro_t.gTimer_pro_display_dht11_value > 4 &&  pro_t.wifi_led_fast_blink_flag==0){
 	   	   pro_t.gTimer_pro_display_dht11_value=0;
          
 		 //   Update_DHT11_Value();
 		
-            if(pro_t.mode_key_run_item_step != mode_key_temp){
-			   TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
-            }
-			TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
+           // if(pro_t.mode_key_run_item_step != mode_key_temp){
+			   TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+          //  }
+			//TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
 
 	   }
 //       if(pro_t.gTimer_pro_action_publis > 4 && wifi_link_net_state()==1){
@@ -309,6 +309,7 @@ static void TFT_Pocess_Command_Handler(void)
 
 					pro_t.gTimer_pro_wifi_led=0;
 					LED_WIFI_ICON_OFF();
+				    TFT_Disp_Humidity_Value(50);
 				}
 				
 			 break;
@@ -368,7 +369,7 @@ static void Power_On_Fun(void)
 	 gctl_t.gSet_timer_minutes =0;
 
 	 //mode key long times 
-	  pro_t.mode_key_run_item_step=0xff;
+	  pro_t.mode_key_run_item_step=0;
 	 gctl_t.mode_key_long_time_flag=0;
 	 pro_t.long_key_flag =0;
 
@@ -397,7 +398,7 @@ static void Power_Off_Fun(void)
 	Power_Off_Led();
    gctl_t.mode_flag = 0;
    pro_t.gPower_On = power_off;
-   pro_t.mode_key_run_item_step=0xff;
+   pro_t.mode_key_run_item_step=0;
    gctl_t.plasma_flag = 0;
    gctl_t.ultrasonic_flag =0;
    gctl_t.ptc_flag = 0;
@@ -440,8 +441,8 @@ static void Key_Interrup_Handler(void)
         case add_key_id:
 		 	
 		 	if(ADD_KEY_VALUE()==KEY_DOWN){
-			    HAL_Delay(10);
-			if(ADD_KEY_VALUE()==KEY_DOWN)
+		
+			
 			      ADD_Key_Fun();//DEC_Key_Fun();
 			  
 
@@ -452,8 +453,7 @@ static void Key_Interrup_Handler(void)
 
 		case dec_key_id:
            if(DEC_KEY_VALUE()==KEY_DOWN){
-			 HAL_Delay(10);
-			if(DEC_KEY_VALUE()==KEY_DOWN)
+		
 			    DEC_Key_Fun();//ADD_Key_Fun();
 			 }
 

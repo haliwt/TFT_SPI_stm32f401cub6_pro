@@ -145,7 +145,7 @@ void Mode_Key_Config_Fun_Handler(void)
              }
 			 else{
                 gctl_t.memory_confimr_key_done = 0;
-                pro_t.mode_key_run_item_step = 0xff; //
+                pro_t.mode_key_run_item_step = 0; //
                 pro_t.mode_key_select_label =0;
                 pro_t.key_mode_long_time_over_flag =0;//pro_t.mode_key_select_label
 			    gctl_t.select_main_fun_numbers--; //return back the first confirm item 
@@ -174,7 +174,7 @@ void Mode_Key_Config_Fun_Handler(void)
 					confirm_data=0;
 					pro_t.gTimer_pro_confir_delay=0;
 				 	pro_t.mode_key_select_label=0;
-				   pro_t.mode_key_run_item_step = 0xff;
+				   pro_t.mode_key_run_item_step = 0;
            
 				}
 			
@@ -234,18 +234,15 @@ void ADD_Key_Fun(void)
  static uint8_t select_flag,disp_temp_value,timer_timing_flag;
  if(pro_t.gPower_On==power_on){
 
-	
-
-
-
-		switch(pro_t.mode_key_run_item_step){
+	switch(pro_t.mode_key_run_item_step){
 
 		case 0xff:
             if(pro_t.key_mode_long_time_over_flag ==0 && pro_t.mode_key_select_label==0){
 			   pro_t.mode_key_run_item_step=mode_key_temp;
 
             }
-
+			pro_t.mode_key_run_item_step=0xfe;
+        //break;
 		case mode_key_temp: //set temperature value add number
 			//pro_t.buzzer_sound_flag = 1;
 			if(pro_t.key_mode_long_time_over_flag ==0 && pro_t.mode_key_select_label ==0){
@@ -259,7 +256,7 @@ void ADD_Key_Fun(void)
 			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
         
 			disp_temp_value =1;
-			TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);	
+			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);	
 			}
 		break;
 
