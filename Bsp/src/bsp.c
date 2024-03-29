@@ -78,7 +78,7 @@ void bsp_Idle(void)
 
     }
 
-  //  TFT_Disp_Timer_Split_Symbol();
+    TFT_Disp_Timer_Split_Symbol();
   //  Wifi_Fast_Led_Blink();
 	/* --- 让CPU进入休眠，由Systick定时中断唤醒或者其他中断唤醒 */
 
