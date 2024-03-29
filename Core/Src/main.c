@@ -103,6 +103,7 @@ int main(void)
   LCD_GPIO_Reset();
   TFT_LCD_Init();
   HAL_TIM_Base_Start_IT(&htim10);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

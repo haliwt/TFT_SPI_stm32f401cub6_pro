@@ -67,12 +67,17 @@ void Error_Handler(void);
 #define VOICE_RX_GPIO_Port GPIOA
 #define SPI_NSS_Pin GPIO_PIN_4
 #define SPI_NSS_GPIO_Port GPIOA
-#define TFT_BACKLIGHT_Pin GPIO_PIN_0
-#define TFT_BACKLIGHT_GPIO_Port GPIOB
+
+#define TFT_BACKLIGHT_Pin 				GPIO_PIN_0
+#define TFT_BACKLIGHT_GPIO_Port 		GPIOB
+
+
 #define TFT_DCX_Pin GPIO_PIN_1
 #define TFT_DCX_GPIO_Port GPIOB
-#define TFT_RESET_Pin GPIO_PIN_2
-#define TFT_RESET_GPIO_Port GPIOB
+
+#define TFT_RESET_Pin 				GPIO_PIN_2
+#define TFT_RESET_GPIO_Port 		GPIOB
+
 #define LED_WIFI_Pin GPIO_PIN_12
 #define LED_WIFI_GPIO_Port GPIOB
 #define LED_KILL_Pin GPIO_PIN_13

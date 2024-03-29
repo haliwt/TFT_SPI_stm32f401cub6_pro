@@ -74,12 +74,12 @@ void bsp_Idle(void)
 	/* --- 喂狗 */
     if(pro_t.gTimer_pro_feed_dog > 3){ //16s
 	pro_t.gTimer_pro_feed_dog = 0;	
-	//iwdg_feed();
+	iwdg_feed();
 
     }
 
-    TFT_Disp_Timer_Split_Symbol();
-    Wifi_Fast_Led_Blink();
+  //  TFT_Disp_Timer_Split_Symbol();
+  //  Wifi_Fast_Led_Blink();
 	/* --- 让CPU进入休眠，由Systick定时中断唤醒或者其他中断唤醒 */
 
 	/* 例如 emWin 图形库，可以插入图形库需要的轮询函数 */

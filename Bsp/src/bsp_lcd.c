@@ -60,7 +60,7 @@ static uint8_t SPI_WriteByte(uint8_t *txdata,uint16_t size)
 //}
 	
 	return HAL_SPI_Transmit_DMA(&hspi1,txdata,1);
-	 
+	//return HAL_SPI_Transmit(&hspi1,txdata,1,0xffff);
 	
 
 }
@@ -69,9 +69,9 @@ void LCD_GPIO_Reset(void)
 
     
 	LCD_RST_SetHigh();
-	HAL_Delay(50);
+	HAL_Delay(500);
 	LCD_RST_SetLow();
-    HAL_Delay(100);
+    HAL_Delay(200);
     LCD_RST_SetHigh();
 	HAL_Delay(50);
 
@@ -395,7 +395,7 @@ void TFT_LCD_Init(void)
 
 	//TFT_BACKLIGHT_ON();
     LCD_Write_Cmd(0x11);
-	HAL_Delay(20);
+	HAL_Delay(120);
     #if 1
     /* 开始设置显存扫描模式，数据格式等 */
 	
@@ -475,17 +475,17 @@ void TFT_LCD_Init(void)
     LCD_Write_Data(0x23);
 
 
-//	 LCD_Write_Cmd(0x2A);
-//     LCD_Write_Data(0x00);
-//     LCD_Write_Data(0x00);
-//     LCD_Write_Data(0x01);
-//     LCD_Write_Data(0x3f);
-//
-//     LCD_Write_Cmd(0x2B);
-//     LCD_Write_Data(0x00);
-//     LCD_Write_Data(0x00);
-//     LCD_Write_Data(0x00);
-//     LCD_Write_Data(0xef);
+	 LCD_Write_Cmd(0x2A);
+     LCD_Write_Data(0x00);
+     LCD_Write_Data(0x00);
+     LCD_Write_Data(0x01);
+     LCD_Write_Data(0x3f);
+
+     LCD_Write_Cmd(0x2B);
+     LCD_Write_Data(0x00);
+     LCD_Write_Data(0x00);
+     LCD_Write_Data(0x00);
+     LCD_Write_Data(0xef);
 
 
 	
