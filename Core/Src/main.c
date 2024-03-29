@@ -99,6 +99,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+    TFT_BACKLIGHT_OFF();
+  LCD_GPIO_Reset();
+  TFT_LCD_Init();
   HAL_TIM_Base_Start_IT(&htim10);
   /* USER CODE END 2 */
 
@@ -109,6 +112,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  bsp_Idle();
+  
+	TFT_Process_Handler();
   }
   /* USER CODE END 3 */
 }

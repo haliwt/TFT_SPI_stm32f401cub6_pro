@@ -83,12 +83,16 @@ void Error_Handler(void);
 #define LED_POWER_GPIO_Port GPIOA
 #define KEY_POWER_Pin GPIO_PIN_9
 #define KEY_POWER_GPIO_Port GPIOA
+#define KEY_POWER_EXTI_IRQn EXTI9_5_IRQn
 #define KEY_MODE_Pin GPIO_PIN_10
 #define KEY_MODE_GPIO_Port GPIOA
+#define KEY_MODE_EXTI_IRQn EXTI15_10_IRQn
 #define KEY_ADD_Pin GPIO_PIN_11
 #define KEY_ADD_GPIO_Port GPIOA
+#define KEY_ADD_EXTI_IRQn EXTI15_10_IRQn
 #define KEY_DEC_Pin GPIO_PIN_12
 #define KEY_DEC_GPIO_Port GPIOA
+#define KEY_DEC_EXTI_IRQn EXTI15_10_IRQn
 #define LED_PTC_Pin GPIO_PIN_8
 #define LED_PTC_GPIO_Port GPIOB
 #define LED_RAT_Pin GPIO_PIN_9

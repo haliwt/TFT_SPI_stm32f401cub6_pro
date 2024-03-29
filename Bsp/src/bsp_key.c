@@ -163,7 +163,8 @@ uint8_t KEY_Scan(void)
 *
 *********************************************************************/
 #if INTERRUPT_KEY
-void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+//void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
  
     
@@ -196,21 +197,21 @@ void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 	break;
 
 	case KEY_DEC_Pin:
-//	if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0 && DEC_KEY_VALUE()==KEY_DOWN){  
-//	//pro_t.buzzer_sound_flag = 1;
-//     pro_t.gKey_value = dec_key_id;
-//	//DEC_Key_Fun();
-//	}
+	if(pro_t.gPower_On == power_on && DEC_KEY_VALUE()==KEY_DOWN){  
+	//pro_t.buzzer_sound_flag = 1;
+     pro_t.gKey_value = dec_key_id;
+	//DEC_Key_Fun();
+	}
 
 	break;
 
 
 	case KEY_ADD_Pin:
-//	if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0 && ADD_KEY_VALUE()==KEY_DOWN){  
-//	 // pro_t.buzzer_sound_flag = 1;
-//      pro_t.gKey_value = add_key_id;
-//	//ADD_Key_Fun();
-//	 }
+	if(pro_t.gPower_On == power_on && ADD_KEY_VALUE()==KEY_DOWN){  
+	 // pro_t.buzzer_sound_flag = 1;
+      pro_t.gKey_value = add_key_id;
+	//ADD_Key_Fun();
+	 }
 
 
 	break;

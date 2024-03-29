@@ -31,7 +31,7 @@ void TFT_Display_Handler(void)
 	//TFT_St7789_FillBlock(157,35,6,75,WHITE);
 
    //temperature value 
-  // TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
+   TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
    //huimidity value
 
   // TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
@@ -502,7 +502,7 @@ void TFT_Disp_Timer_Split_Symbol(void)
 	*Return: NO 
 	*
 ***********************************************************************************************/
-#if 0
+#if 1
 void TFT_Disp_Temp_Value(uint8_t bc,uint8_t temp_value)
 {
 
@@ -512,7 +512,7 @@ void TFT_Disp_Temp_Value(uint8_t bc,uint8_t temp_value)
 
    temp_unit= temp_value%10; 
   
-   if(refresh_one != temp_decade || v_t.voice_set_temperature_value_flag==2){
+   if(refresh_one != temp_decade){
    	refresh_one = temp_decade;
 	//__disable_irq();
    	TFT_Disp_Numbers_Pic_413(5,40,bc,temp_decade); //间隔58
@@ -520,9 +520,9 @@ void TFT_Disp_Temp_Value(uint8_t bc,uint8_t temp_value)
 
    }
 
-   if(refresh_two != temp_unit || v_t.voice_set_temperature_value_flag==2){
+   if(refresh_two != temp_unit ){
    	  refresh_two = temp_unit;
-	   v_t.voice_set_temperature_value_flag++;
+	 
    //__disable_irq();
    TFT_Disp_Numbers_Pic_413(63,40,bc,temp_unit);
 

@@ -45,11 +45,19 @@ void MX_IWDG_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN IWDG_Init 2 */
+/* USER CODE BEGIN 1 */
 
   /* USER CODE END IWDG_Init 2 */
 
 }
 
+
+
+
 /* USER CODE BEGIN 1 */
+void iwdg_feed(void)
+{
+   HAL_IWDG_Refresh(&hiwdg);  /* ?????????? */
+}
 
 /* USER CODE END 1 */

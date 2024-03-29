@@ -14,14 +14,14 @@ void Key_Speical_Power_Fun_Handler(void)
 	static uint8_t  power_on_off ;
 	//be pressed long time key of function that link tencent cloud funtion 
     static uint8_t delay_pw,pw_flag;
-//	 if(ptc_error_state()==0 && fan_error_state()==0){
-//	 if(pro_t.key_power_be_pressed_flag==1){
-//         if(POWER_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_power_key_adjust > 2 &&  pro_t.gPower_On == power_on){
-//            pro_t.key_power_be_pressed_flag =0;
-//			pro_t.gTimer_pro_wifi_led =0;
-//            pro_t.wifi_led_fast_blink_flag=1;
-//			
-//			//WIFI CONNCETOR process
+	//if(ptc_error_state()==0 && fan_error_state()==0){
+	 if(pro_t.key_power_be_pressed_flag==1){
+         if(POWER_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_power_key_adjust > 2 &&  pro_t.gPower_On == power_on){
+            pro_t.key_power_be_pressed_flag =0;
+			pro_t.gTimer_pro_wifi_led =0;
+            pro_t.wifi_led_fast_blink_flag=1;
+			
+			//WIFI CONNCETOR process
 //			wifi_t.link_tencent_step_counter=0;
 //			wifi_t.esp8266_login_cloud_success =0;
 //			wifi_t.runCommand_order_lable=wifi_link_tencent_cloud;
@@ -29,12 +29,12 @@ void Key_Speical_Power_Fun_Handler(void)
 //			wifi_t.gTimer_login_tencent_times=0;
 //			wifi_t.gTimer_linking_tencent_duration=0; //166s -2分7秒
 //			buzzer_sound();
-//			
-//			 
-//        }
+			
+			 
+        }
 
-//	 }
-//	 }
+	 }
+	// }
 	//sort time key of fun
 		if(POWER_KEY_VALUE() ==KEY_UP && pro_t.key_power_be_pressed_flag ==1){
                HAL_Delay(10);
@@ -259,7 +259,7 @@ void ADD_Key_Fun(void)
 			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
         
 			disp_temp_value =1;
-			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);	
+			TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);	
 			}
 		break;
 
@@ -300,7 +300,7 @@ void ADD_Key_Fun(void)
 	
     if(disp_temp_value ==1){
 		disp_temp_value =0;
-    //TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+    TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
 
     }
     if(timer_timing_flag ==1){
@@ -348,7 +348,7 @@ void DEC_Key_Fun(void)
 			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
              disp_temp_value =1;
 	        
-			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+		
 	        }
 			break;
 
@@ -388,7 +388,7 @@ void DEC_Key_Fun(void)
 	   	  }
 		if(disp_temp_value ==1){
 		disp_temp_value =0;
-    		//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+    		TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
 
     	}
 	    if(timer_timing_flag ==1){
