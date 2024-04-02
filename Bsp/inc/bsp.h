@@ -13,21 +13,21 @@
 #include "usart.h"
 #include "gpio.h"
 //bsp
-//#include "bsp_buzzer.h"
-//#include "bsp_ultrasonic.h"
-//#include "bsp_delay.h"
+#include "bsp_buzzer.h"
+#include "bsp_ultrasonic.h"
+#include "bsp_delay.h"
 #include "bsp_ptc.h"
-//#include "bsp_plasma.h"
-//#include "bsp_sensor.h"
-//#include "bsp_adc.h"
+#include "bsp_plasma.h"
+#include "bsp_sensor.h"
+#include "bsp_adc.h"
 #include "bsp_fan.h"
 #include "bsp_led.h"
 #include "bsp_key.h"
-//#include "bsp_ctl.h"
+#include "bsp_ctl.h"
 #include "bsp_lcd.h"
-//#include "bsp_usart.h"
+#include "bsp_usart.h"
 #include "bsp_lcd_gui.h"
-//#include "bsp_wifi.h"
+#include "bsp_wifi.h"
 #include "bsp_image.h"
 #include "bsp_tft_font.h"
 #include "bsp_font.h"
@@ -39,14 +39,14 @@
 
 
 //wifi
-//#include "bsp_wifi_fun.h"
-//#include "bsp_esp8266.h"
-//#include "bsp_publish.h"
-//#include "bsp_subscription.h"
-//#include "bsp_mqtt_iot.h"
+#include "bsp_wifi_fun.h"
+#include "bsp_esp8266.h"
+#include "bsp_publish.h"
+#include "bsp_subscription.h"
+#include "bsp_mqtt_iot.h"
 
 //voice 
-//#include "bsp_voice.h"
+#include "bsp_voice.h"
 
 
 
@@ -145,6 +145,7 @@ typedef struct{
    uint8_t timer_mode_flag;
    uint8_t mode_key_run_item_step;
    uint8_t mode_key_special_fun;
+   uint8_t add_or_dec_is_cofirm_key_flag;
  
   
 
@@ -204,59 +205,6 @@ typedef struct{
 
 extern PRO_T pro_t;
 
-typedef struct _bsp_ctl{
-
-    
-	uint8_t mode_flag;
-	uint8_t ptc_flag;
-	uint8_t plasma_flag;
-	uint8_t ultrasonic_flag;
-	uint8_t mode_key_long_time_flag;
-   
-
-	uint8_t ptc_warning;
-	uint8_t fan_warning;
-	uint8_t time_out_flag;
-	uint8_t memory_confimr_key_done;
-   
-    //time
-   uint8_t disp_works_hours;
-   uint8_t timer_time_define_flag;
-   uint8_t timer_timing_words_changed_flag;
-   uint8_t timing_words_changed_flag;
-
-   
- 
-   
-   uint8_t disp_works_minutes;
-   int8_t gSet_timer_minutes ;
-   int8_t gSet_timer_hours ;
-   
-   int8_t gSet_temperature_value;
-   int8_t select_main_fun_numbers;
-
-   //command
-
-   uint8_t dht11_hum_value;
-   uint8_t dht11_temp_value;
-   uint8_t gSet_temperature_value_item;
-
-   uint8_t gTimer_ctl_disp_works_time_second;
-   uint8_t gTimer_ctl_set_timer_time_senconds;
-   uint8_t gTimer_ctl_select_led;
-   uint8_t gTimer_ctl_total_continue_time;
-   uint8_t gTimer_ctl_ptc_adc_times;
-   uint8_t gTimer_ctl_fan_adc_times ;
-   uint8_t gTimer_ctl_warning_time;
-   uint8_t gTimer_ctl_usart1_error ;
-   uint8_t gTimer_ctl_usart2_error; 
-   uint8_t gTimer_ctl_dma_state;
-
-
-}bsp_ctl;
-
-extern bsp_ctl gctl_t;
-
 
 void bsp_Init(void);
 
@@ -275,3 +223,4 @@ void Mode_Long_Key_Fun(void);;
 
 
 #endif 
+

@@ -57,6 +57,16 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define FAN_CTL_2_Pin GPIO_PIN_13
+#define FAN_CTL_2_GPIO_Port GPIOC
+#define FAN_CTL_1_Pin GPIO_PIN_14
+#define FAN_CTL_1_GPIO_Port GPIOC
+#define TEMP_SENSOR_Pin GPIO_PIN_15
+#define TEMP_SENSOR_GPIO_Port GPIOC
+#define MUTE_Pin GPIO_PIN_0
+#define MUTE_GPIO_Port GPIOH
+#define VOICE_IN_Pin GPIO_PIN_1
+#define VOICE_IN_GPIO_Port GPIOH
 #define ADC_FAN_Pin GPIO_PIN_0
 #define ADC_FAN_GPIO_Port GPIOA
 #define ADC_NTC_Pin GPIO_PIN_1
@@ -65,26 +75,22 @@ void Error_Handler(void);
 #define VOICE_TX_GPIO_Port GPIOA
 #define VOICE_RX_Pin GPIO_PIN_3
 #define VOICE_RX_GPIO_Port GPIOA
-//spi IC CS GPIO
 #define SPI_NSS_Pin GPIO_PIN_4
 #define SPI_NSS_GPIO_Port GPIOA
-
-#define TFT_BACKLIGHT_Pin 				GPIO_PIN_0
-#define TFT_BACKLIGHT_GPIO_Port 		GPIOB
-
-
+#define TFT_BACKLIGHT_Pin GPIO_PIN_0
+#define TFT_BACKLIGHT_GPIO_Port GPIOB
 #define TFT_DCX_Pin GPIO_PIN_1
 #define TFT_DCX_GPIO_Port GPIOB
-
-#define TFT_RESET_Pin 				GPIO_PIN_2
-#define TFT_RESET_GPIO_Port 		GPIOB
-
+#define TFT_RESET_Pin GPIO_PIN_2
+#define TFT_RESET_GPIO_Port GPIOB
 #define LED_WIFI_Pin GPIO_PIN_12
 #define LED_WIFI_GPIO_Port GPIOB
 #define LED_KILL_Pin GPIO_PIN_13
 #define LED_KILL_GPIO_Port GPIOB
 #define LED_KEY_TIM_Pin GPIO_PIN_14
 #define LED_KEY_TIM_GPIO_Port GPIOB
+#define PLASMA_CTL_Pin GPIO_PIN_15
+#define PLASMA_CTL_GPIO_Port GPIOB
 #define LED_POWER_Pin GPIO_PIN_8
 #define LED_POWER_GPIO_Port GPIOA
 #define KEY_POWER_Pin GPIO_PIN_9
@@ -93,31 +99,20 @@ void Error_Handler(void);
 #define KEY_MODE_Pin GPIO_PIN_10
 #define KEY_MODE_GPIO_Port GPIOA
 #define KEY_MODE_EXTI_IRQn EXTI15_10_IRQn
-
-///
 #define KEY_ADD_Pin GPIO_PIN_11
-
 #define KEY_ADD_GPIO_Port GPIOA
 #define KEY_ADD_EXTI_IRQn EXTI15_10_IRQn
-//
 #define KEY_DEC_Pin GPIO_PIN_12
 #define KEY_DEC_GPIO_Port GPIOA
 #define KEY_DEC_EXTI_IRQn EXTI15_10_IRQn
-//
+#define RELAY_CTL_Pin GPIO_PIN_3
+#define RELAY_CTL_GPIO_Port GPIOB
+#define WIFI_EN_Pin GPIO_PIN_5
+#define WIFI_EN_GPIO_Port GPIOB
 #define LED_PTC_Pin GPIO_PIN_8
 #define LED_PTC_GPIO_Port GPIOB
 #define LED_RAT_Pin GPIO_PIN_9
 #define LED_RAT_GPIO_Port GPIOB
-
-//
-#define RELAY_CTL_Pin 					GPIO_PIN_3
-#define RELAY_CTL_GPIO_Port 			GPIOB
-
-#define FAN_CTL_2_Pin 								GPIO_PIN_13
-#define FAN_CTL_2_GPIO_Port 						GPIOC
-
-#define FAN_CTL_1_Pin 								GPIO_PIN_14
-#define FAN_CTL_1_GPIO_Port 						GPIOC
 
 /* USER CODE BEGIN Private defines */
 

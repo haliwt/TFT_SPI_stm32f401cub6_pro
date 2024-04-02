@@ -2,7 +2,7 @@
 
 PRO_T pro_t;
 
-bsp_ctl gctl_t;
+
 
 uint8_t led_blink_times;
 uint8_t update_step;
