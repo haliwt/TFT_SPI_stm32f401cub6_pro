@@ -65,6 +65,7 @@ void Error_Handler(void);
 #define VOICE_TX_GPIO_Port GPIOA
 #define VOICE_RX_Pin GPIO_PIN_3
 #define VOICE_RX_GPIO_Port GPIOA
+//spi IC CS GPIO
 #define SPI_NSS_Pin GPIO_PIN_4
 #define SPI_NSS_GPIO_Port GPIOA
 
@@ -107,6 +108,16 @@ void Error_Handler(void);
 #define LED_PTC_GPIO_Port GPIOB
 #define LED_RAT_Pin GPIO_PIN_9
 #define LED_RAT_GPIO_Port GPIOB
+
+//
+#define RELAY_CTL_Pin 					GPIO_PIN_3
+#define RELAY_CTL_GPIO_Port 			GPIOB
+
+#define FAN_CTL_2_Pin 								GPIO_PIN_13
+#define FAN_CTL_2_GPIO_Port 						GPIOC
+
+#define FAN_CTL_1_Pin 								GPIO_PIN_14
+#define FAN_CTL_1_GPIO_Port 						GPIOC
 
 /* USER CODE BEGIN Private defines */
 

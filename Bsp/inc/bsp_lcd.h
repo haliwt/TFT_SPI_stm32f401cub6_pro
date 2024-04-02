@@ -33,9 +33,9 @@ extern uint8_t spi_tx_buffer[1];
 
 #define LCD_RST_SetLow()   (HAL_GPIO_WritePin(TFT_RESET_GPIO_Port,TFT_RESET_Pin,GPIO_PIN_RESET))
 
-#define LCD_NSS_SetHigh()   (HAL_GPIO_WritePin(TFT_NSS_GPIO_Port,TFT_NSS_Pin,GPIO_PIN_SET))
+#define LCD_NSS_SetHigh()   (HAL_GPIO_WritePin(SPI_NSS_GPIO_Port,SPI_NSS_Pin,GPIO_PIN_SET))
 
-#define LCD_NSS_SetLow()    (HAL_GPIO_WritePin(TFT_NSS_GPIO_Port,TFT_NSS_Pin,GPIO_PIN_RESET))
+#define LCD_NSS_SetLow()    (HAL_GPIO_WritePin(SPI_NSS_GPIO_Port,SPI_NSS_Pin,GPIO_PIN_RESET))
 
 void TFT_LCD_Init(void);
 

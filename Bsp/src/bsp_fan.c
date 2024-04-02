@@ -1,7 +1,7 @@
 #include "bsp_fan.h"
 #include "bsp.h"
 
-static void turn_off_fan_function(void);
+//static void turn_off_fan_function(void);
 
 
 void Fan_Run(void)
@@ -21,6 +21,7 @@ void Fan_Stop(void)
   
     
 }
+#if 0
 /********************************************************************************************
 	*
 	*Function Name:void Temperature_Ptc_Pro_Handler(void)
@@ -137,5 +138,5 @@ static void turn_off_fan_function(void)
 
 }
 
-
+#endif 
 

@@ -132,6 +132,7 @@ void TFT_Process_Handler(void)
 		Power_Off_Fun();
 		//Device_NoAction_Power_Off();
 		LED_Mode_Key_Off();
+		Ptc_Off();
 		
 		
 	}
@@ -144,13 +145,13 @@ void TFT_Process_Handler(void)
 	if(fan_continuce_flag ==1){
 
 	    if(pro_t.gTimer_pro_fan <61){
-           // Fan_Run();        
+            Fan_Run();        
 
 		}
 		else{
 			fan_continuce_flag++;
 
-           // Fan_Stop();
+            Fan_Stop();
 		}
       
 
@@ -200,7 +201,7 @@ void TFT_Process_Handler(void)
 #if 1
 static void TFT_Pocess_Command_Handler(void)
 {
-   static uint8_t ptc_first_on ,ptc_on_flag;;
+   static uint8_t ptc_first_on ,ptc_on_flag;
 	if(pro_t.gPower_On == power_on){
   
     switch(pro_t.run_process_step){
@@ -221,7 +222,8 @@ static void TFT_Pocess_Command_Handler(void)
 		pro_t.gTimer_pro_ptc_delay_time=0;
 		pro_t.gTimer_pro_display_dht11_value=30; //at once display dht11 value
 		gctl_t.gTimer_ctl_dma_state =0;
-
+		Ptc_On();
+	    Fan_Run();
 		//test item 
 		//gctl_t.ptc_warning=1;
 		//gctl_t.fan_warning = 1;
@@ -266,7 +268,7 @@ static void TFT_Pocess_Command_Handler(void)
 		Wifi_Fast_Led_Blink();
 	
 	
-	  //  TimeTimer_Pro_Handler();
+	    TFT_Display_WorksTime();//TimeTimer_Pro_Handler();
 			
 
 		pro_t.run_process_step=pro_set_temperature;
@@ -310,6 +312,7 @@ static void TFT_Pocess_Command_Handler(void)
 					pro_t.gTimer_pro_wifi_led=0;
 					LED_WIFI_ICON_OFF();
 				    TFT_Disp_Humidity_Value(50);
+					Ptc_On();
 				}
 				
 			 break;
