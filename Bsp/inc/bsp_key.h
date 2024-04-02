@@ -130,7 +130,7 @@ typedef enum _key_value{
 }key_value;
 
 
-typedef  struct  _state_
+typedef  struct  KEY_state
 {
  unsigned char         read;
  unsigned char         buffer;

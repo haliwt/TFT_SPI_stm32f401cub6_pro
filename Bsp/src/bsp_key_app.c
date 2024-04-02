@@ -1,532 +1,644 @@
-#include "bsp_key.h"
 #include "bsp.h"
 
 
-key_types key_t;
-uint8_t power_key_detected;
-uint16_t key_mode_counter;
-
-
-uint32_t  K1=0;
-uint32_t  K2=0;
-
-uint16_t  K3=0;
-uint16_t  K4=0;
-
-
-uint16_t cnt;
-uint8_t value1 = 0;
-uint8_t value2 = 0;
-uint8_t value3 = 0;
-uint8_t value4 = 0;
-
-/**************************************************************
+/******************************************************************************
 	*
-	*Function Name:uint8_t KEY_Scan(void)
+	*Function Name:static void Key_Speical_Power_Fun_Handler(void)
+	*Funcion: speical of power key function
+	*Input Ref:NO
+	*Return Ref:NO
 	*
-	*
-	*
-	*
-**************************************************************/
-#if NORMAL_KEY_3
-uint8_t KEY_Scan(void)
+******************************************************************************/
+void Key_Speical_Power_Fun_Handler(void)
 {
-
-   uint8_t  reval = 0;
- 
-  key_t.read = _KEY_ALL_OFF; //0xFF 
-  
-  
-    if(POWER_KEY_VALUE() ==KEY_DOWN )// high level
-    {
-        key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
-    }
-//    if(DEC_KEY_VALUE()==KEY_DOWN )
-//	{
-//		  key_t.read &= ~0x04; // 0xFf & 0xfB =  0xFB
-//	}
-//    else if(ADD_KEY_VALUE() ==KEY_DOWN )
-//	{
-//		  key_t.read &= ~0x08; // 0x1f & 0xf7 =  0xF7
-//	 }
-    else if(MODE_KEY_VALUE() ==KEY_DOWN )
-	{
-		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
-	}
-    
-   
-
-    switch(key_t.state )
-	{
-		case start:
-		{
-			if(key_t.read != _KEY_ALL_OFF)
-			{
-				key_t.buffer   = key_t.read; //??:key.buffer = 0xFE  POWER KEY 
-				key_t.state    = first;
-				key_t.on_time  = 0;
-				key_t.off_time = 0;
-                
-			}
-			break;
-		}
-		case first:
-		{
-			if(key_t.read == key_t.buffer) // adjust key be down ->continunce be pressed key
-			{
-
-			 if(++key_t.on_time>59 ){
-
-					key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
-					key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10
-                   
-					key_t.state   = second;
-
-
-				 }
-			}
-			else
-			{
-				key_t.on_time = 0; 
-				key_t.state   = start;
-			}
-			break;
-		}
-		case second:
-		{
-			if(key_t.read == key_t.buffer) //again adjust key if be pressed down 
-			{
-				if(++key_t.on_time> 1000 && power_on_state() ==power_on)// 500 long key be down
-				{
-					
-					key_t.value = key_t.value|0x80; //key.value(power_on) = 0x01 | 0x80  =0x81  
-					key_t.on_time = 0;               //key.vaule(model_key) = 0x01 | 0x80 = 0x82
-					key_t.state   = finish; 
-                   
-				}
-			}
-			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
-				{
-					if(++key_t.off_time>1) //8 //30 don't holding key dithering
-					{
-						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
-						
-						key_t.state   = finish; // loose hand
-					}
-					
-				}
-		   
-			break;
-		}
-		case finish:
-		{
+	static uint8_t  power_on_off ;
+	//be pressed long time key of function that link tencent cloud funtion 
+    static uint8_t delay_pw,pw_flag;
+	 if(ptc_error_state()==0 && fan_error_state()==0){
+	 if(pro_t.key_power_be_pressed_flag==1){
+         if(POWER_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_power_key_adjust > 2 &&  pro_t.gPower_On == power_on){
+            pro_t.key_power_be_pressed_flag =0;
+			pro_t.gTimer_pro_wifi_led =0;
+            pro_t.wifi_led_fast_blink_flag=1;
 			
-			reval = key_t.value; // is short time  TIMER_KEY = 0x01  2. long times TIMER_KEY = 0X81
-			key_t.state   = end;
+			//WIFI CONNCETOR process
+			wifi_t.link_tencent_step_counter=0;
+			wifi_t.esp8266_login_cloud_success =0;
+			wifi_t.runCommand_order_lable=wifi_link_tencent_cloud;
+			wifi_t.wifi_config_net_lable= wifi_set_restor;
+			wifi_t.gTimer_login_tencent_times=0;
+			wifi_t.gTimer_linking_tencent_duration=0; //166s -2分7秒
+			buzzer_sound();
+			
+			 
+        }
+
+	 }
+	 }
+	//sort time key of fun
+		if(POWER_KEY_VALUE() ==KEY_UP && pro_t.key_power_be_pressed_flag ==1){
+               HAL_Delay(10);
+		  if(POWER_KEY_VALUE() ==KEY_UP){
          
-			break;
+            power_on_off = power_on_off ^ 0x01;
+			  pro_t.key_power_be_pressed_flag=0;
+		  if(power_on_off==1){
+		
+		  
+
+			buzzer_sound();	
+			pro_t.gPower_On = power_on;   
+            pro_t.long_key_flag =0;
+            pro_t.run_process_step=0;
+		   
+
+		
+			
+		  }
+		  else {
+			 //pro_t.gKey_value = power_key_id;
+			 buzzer_sound();
+			 pro_t.power_off_flag=1;
+			 pro_t.long_key_flag =0;
+			pro_t.run_process_step=0xff;
+			pro_t.gPower_On = power_off;   
+		
+			  
+			 }
+		  }
+	}
+}
+/******************************************************************************
+	*
+	*Function Name:static void Key_Speical_Mode_Fun_Handler(void)
+	*Funcion: speical of mode key fun
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+******************************************************************************/
+void Key_Speical_Mode_Fun_Handler(void)
+{
+ //modke _key_long_time
+	if(pro_t.mode_key_pressed_flag ==1){
+
+		//mode key be pressed long times
+		if(MODE_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_mode_key_adjust > 1){
+			
+			pro_t.mode_key_pressed_flag =0;
+			pro_t.mode_key_select_label =0;
+            Buzzer_KeySound();
+		    pro_t.gTimer_pro_mode_long_key=0;
+		    pro_t.key_mode_long_time_over_flag=1;
+			Mode_Long_Key_Fun();
+
+		   
 		}
-		case end:
-		{
-			if(key_t.read == _KEY_ALL_OFF)
-			{
-				if(++key_t.off_time>0)//50 //100
-				{
-					key_t.state   = start;
-                   
-                  
+       //select mode key 
+       if(MODE_KEY_VALUE() ==KEY_UP && pro_t.mode_key_pressed_flag ==1){
+			HAL_Delay(10);
+	   	 if(MODE_KEY_VALUE() ==KEY_UP){
+		pro_t.mode_key_pressed_flag =0;
+	   
+		
+		pro_t.mode_key_run_item_step = mode_key_select;
+	    pro_t.mode_key_select_label =mode_key_select;
+	     gctl_t.select_main_fun_numbers++; // 0,1,2
+		 if(gctl_t.select_main_fun_numbers > 3){
+			  gctl_t.select_main_fun_numbers = 1;
+			}
+		
+		gctl_t.memory_confimr_key_done = 1;
+        
+		pro_t.buzzer_sound_flag =1;
+
+		pro_t.gTimer_pro_mode_key_be_select = 0; //counter starts after 4 seconds ,cancel this function
+		gctl_t.gTimer_ctl_select_led =0;
+	   	 }
+	   }
+		
+		
+	}
+
+	Mode_Key_Config_Fun_Handler();
+}
+
+/******************************************************************************
+	*
+	*Function Name:static void Mode_Key_Config_Fun_Handler(void)
+	*Funcion: speical of mode key fun
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+******************************************************************************/
+void Mode_Key_Config_Fun_Handler(void)
+{
+  static uint8_t confirm_data;
+  switch(pro_t.mode_key_run_item_step){
+
+
+             case mode_key_select: //02
+
+		     if(pro_t.gTimer_pro_mode_key_be_select < 4){ //exit of rule
+
+				Mode_Key_Select_Fun();
+				
+             }
+			 else{
+                gctl_t.memory_confimr_key_done = 0;
+                pro_t.mode_key_run_item_step = 0xff; //
+                pro_t.mode_key_select_label =0;
+                pro_t.key_mode_long_time_over_flag =0;//pro_t.mode_key_select_label
+			    gctl_t.select_main_fun_numbers--; //return back the first confirm item 
+				if(gctl_t.select_main_fun_numbers == 0){
+					gctl_t.select_main_fun_numbers = 5;
 				}
+				pro_t.add_or_dec_is_cofirm_key_flag =0;
 				
-			}
-			break;
-		}
-		default:
-		{
-			key_t.state   = start;
-            
-			break;
-		}
-	}
-	return  reval;
+                Device_Action_Led_OnOff_Handler();
+			 }
+             
+
+		   break;
 
 
+		   case mode_key_confirm: //03//as "+" and "-" key  confirm ation
+			    Device_Action_Led_OnOff_Handler();
+                Mode_Key_Confirm_Fun();
+		    
+				if(confirm_data==0){
+					confirm_data++;
+					pro_t.gTimer_pro_confir_delay=0;
+				   // pro_t.add_or_dec_is_cofirm_key_flag =0;
+
+				}
+
+				if(confirm_data==1 && pro_t.gTimer_pro_confir_delay>1){
+					confirm_data=0;
+					pro_t.gTimer_pro_confir_delay=0;
+				 	pro_t.mode_key_select_label=0;
+				    pro_t.mode_key_run_item_step = 0xff;
+				    pro_t.add_or_dec_is_cofirm_key_flag =1;
+           
+				}
+			
+
+			break;
+
+			default:
+
+			break;
+
+	    }
+
+
+       
+     
 }
 
-
-#endif 
-/********************************************************************
-*
-*Function Name:
-*Function: interrupt of GPIO of call back function
-*
-*
-*
-*********************************************************************/
-#if INTERRUPT_KEY
-void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+/************************************************************************
+	*
+	*Function Name: static void Mode_Long_Key_Fun(void) 
+	*Function : set timer timing is enable 
+	*Input Ref:NO
+	*Return Ref:No
+	*
+************************************************************************/
+void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 {
- 
-    
-   if(!pro_t.gTimer_pro_detect_key_ms) return ;
-
-	pro_t.gTimer_pro_detect_key_ms=0;
-	switch(GPIO_Pin){
-
-	case KEY_POWER_Pin:
-         if(POWER_KEY_VALUE()==KEY_DOWN ){
-		     pro_t.key_power_be_pressed_flag =1;
-			 pro_t.gTimer_pro_power_key_adjust=0;
-
-         }
-	
-
-    break;
-
-	case KEY_MODE_Pin:
-
-      if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0){   
-
-  	  pro_t.mode_key_pressed_flag =1;
-      pro_t.gTimer_pro_mode_key_adjust =0;
-
-	//counter starts after 4 seconds ,cancel this function
-     }
-
-	
-	break;
-
-	case KEY_DEC_Pin:
-	if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0 && DEC_KEY_VALUE()==KEY_DOWN){  
-	//pro_t.buzzer_sound_flag = 1;
-     pro_t.gKey_value = dec_key_id;
-	//DEC_Key_Fun();
-	}
-
-	break;
+	  if(power_on_state() ==power_on){
+	   if(gctl_t.fan_warning ==0 && ptc_error_state() ==0){
+	  	  pro_t.mode_key_run_item_step = mode_key_timer_time;
+		  pro_t.timer_mode_flag=timer_set_time; //set timer mode enable,
+		  gctl_t.timer_timing_words_changed_flag ++;
+		  gctl_t.timing_words_changed_flag++;
+		  pro_t.gTimer_pro_mode_long_key=0;
+		 
 
 
-	case KEY_ADD_Pin:
-	if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0 && ADD_KEY_VALUE()==KEY_DOWN){  
-	 // pro_t.buzzer_sound_flag = 1;
-      pro_t.gKey_value = add_key_id;
-	//ADD_Key_Fun();
-	 }
+	     TFT_Disp_Set_TimerTime_Init();
 
-
-	break;
-	
+	   }
+	  	 
+      }
 }
 
-}
-#endif 
 
-/***********************************************************
- *  *
-    *Function Name: uint8_t ReadKey(void)
-    *Function: 
-    *Input Ref: NO
-    *Return Ref: 
-    * 
-***********************************************************/
-#if NORMAL_KEY 
-uint8_t ReadKey(void)
+/************************************************************************
+	*
+	*Function Name: static void Power_On_Fun(void)
+	*Function : power on
+	*Input Ref:NO
+	*Return Ref:No
+	*
+************************************************************************/
+void ADD_Key_Fun(void)
 {
 
-    uint8_t value0;
-	if(!pro_t.gTimer_pro_detect_key_ms) return value0;
+ static uint8_t select_flag,disp_temp_value,timer_timing_flag;
+ if(power_on_state()==power_on){
 
-	 pro_t.gTimer_pro_detect_key_ms=0;
+	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0){
 
 
-	if(HAL_GPIO_ReadPin(KEY_POWER_GPIO_Port,KEY_POWER_Pin) == KEY_DOWN && pro_t.long_key_flag ==0){ //KEY1 =POWER_KEY ,KEY2 = MODES
-			cnt = 0;
-			pro_t.long_key_flag =0;
-			K1++;
-			if(K1 > 1990000 && pro_t.gPower_On ==power_on){
-	               K1= 0;
+
+		switch(pro_t.mode_key_run_item_step){
+
+		case 0xff:
+            if(pro_t.key_mode_long_time_over_flag ==0 && pro_t.mode_key_select_label==0){
+			   pro_t.mode_key_run_item_step=mode_key_temp;
+
+            }
+
+		case mode_key_temp: //set temperature value add number
+			//pro_t.buzzer_sound_flag = 1;
+			if(pro_t.key_mode_long_time_over_flag ==0 && pro_t.mode_key_select_label ==0){
+			Buzzer_KeySound();
+			gctl_t.gSet_temperature_value ++;
+			if( gctl_t.gSet_temperature_value < 20)gctl_t.gSet_temperature_value=20;
 			
-				  pro_t.long_key_flag =1;
-				 // gctl_t.gKey_value = wifi_fun_on;
-	              return   KEY_POWER_LONG_DOWN;
-	              
+            if(gctl_t.gSet_temperature_value > 40) gctl_t.gSet_temperature_value= 20;
+
+             pro_t.gTimer_pro_set_tem_value_blink =0;
+			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
+        
+			disp_temp_value =1;
+			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);	
 			}
-	}
-	else if(HAL_GPIO_ReadPin(KEY_MODE_GPIO_Port,KEY_MODE_Pin)==KEY_DOWN  && pro_t.long_key_flag ==0 && power_on_state() == power_on){
-	  		cnt = 0;
-			K2++;   //Confirm_key press
+		break;
+
+		case mode_key_timer_time:
+            pro_t.buzzer_sound_flag = 1;
+		    pro_t.gTimer_pro_mode_long_key=0;
+			gctl_t.mode_key_long_time_flag++;
+			
+			gctl_t.gSet_timer_minutes=0;
+			gctl_t.gSet_timer_hours ++ ;//disp_t.disp_timer_time_hours++ ;//pro_t.dispTime_minutes = pro_t.dispTime_minutes + 60;
+			if(gctl_t.gSet_timer_hours  > 24){ //if(pro_t.dispTime_minutes > 59){
+
+			gctl_t.gSet_timer_hours =0;//pro_t.dispTime_hours =0;
+
+
+			}
+
+		   pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
+			timer_timing_flag=1;
+		 
+			
+
+		break;
+
 		
-			pro_t.long_key_flag =0;
-			if(K2 > 1990000 && power_on_state() ==power_on){
-	              K2=0;
-				  cnt = 0;
-				 
-				  pro_t.long_key_flag =1;
-				  
-				  return KEY_MODE_LONG_DOWN;
-	            }
 
+		case mode_key_select:
+			
+			pro_t.buzzer_sound_flag = 1;
+			pro_t.mode_key_run_item_step = mode_key_confirm;
+			
+		
+        break; 
+		
 
-	 }
-	 else if(HAL_GPIO_ReadPin(KEY_DEC_GPIO_Port,KEY_DEC_Pin)== KEY_DOWN && power_on_state() == power_on){
-	       cnt =0;
-		   K3++;
-	       
+		}	
 	}
-	else if(HAL_GPIO_ReadPin(KEY_ADD_GPIO_Port,KEY_ADD_Pin) == KEY_DOWN && power_on_state() == power_on){
-		cnt =0;
-		K4++;
-	}
-	//be detected of key release .
-    else if(POWER_KEY_VALUE()==KEY_UP && MODE_KEY_VALUE()==KEY_UP \
-
-      && DEC_KEY_VALUE()==KEY_UP && ADD_KEY_VALUE()==KEY_UP && pro_t.long_key_flag ==0){ //oneself key 
-		cnt++;
-		if(cnt<50){ //按键松开消抖,一定要大于短按键次数 > 20
-		    return 0; 
-
-		}
-//		
-		cnt = 0;//
-
-       if(K1>600){
-
-
-          value1 = power_key_id;
-	   }
-	   else{
-
-          value1 =0;
-	   }
 	
-		if(K2>600 ){//short time modes press 
-            value2 = mode_key_id;
-			
+    if(disp_temp_value ==1){
+		disp_temp_value =0;
+    TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
 
-		}
-		else{ 
-			value2 = 0;
-		}
+    }
+    if(timer_timing_flag ==1){
+		timer_timing_flag=0;
+	  TFT_Disp_Set_TimerTime(0);
 
-		//DEC_CONFIRM 
-		if(K3>600 ){//short time modes press 
-            value3 = dec_key_id;
-			
 
-		}
-		else{ 
-			value3 = 0;
-		}
+    }
 
-		
-		//ADD_KEY
-		if(K4>600){//short time modes press 
-			value4 = add_key_id;
-			
-		
-		}
-		else{ 
-		  value4 = 0;
-		}
-
-		
-		
-		 	
-		
-		K1 = 0;
-		K2 = 0;
-		K3 = 0 ;
-		K4 = 0;
-
-		return (value1+value2+value3+value4);
-	}
-
+ }
    
-   //judge key combination
-    #if 0
-	if((K1==500) && (K2<50)) //combination key 
-		value1 = 0x03;
-	else if(K2==500 && K1<50)
-		value2 = 0x30;
-	else if(K1==100 && K2>100)
-		value1 = 0x44;
-	else if(K1>100 && K2==100)
-		value1 = 0x44;
-	
+	 
 
-  return (value1+value2);
-  #endif 
-	
- //  return 0;
 }
-#endif 
-
-#if NORMAL_KEY_2
-/**
-  * 函数功能: 读取按键KEY1的状态
-  * 输入参数：无
-  * 返 回 值: KEY_DOWN：按键被按下；
-  *           KEY_UP  ：按键没被按下
-  * 说    明：无。
-  */
-KEYState_TypeDef POWER_KEY_StateRead(void)
+/************************************************************************
+	*
+	*Function Name: static void DEC_Key_Fun(void)
+	*Function : KEY OF decrease
+	*Input Ref:NO
+	*Return Ref:No
+	*
+************************************************************************/
+void DEC_Key_Fun(void)
 {
-  /* 读取此时按键值并判断是否是被按下状态，如果是被按下状态进入函数内 */
-  if(HAL_GPIO_ReadPin(KEY_POWER_GPIO_Port,KEY_POWER_Pin)==KEY_DOWN_LEVEL)
-  {
-    /* 延时一小段时间，消除抖动 */
-    HAL_Delay(20);
-    /* 延时时间后再来判断按键状态，如果还是按下状态说明按键确实被按下 */
-    if(HAL_GPIO_ReadPin(KEY_POWER_GPIO_Port,KEY_POWER_Pin)==KEY_DOWN_LEVEL)
-    {
-      /* 等待按键弹开才退出按键扫描函数 */
-      while(HAL_GPIO_ReadPin(KEY_POWER_GPIO_Port,KEY_POWER_Pin)==KEY_DOWN_LEVEL){
+    static uint8_t disp_temp_value,timer_timing_flag;
+	if(power_on_state() ==power_on){
+	   	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0 ){
+	   	
+	     switch(pro_t.mode_key_run_item_step ){
 
-         K1++;
-		 iwdg_feed();
-		 if(power_on_state() == power_on){
+		   case 0xff:
+            if(pro_t.key_mode_long_time_over_flag ==0 && pro_t.mode_key_select_label ==0){
+		 	 pro_t.mode_key_run_item_step= mode_key_temp;
+            }
 
-		    if(K1 > 900000){
-                K1=0;
+		   case mode_key_temp:  //default tempearture value 
+	        // pro_t.buzzer_sound_flag = 1;
+	        if(pro_t.key_mode_long_time_over_flag ==0 && pro_t.mode_key_select_label ==0){
+	        Buzzer_KeySound();
+			 gctl_t.gSet_temperature_value--;
+			if( gctl_t.gSet_temperature_value<20)  gctl_t.gSet_temperature_value=40;
+	        if( gctl_t.gSet_temperature_value >40) gctl_t.gSet_temperature_value=40;
+   
+			 pro_t.gTimer_pro_set_tem_value_blink =0;
+			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
+             disp_temp_value =1;
+	        
+			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+	        }
+			break;
+
+			case mode_key_timer_time: //timer timing set "decrease -down"
+			   
+			    pro_t.buzzer_sound_flag = 1;
+	            gctl_t.mode_key_long_time_flag++;
+			
+				gctl_t.gSet_timer_minutes=0;
+				gctl_t.gSet_timer_hours --;//disp_t.disp_timer_time_hours -- ;//pro_t.dispTime_minutes = pro_t.dispTime_minutes - 1;
+				if(gctl_t.gSet_timer_hours  < 0){//if(pro_t.dispTime_minutes < 0){
+
+				    gctl_t.gSet_timer_hours  =24;//pro_t.dispTime_hours --;
+					
+					
+				}
+		
+		     pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
+		     timer_timing_flag=1;
+			 	
+			//TFT_Disp_Set_TimerTime(0);
+			break;
+
+			 case mode_key_select:
+			 
+			 	pro_t.buzzer_sound_flag = 1;
+	
+				pro_t.mode_key_run_item_step = mode_key_confirm;
 				
-				//SendData_Set_Wifi(0x01);
-				pro_t.long_key_flag =1;
-				pro_t.wifi_led_fast_blink_flag=0;
-				 pro_t.gTimer_pro_wifi_led =0;
-				//gctl_t.wifi_flag =0;
-				return KEY_POWER_LONG_DOWN;
+
+			   
+			
+			break;
+
+
+	    	}
+	   	  }
+		if(disp_temp_value ==1){
+		disp_temp_value =0;
+    		TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+
+    	}
+	    if(timer_timing_flag ==1){
+		   timer_timing_flag=0;
+	     TFT_Disp_Set_TimerTime(0);
+
+  
+       }
+	}
+       
+}
+
+/*****************************************************************************
+ * 
+ * Function Name: void Mode_Key_Select_Fun(void)
+ * Function:   This function is used to select the working mode of the device.
+ * Input Ref: NO
+ * Return Ref: NO
+ * 
+*****************************************************************************/
+void Mode_Key_Select_Fun(void)
+{
+  
+   
+   switch(gctl_t.select_main_fun_numbers){
+
+      case ptc_fun:
+        
+
+  led_blik: if(plasma_state() == 1){
+                   // Plasma_On();
+			LED_KILL_ICON_ON();
 			}
+			else{
+			//  Plasma_Off();
+			LED_KILL_ICON_OFF();
+
+			}
+
+			if(ultrasonic_state()==1){
+
+			// Ultrasonic_Pwm_Output();
+			LED_RAT_ICON_ON();
+
+			}
+			else{
+
+			// Ultrasonic_Pwm_Stop();
+			LED_RAT_ICON_OFF();
+		}
+			
+			
+	    if(gctl_t.gTimer_ctl_select_led < 20){ //30x10ms=300ms
+ 		      LED_PTC_ICON_ON()  ;  
+		  }
+		  else if(gctl_t.gTimer_ctl_select_led > 19 && gctl_t.gTimer_ctl_select_led < 41){
+ 		     LED_PTC_ICON_OFF() ; 
+
+		  }
+		  else{
+		  	gctl_t.gTimer_ctl_select_led=0;
+			if(pro_t.mode_key_run_item_step==mode_key_select)
+			   goto led_blik;
+			
+
+		  }
+
+        
+		
+
+      break;
+
+	  case plasma_fun:
+	  	//KILL ICON LED
+	  	
+     led_blik2:   if(ptc_state()== 1){
+
+	
+		LED_PTC_ICON_ON();
+
+		}
+		else{
+	
+		LED_PTC_ICON_OFF();
+
+
 		}
 
+		if(ultrasonic_state()==1){
 
-	  };      
-       /* 按键扫描完毕，确定按键被按下，返回按键被按下状态 */
+	
+		LED_RAT_ICON_ON();
+
+		}
+		else{
+
+		
+		LED_RAT_ICON_OFF();
+
+		}
+
+     if(gctl_t.gTimer_ctl_select_led < 20){ //30x10ms=300ms
+
+		    
+				LED_KILL_ICON_ON() ;   
+         	 }
+			 else if(gctl_t.gTimer_ctl_select_led > 19 && gctl_t.gTimer_ctl_select_led < 41){
+				LED_KILL_ICON_OFF() ;
+			 }
+			 else{
+			 	gctl_t.gTimer_ctl_select_led=0;
+				if(pro_t.mode_key_run_item_step==mode_key_select)
+				goto led_blik2;
+
+			 }
+	  	
+		
+
+	  break;
+
+	  case rat_fun:
+
+	  //ULTRSONIC ICO LED
 	 
-	  if(K1 > 900000 && power_on_state() == power_on && pro_t.long_key_flag ==0){
-	  	 K1 =0;
-		//  SendData_Set_Wifi(0x01);
-		  pro_t.long_key_flag =1;
-		  pro_t.wifi_led_fast_blink_flag=0;
-		// gctl_t.wifi_flag =0;
-		 pro_t.gTimer_pro_wifi_led =0;
-		 return KEY_POWER_LONG_DOWN;
 
-
+	led_blink3:   if(ptc_state()== 1){
+	
+	   
+		LED_PTC_ICON_ON();
+	
+	 }
+	 else{
+	   
+	   LED_PTC_ICON_OFF();
+	}
+	
+	if(plasma_state() == 1){
+		
+		  LED_KILL_ICON_ON();
 	  }
 	  else{
-	  	K1=0;
-         return KEY_DOWN;
-
+	   
+		 LED_KILL_ICON_OFF();
+	
 	  }
-    }
-  }
-  /* 按键没被按下，返回没被按下状态 */
- 
+	
+	 
 
-  return KEY_UP;
-}
 
-/**
-  * 函数功能: 读取按键KEY1的状态
-  * 输入参数：无
-  * 返 回 值: KEY_DOWN：按键被按下；
-  *           KEY_UP  ：按键没被按下
-  * 说    明：无。
-  */
-
-KEYState_TypeDef MODE_KEY_StateRead(void)
-{
-  /* 读取此时按键值并判断是否是被按下状态，如果是被按下状态进入函数内 */
-  if(HAL_GPIO_ReadPin(KEY_MODE_GPIO_Port,KEY_MODE_Pin)==KEY_DOWN_LEVEL)
-  {
-    /* 延时一小段时间，消除抖动 */
-    HAL_Delay(20);
-    /* 延时时间后再来判断按键状态，如果还是按下状态说明按键确实被按下 */
-    if(HAL_GPIO_ReadPin(KEY_MODE_GPIO_Port,KEY_MODE_Pin)==KEY_DOWN_LEVEL)
-    {
-      /* 等待按键弹开才退出按键扫描函数 */
-      while(HAL_GPIO_ReadPin(KEY_MODE_GPIO_Port,KEY_MODE_Pin)==KEY_DOWN_LEVEL){
-		 K2++;
-		 if(power_on_state() == power_on){
-
-		    if(K2 > 900000){
-                K2=0;
-				pro_t.long_key_flag =1;
-			    
-				return KEY_MODE_LONG_DOWN;
-
-			}
+	if(gctl_t.gTimer_ctl_select_led < 20){ //30x10ms=300ms
+			LED_RAT_ICON_ON(); 
+	   	}
+		else if(gctl_t.gTimer_ctl_select_led > 19 && gctl_t.gTimer_ctl_select_led < 41){	
+		   LED_RAT_ICON_OFF();
+		}
+		else{
+		   gctl_t.gTimer_ctl_select_led=0;
+		   if(pro_t.mode_key_run_item_step==mode_key_select)
+		   goto led_blink3;
 
 		}
 
-		};      
-       /* 按键扫描完毕，确定按键被按下，返回按键被按下状态 */
-	  K2=0;
-      return KEY_DOWN;
-    }
-  }
-  /* 按键没被按下，返回没被按下状态 */
-  return KEY_UP;
+	   
+	  break;
+	  	
+	  	
+
+   }
+
 }
 
-/**
-  * 函数功能: 读取按键KEY1的状态
-  * 输入参数：无
-  * 返 回 值: KEY_DOWN：按键被按下；
-  *           KEY_UP  ：按键没被按下
-  * 说    明：无。
-  */
-
-KEYState_TypeDef ADD_KEY_StateRead(void)
+/**************************************************************************
+ * 
+ * Function Name: void Mode_Key_Confirm_Fun(void)
+ * Function : "+" and "-" of key as confirm of key be used to 
+ * Input Ref:NO
+ * Return Ref:NO
+ * 
+**************************************************************************/
+void Mode_Key_Confirm_Fun(void)
 {
-  /* 读取此时按键值并判断是否是被按下状态，如果是被按下状态进入函数内 */
-  if(HAL_GPIO_ReadPin(KEY_ADD_GPIO_Port,KEY_ADD_Pin)==KEY_DOWN_LEVEL)
-  {
-    /* 延时一小段时间，消除抖动 */
-    HAL_Delay(20);
-    /* 延时时间后再来判断按键状态，如果还是按下状态说明按键确实被按下 */
-    if(HAL_GPIO_ReadPin(KEY_ADD_GPIO_Port,KEY_ADD_Pin)==KEY_DOWN_LEVEL)
-    {
-      /* 等待按键弹开才退出按键扫描函数 */
-      while(HAL_GPIO_ReadPin(KEY_ADD_GPIO_Port,KEY_ADD_Pin)==KEY_DOWN_LEVEL);      
-       /* 按键扫描完毕，确定按键被按下，返回按键被按下状态 */
-      return KEY_DOWN;
-    }
-  }
-  /* 按键没被按下，返回没被按下状态 */
-  return KEY_UP;
+   switch(gctl_t.select_main_fun_numbers){
+
+      case ptc_fun:
+           if(gctl_t.memory_confimr_key_done ==1){
+            if(ptc_state() == 0){
+				LED_PTC_ICON_ON(); 
+			    Ptc_On();
+				gctl_t.ptc_flag = 1;
+				
+		    }
+			else{
+				LED_PTC_ICON_OFF() ;
+				Ptc_Off();
+				gctl_t.ptc_flag = 0;
+				
+            }
+
+			gctl_t.select_main_fun_numbers--;
+			if(gctl_t.select_main_fun_numbers==0)gctl_t.select_main_fun_numbers=4;
+		    gctl_t.memory_confimr_key_done = 0;
+          }
+	  break;
+
+	  case plasma_fun:
+	  	   if(gctl_t.memory_confimr_key_done ==1){
+
+		 if(plasma_state() == 0){
+			gctl_t.plasma_flag=1;
+			LED_KILL_ICON_ON() ;
+			Plasma_On();
+		}
+     	else{
+		  gctl_t.plasma_flag=0;
+		  LED_KILL_ICON_OFF() ;
+		  Plasma_Off();
+		}
+		gctl_t.select_main_fun_numbers--;
+			if(gctl_t.select_main_fun_numbers==0)gctl_t.select_main_fun_numbers=5;
+		gctl_t.memory_confimr_key_done = 0;
+	  	   }
+	  break;
+
+	  case rat_fun: //ball cat-black
+       if(gctl_t.memory_confimr_key_done ==1){
+	   if(ultrasonic_state() ==0){ //30x10ms=300ms
+	   	    gctl_t.ultrasonic_flag=1;
+			LED_RAT_ICON_ON(); 
+		    Ultrasonic_Pwm_Output();
+			
+			
+	   	}
+		else{	
+		   gctl_t.ultrasonic_flag=0;
+		   LED_RAT_ICON_OFF();
+		   Ultrasonic_Pwm_Stop();
+		  
+				
+		}
+	  gctl_t.select_main_fun_numbers--;
+	  if(gctl_t.select_main_fun_numbers==0)gctl_t.select_main_fun_numbers=6;
+	   gctl_t.memory_confimr_key_done = 0;
+       }
+	   break;
+
+	 }
+   
 }
-
-/**
-  * 函数功能: 读取按键KEY1的状态
-  * 输入参数：无
-  * 返 回 值: KEY_DOWN：按键被按下；
-  *           KEY_UP  ：按键没被按下
-  * 说    明：无。
-  */
-
-KEYState_TypeDef DEC_KEY_StateRead(void)
-{
-  /* 读取此时按键值并判断是否是被按下状态，如果是被按下状态进入函数内 */
-  if(HAL_GPIO_ReadPin(KEY_DEC_GPIO_Port,KEY_DEC_Pin)==KEY_DOWN_LEVEL)
-  {
-    /* 延时一小段时间，消除抖动 */
-    HAL_Delay(20);
-    /* 延时时间后再来判断按键状态，如果还是按下状态说明按键确实被按下 */
-    if(HAL_GPIO_ReadPin(KEY_DEC_GPIO_Port,KEY_DEC_Pin)==KEY_DOWN_LEVEL)
-    {
-      /* 等待按键弹开才退出按键扫描函数 */
-      while(HAL_GPIO_ReadPin(KEY_DEC_GPIO_Port,KEY_DEC_Pin)==KEY_DOWN_LEVEL);      
-       /* 按键扫描完毕，确定按键被按下，返回按键被按下状态 */
-      return KEY_DOWN;
-    }
-  }
-  /* 按键没被按下，返回没被按下状态 */
-  return KEY_UP;
-}
-
-
-
-#endif 
-
 
 

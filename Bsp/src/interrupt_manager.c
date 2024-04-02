@@ -12,7 +12,6 @@ uint8_t voice_inputBuf[1];
 	*Return Ref:NO
 	*
 *******************************************************************************/
-#if 0
 void USART_Cmd_Error_Handler(void)
 {
        HAL_DMA_StateTypeDef flag_dma1_tx_state,flag_dma1_rx_state;
@@ -24,7 +23,7 @@ void USART_Cmd_Error_Handler(void)
 			gctl_t.gTimer_ctl_usart1_error=0;
 			  __HAL_UART_CLEAR_OREFLAG(&huart1);
 	        
-	          temp = USART1->RDR;
+	          temp = USART1->DR;
 	     
 	         HAL_UART_Receive_IT(&huart1,voice_inputBuf,1);//UART receive data interrupt 1 byte
 			 // UART_Start_Receive_IT(&huart1,inputBuf,1);
@@ -37,7 +36,7 @@ void USART_Cmd_Error_Handler(void)
            __HAL_UART_CLEAR_OREFLAG(&huart2);
         
 
-          temp = USART2->RDR;
+          temp = USART2->DR;
 		 
 		    HAL_UART_Receive_IT(&huart2,wifi_t.usart2_dataBuf,1);
 		
@@ -55,7 +54,6 @@ void USART_Cmd_Error_Handler(void)
 		   }
 	 }
 }
-#endif 
 /********************************************************************************
 	**
 	*Function Name:void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -64,7 +62,6 @@ void USART_Cmd_Error_Handler(void)
 	*Return Ref:NO
 	*
 *******************************************************************************/
-#if 0
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     static uint8_t state=0,state_uart1,voice_cmd_time = 0xff;
@@ -303,7 +300,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
   
  
-#endif 
+
 //	__HAL_UART_CLEAR_NEFLAG(&huart1);
 //	__HAL_UART_CLEAR_FEFLAG(&huart1);
 //	__HAL_UART_CLEAR_OREFLAG(&huart1);
@@ -381,21 +378,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	
 	  //wifi counter 
 	 
-//	  wifi_t.gTimer_login_tencent_times++;
-//	  wifi_t.gTimer_publish_dht11++;
-//	  wifi_t.gTimer_auto_detected_net_state_times++;
-//	  wifi_t.gTimer_get_beijing_time++;
-//	  wifi_t.gTimer_read_beijing_time++;
-//	
-//	  
-//	 
-//	  wifi_t.gTimer_linking_tencent_duration++;
-//	  wifi_t.gTimer_power_first_link_tencent ++;
-//	  wifi_t.gTimer_main_pro_times++;
+	  wifi_t.gTimer_login_tencent_times++;
+	  wifi_t.gTimer_publish_dht11++;
+	  wifi_t.gTimer_auto_detected_net_state_times++;
+	  wifi_t.gTimer_get_beijing_time++;
+	  wifi_t.gTimer_read_beijing_time++;
+	
+	  
+	 
+	  wifi_t.gTimer_linking_tencent_duration++;
+	  wifi_t.gTimer_power_first_link_tencent ++;
+	  wifi_t.gTimer_main_pro_times++;
 
-//	  //voice sound 
-//	  v_t.gTimer_voice_time++;
-//	  v_t.gTimer_voice_sound_input_time++;
+	  //voice sound 
+	  v_t.gTimer_voice_time++;
+	  v_t.gTimer_voice_sound_input_time++;
 	  	
 
 	  
@@ -419,20 +416,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 *Return Ref:NO
 *
 *******************************************************************************/
-//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-//{
-//if(huart==&huart1) //voice  sound send 
-//{
-//	v_t.transOngoingFlag=0; //UART Transmit interrupt flag =0 ,RUN
-//}
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart==&huart1) //voice  sound send 
+	{
+		v_t.transOngoingFlag=0; //UART Transmit interrupt flag =0 ,RUN
+	}
 
-////	if(huart== &huart2){
-////
-////       usart2_transOngoingFlag =0;
-////
-////	}
+//	if(huart== &huart2){
+//
+//       usart2_transOngoingFlag =0;
+//
+//	}
 
-//}
+}
 
 
 

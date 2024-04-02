@@ -20,9 +20,6 @@ uint8_t value2 = 0;
 uint8_t value3 = 0;
 uint8_t value4 = 0;
 
-uint8_t flag_dec_key;
-uint8_t flag_add_key;
-
 /**************************************************************
 	*
 	*Function Name:uint8_t KEY_Scan(void)
@@ -166,8 +163,7 @@ uint8_t KEY_Scan(void)
 *
 *********************************************************************/
 #if INTERRUPT_KEY
-//void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
 {
  
     
@@ -188,7 +184,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	case KEY_MODE_Pin:
 
-      if(pro_t.gPower_On == power_on ){   
+      if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0){   
 
   	  pro_t.mode_key_pressed_flag =1;
       pro_t.gTimer_pro_mode_key_adjust =0;
@@ -200,9 +196,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	break;
 
 	case KEY_DEC_Pin:
-	if(pro_t.gPower_On == power_on && DEC_KEY_VALUE()==KEY_DOWN){  
+	if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0 && DEC_KEY_VALUE()==KEY_DOWN){  
 	//pro_t.buzzer_sound_flag = 1;
-		flag_dec_key++;
      pro_t.gKey_value = dec_key_id;
 	//DEC_Key_Fun();
 	}
@@ -211,9 +206,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 
 	case KEY_ADD_Pin:
-	if(pro_t.gPower_On == power_on && ADD_KEY_VALUE()==KEY_DOWN){  
+	if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0 && ADD_KEY_VALUE()==KEY_DOWN){  
 	 // pro_t.buzzer_sound_flag = 1;
-      flag_add_key++;
       pro_t.gKey_value = add_key_id;
 	//ADD_Key_Fun();
 	 }

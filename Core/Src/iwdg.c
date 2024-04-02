@@ -51,11 +51,7 @@ void MX_IWDG_Init(void)
 
 }
 
-/* USER CODE BEGIN 1 */
 
-  /* USER CODE END IWDG_Init 2 */
-
-}
 
 /* USER CODE BEGIN 1 */
 void iwdg_feed(void)
