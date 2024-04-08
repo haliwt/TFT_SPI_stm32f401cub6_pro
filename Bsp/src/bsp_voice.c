@@ -114,7 +114,7 @@ static void voice_set_timer_timing_value(uint8_t time);
 uint8_t key;
 int8_t result;
 
-
+uint8_t voice_cmd_flag;
 
 
 /***********************************************************
@@ -143,12 +143,13 @@ void Rx_Voice_Data_Handler(void(*rx_voice_handler)(uint8_t data))
 void Voice_Decoder_Handler(void)
 {
 
-   static uint8_t voice_cmd_flag;
+  
 
   
    if(v_t.voice_wakeword_enable ==1 && v_t.gTimer_voice_time_counter_start < 16){
 		   voice_cmd_flag=1;
-		if(v_t.voice_power_on_cmd==1 || pro_t.gPower_On == power_on){
+		   if(pro_t.gPower_On == power_on)v_t.voice_power_on_cmd=1;
+		if(v_t.voice_power_on_cmd==1){
 			VOICE_OUTPUT_SOUND_ENABLE();
 			
 	
@@ -185,7 +186,7 @@ void Voice_Decoder_Handler(void)
 		   v_t.voice_wakeword_counter++;
 		  // v_t.voice_decoder_flag=0;
 		   v_t.voice_wakeword_enable =0;
-		 
+		   VOICE_OUTPUT_SOUND_DISABLE();
 	   }
 
   

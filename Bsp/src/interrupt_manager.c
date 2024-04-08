@@ -175,9 +175,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	   case 4:
 
 	     if(voice_inputBuf[0]==0x01){
-		 	  v_t.voice_wakeword_enable=1;
+		 	 
 			  VOICE_OUTPUT_SOUND_ENABLE();
-	
+	           v_t.voice_wakeword_enable=1;
 			
 			  v_t.RxBuf[0]= voice_inputBuf[0];
 		
@@ -194,6 +194,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			   if(v_t.RxBuf[0]==0x02){
 			   	//power On command
 			   	  v_t.voice_power_on_cmd = 1;
+				 VOICE_OUTPUT_SOUND_ENABLE();
 				  if(pro_t.gPower_On == power_off){
 				  	pro_t.gPower_On = power_on;
 					gctl_t.ptc_warning =0;
@@ -201,10 +202,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				  }
 
 				   pro_t.long_key_flag =0;
-		          // pro_t.run_process_step=0;
-
-					
-				   VOICE_OUTPUT_SOUND_ENABLE();
 				  
 
                }
@@ -257,6 +254,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      if(voice_inputBuf[0] == 0x22){ //power on cmd
 		  
                v_t.RxBuf[1]=voice_inputBuf[0];
+			   
 			   state_uart1=8; 
 		  }
 		  else if(voice_inputBuf[0]==0x23){ //power off
@@ -279,10 +277,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 			   v_t.RxBuf[1]=voice_inputBuf[0];
 			   state_uart1=7; 
-		   }
-		   else{
-			  VOICE_OUTPUT_SOUND_DISABLE();
-			  state_uart1=0; 
 		   }
 	     }
 		 else{
@@ -330,11 +324,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			   state_uart1=0; 
 
 		  }
-		  else{
-			  state_uart1=0; 
-
-
-		  }
+		
 		  
 
      break;
@@ -342,7 +332,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	 
 	  }
 
-			HAL_UART_Receive_IT(&huart2,voice_inputBuf,1);//UART receive data interrupt 1 byte
+	HAL_UART_Receive_IT(&huart2,voice_inputBuf,1);//UART receive data interrupt 1 byte
 
 	}
 	
