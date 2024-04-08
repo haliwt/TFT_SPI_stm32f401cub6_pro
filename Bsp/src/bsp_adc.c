@@ -172,9 +172,6 @@ static void Judge_Fan_State(uint16_t adc_value)
 		detect_error_times++;
 
      }
-
-
-
 }
 
 
