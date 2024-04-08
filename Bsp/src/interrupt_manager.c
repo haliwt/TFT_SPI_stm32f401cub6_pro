@@ -197,6 +197,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				 VOICE_OUTPUT_SOUND_ENABLE();
 				  if(pro_t.gPower_On == power_off){
 				  	pro_t.gPower_On = power_on;
+					pro_t.run_process_step=0;
 					gctl_t.ptc_warning =0;
 				    gctl_t.fan_warning =0;
 				  }
@@ -264,6 +265,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				v_t.voice_power_on_cmd = 0;
 			  	if(pro_t.gPower_On == power_on){
 					pro_t.gPower_On = power_off;
+					
 					pro_t.power_off_flag=1;
 
 			  	}
