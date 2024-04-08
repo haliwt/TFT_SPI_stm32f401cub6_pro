@@ -13,7 +13,7 @@ void Key_Speical_Power_Fun_Handler(void)
 {
 	static uint8_t  power_on_off ;
 	//be pressed long time key of function that link tencent cloud funtion 
-    static uint8_t delay_pw,pw_flag;
+   
 	 if(ptc_error_state()==0 && fan_error_state()==0){
 	 if(pro_t.key_power_be_pressed_flag==1){
          if(POWER_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_power_key_adjust > 2 &&  pro_t.gPower_On == power_on){
@@ -234,7 +234,7 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 void ADD_Key_Fun(void)
 {
 
- static uint8_t select_flag,disp_temp_value,timer_timing_flag;
+ static uint8_t disp_temp_value,timer_timing_flag;
  if(power_on_state()==power_on){
 
 	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0){

@@ -107,15 +107,15 @@ static void RunWifi_Command_Handler(void)
 
 		if(wifi_link_net_state()==1){
 
-		wifi_t.linking_tencent_cloud_doing=0;
-		wifi_t.has_been_login_flag = 1;
-		wifi_t.get_rx_beijing_time_enable=0;
-		wifi_t.gTimer_main_pro_times =0;
-		wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;//wifi_tencent_subscription_data;
-		step_flag =1;
+			wifi_t.linking_tencent_cloud_doing=0;
+			wifi_t.has_been_login_flag = 1;
+			wifi_t.get_rx_beijing_time_enable=0;
+			wifi_t.gTimer_main_pro_times =0;
+			wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;//wifi_tencent_subscription_data;
+			step_flag =1;
 
 
-	}
+		}
 
 	break;
 
@@ -336,11 +336,7 @@ static void RunWifi_Command_Handler(void)
 		wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 	}
 
-
-
-
-
-	break;
+   break;
 
 	   
 	  default:
@@ -393,10 +389,7 @@ void Wifi_Rx_Auto_Link_Net_Handler(void)
 	   strncpy((char *)wifi_t.auto_det_data, (const char *)wifi_t.wifi_data,150);
 	   wifi_t.get_rx_auto_repeat_net_enable =1;
 
-
-	
-	   
-	   if(strstr((const char*)wifi_t.auto_det_data,"QTTSTATE:0")){
+       if(strstr((const char*)wifi_t.auto_det_data,"QTTSTATE:0")){
 
 			 wifi_t.esp8266_login_cloud_success=0;
              wifi_t.gTimer_auto_detected_net_state_times=0;
@@ -443,9 +436,6 @@ static void auto_repeat_init_link_net(void)
 		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
 		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
 		HAL_Delay(1000);
-
-
-
 }
 
 static void auto_repeat_tencnet_net(void)
@@ -459,9 +449,5 @@ static void auto_repeat_tencnet_net(void)
 			HAL_Delay(1000);
 			HAL_Delay(1000);
 		
-		
-		 
-
-
 }
 

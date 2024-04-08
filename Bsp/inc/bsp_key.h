@@ -8,13 +8,13 @@
 #define NORMAL_KEY_2                 0
 #define NORMAL_KEY_3                 0
 
-#define POWER_KEY_VALUE()            HAL_GPIO_ReadPin(KEY_POWER_GPIO_Port,KEY_POWER_Pin)
+#define POWER_KEY_VALUE()            sys_gpio_pin_get(KEY_POWER_GPIO_Port,KEY_POWER_Pin)//HAL_GPIO_ReadPin(KEY_POWER_GPIO_Port,KEY_POWER_Pin)
 
-#define MODE_KEY_VALUE()             HAL_GPIO_ReadPin(KEY_MODE_GPIO_Port,KEY_MODE_Pin)
+#define MODE_KEY_VALUE()             sys_gpio_pin_get(KEY_MODE_GPIO_Port,KEY_MODE_Pin)
 
 
-#define DEC_KEY_VALUE()              HAL_GPIO_ReadPin(KEY_DEC_GPIO_Port,KEY_DEC_Pin)
-#define ADD_KEY_VALUE()              HAL_GPIO_ReadPin(KEY_ADD_GPIO_Port,KEY_ADD_Pin)
+#define DEC_KEY_VALUE()              sys_gpio_pin_get(KEY_DEC_GPIO_Port,KEY_DEC_Pin)
+#define ADD_KEY_VALUE()              sys_gpio_pin_get(KEY_ADD_GPIO_Port,KEY_ADD_Pin)
 
 
 
@@ -153,6 +153,7 @@ void Key_Init(void);
 
 
 
+uint8_t sys_gpio_pin_get(GPIO_TypeDef *p_gpiox, uint16_t pinx);
 
 
 void SplitDispose_Key(uint8_t value);

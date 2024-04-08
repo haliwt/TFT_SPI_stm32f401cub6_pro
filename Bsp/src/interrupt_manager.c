@@ -14,10 +14,11 @@ uint8_t voice_inputBuf[1];
 *******************************************************************************/
 void USART_Cmd_Error_Handler(void)
 {
-       HAL_DMA_StateTypeDef flag_dma1_tx_state,flag_dma1_rx_state;
+    uint32_t temp;   
+	HAL_DMA_StateTypeDef flag_dma1_tx_state;
 	   DMA_HandleTypeDef hdma_spi1_tx;
 	   DMA_HandleTypeDef hdma_spi1_rx;
-	   uint32_t temp;
+	  
        if(gctl_t.gTimer_ctl_usart1_error > 6 ){ //9
 			
 			gctl_t.gTimer_ctl_usart1_error=0;
@@ -64,10 +65,10 @@ void USART_Cmd_Error_Handler(void)
 *******************************************************************************/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    static uint8_t state=0,state_uart1,voice_cmd_time = 0xff;
-    uint32_t temp ;
-    //wifi usart2
-    if(huart->Instance==USART2)
+    static uint8_t state_uart1,voice_cmd_time = 0xff;
+   
+    //wifi usart1
+    if(huart->Instance==USART1)
     {
            
          
@@ -121,7 +122,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	}
 
 
-  if(huart->Instance==USART1){
+  if(huart->Instance==USART2){
 
 		switch(state_uart1)
 		{
@@ -211,7 +212,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 		   v_t.rx_enable_voice_output = 2;
 		   v_t.gTimer_voice_sound_input_time=0;
-		   Voice_GPIO_Dir_Output_Init();
+		  // Voice_GPIO_Dir_Output_Init();
+		      VOICE_MUTE_ENABLE();
 
 		  }
 		 
@@ -364,6 +366,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	
 	  pro_t.gTimer_pro_mode_long_key++;
 	  pro_t.gTimer_pro_action_publis++;
+	  pro_t.gTimer_pro_display_dht11_hum++;
 	 
 
 	  //gctl_t 

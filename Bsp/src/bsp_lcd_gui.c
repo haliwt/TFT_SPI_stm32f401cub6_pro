@@ -216,7 +216,7 @@ void TFT_Disp_Onley_Set_TimerTime_Value(void)
 {
 
    static uint8_t timer_decade_hours,timer_unit_hours,timer_decade_minutes,timer_unit_minutes;
-   static uint8_t set_timer_hours=0xff,disp_timer_words=0xff;
+   
   
 
   
@@ -419,7 +419,7 @@ void TFT_Disp_Voice_Set_TimerTime_Init(void)
 {
 
    static uint8_t timer_decade_hours,timer_unit_hours,timer_decade_minutes,timer_unit_minutes;
-   static uint8_t set_timer_hours=0xff,disp_timer_words=0xff;
+   static uint8_t disp_timer_words=0xff;
    static uint8_t bc;
 
    bc = 0;
@@ -534,7 +534,7 @@ void TFT_Disp_Temp_Value(uint8_t bc,uint8_t temp_value)
 void TFT_Disp_Voice_Temp_Value(uint8_t bc,uint8_t temp_value)
 {
 
-   static uint8_t temp_unit,temp_decade,refresh_one=0xff,refresh_two=0xff;
+   static uint8_t temp_unit,temp_decade;
 
    temp_decade = temp_value /10;
 

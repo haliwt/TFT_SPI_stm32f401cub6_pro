@@ -190,7 +190,8 @@ void Voice_Decoder_Handler(void)
        v_t.rx_voice_cmd_enable =0;
 	   v_t.recoder_cmd_counter++;
 
-	   Voice_GPIO_Dir_Output_Init();
+	  // Voice_GPIO_Dir_Output_Init();
+	   VOICE_MUTE_ENABLE();
 	}
 
 	
@@ -202,6 +203,7 @@ void Voice_Decoder_Handler(void)
 	    switch(v_t.rx_enable_voice_output){
 
 		 case 1:
+		   VOICE_MUTE_DISABLE();
 		   Voice_GPIO_Dir_Iniput_Init();
 
 
@@ -213,13 +215,12 @@ void Voice_Decoder_Handler(void)
 		 
 	       if(v_t.gTimer_voice_sound_input_time< 10){
 		   	
-			 Voice_GPIO_Dir_Output_Init();
+			 //Voice_GPIO_Dir_Output_Init();
+			   VOICE_MUTE_ENABLE();
 
             }
 		    else{
 				v_t.rx_enable_voice_output=3;
-
-
 			}
            
 			
@@ -230,11 +231,13 @@ void Voice_Decoder_Handler(void)
     	
 		    v_t.gTimer_voice_sound_input_time=0;
 			Voice_GPIO_Dir_Iniput_Init();
+		    VOICE_MUTE_DISABLE();
 
 		 break;
 
 		 case 0xff:
 			Voice_GPIO_Dir_Iniput_Init();
+			VOICE_MUTE_DISABLE();
 
 		 break;
 
@@ -383,11 +386,11 @@ static void voice_cmd_fun(uint8_t cmd)
    case voice_close_plasma:
    	if(v_t.voice_soun_output_enable ==1){
    	 if(plasma_state()==0){
-		// buzzer_sound();//SendData_Buzzer();
+	
 
 	 }
 	 else{
-   	    // buzzer_sound();
+   	  
 	     gctl_t.plasma_flag=0;
 		 Plasma_Off();
 		 LED_KILL_ICON_OFF() ;
@@ -399,11 +402,11 @@ static void voice_cmd_fun(uint8_t cmd)
 	case voice_open_rat:
 		if(v_t.voice_soun_output_enable ==1){
 		 if(ultrasonic_state() ==1){
-		//	buzzer_sound();//SendData_Buzzer();
+		
 
          }
 		 else{
-		//	buzzer_sound();
+	
             gctl_t.ultrasonic_flag =1;
 			Ultrasonic_Pwm_Output();
 		    LED_RAT_ICON_ON();
@@ -452,7 +455,8 @@ static void  voice_set_temperature_value(uint8_t value)
 
         }
 		else{
-           VOICE_SOUND_DISABLE();
+          // VOICE_SOUND_DISABLE();
+		   VOICE_MUTE_ENABLE();
    
 		}
 
@@ -489,7 +493,8 @@ static void voice_set_timer_timing_value(uint8_t time)
 	TFT_Disp_Voice_Set_TimerTime_Init();
     }
 	else{
-       VOICE_SOUND_DISABLE();
+      // VOICE_SOUND_DISABLE();
+	   VOICE_MUTE_ENABLE();
 
 	}
 
@@ -545,23 +550,23 @@ static int8_t BinarySearch_Voice_Data(const uint8_t *pta,uint8_t key)
 ***********************************************************************************/
 void Voice_GPIO_Dir_Output_Init(void)
 {
-GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-/* GPIO Ports Clock Enable */
-__HAL_RCC_GPIOC_CLK_ENABLE();
-
-
-/*Configure GPIO pin Output Level */
-HAL_GPIO_WritePin(GPIOC,VOICE_IN_Pin,GPIO_PIN_RESET);
+	/* GPIO Ports Clock Enable */
+	__HAL_RCC_GPIOC_CLK_ENABLE();
 
 
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOC,VOICE_IN_Pin,GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PCPin PCPin */
-GPIO_InitStruct.Pin = VOICE_IN_Pin;
-GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
- GPIO_InitStruct.Pull = GPIO_NOPULL;
-GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+
+	/*Configure GPIO pins : PCPin PCPin */
+	GPIO_InitStruct.Pin = VOICE_IN_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 
 }
@@ -597,8 +602,6 @@ void Voice_Warning_Sound_Ptc(void)
 
 
 }
-
-
 
 /********************************************************************************
 	**
@@ -646,13 +649,7 @@ static void sendData_VoiceSound_Warning_Ptc(void)
 *******************************************************************************/
 void Voice_Warning_Sound_Fan(void)
 {
-
-	
 	sendData_VoiceSound_Warning_Fan();
-
-
-
-
 }
 
 /********************************************************************************

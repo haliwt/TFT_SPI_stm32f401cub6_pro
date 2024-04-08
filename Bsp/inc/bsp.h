@@ -197,6 +197,7 @@ typedef struct{
   uint8_t gTimer_pro_confir_delay;
   uint8_t gTimer_pro_action_publis;
   uint8_t gTimer_pro_mode_long_key;
+  uint8_t gTimer_pro_display_dht11_hum;
   
 	
 
@@ -223,4 +224,3 @@ void Mode_Long_Key_Fun(void);;
 
 
 #endif 
-

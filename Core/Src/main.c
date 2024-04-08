@@ -101,11 +101,18 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  delay_init(64); 
+  bsp_ctl_init();
+  Wifi_Init();
   TFT_BACKLIGHT_OFF();
-  LCD_GPIO_Reset();
   TFT_LCD_Init();
   HAL_TIM_Base_Start_IT(&htim10);
 
+
+  HAL_UART_Receive_IT(&huart2,wifi_t.usart2_dataBuf,1);
+  
+  HAL_UART_Receive_IT(&huart1,voice_inputBuf,1);//HAL_UART_Receive_IT(&huart1,voice_inputBuf,8);
+  pro_t.buzzer_sound_flag=1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -115,8 +122,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  bsp_Idle();
-     Voice_Decoder_Handler();
+	bsp_Idle();
+    Voice_Decoder_Handler();
 	TFT_Process_Handler();
 	 WIFI_Process_Handler();
 	USART_Cmd_Error_Handler();

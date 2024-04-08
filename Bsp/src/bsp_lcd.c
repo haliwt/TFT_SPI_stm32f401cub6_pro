@@ -67,13 +67,11 @@ static uint8_t SPI_WriteByte(uint8_t *txdata,uint16_t size)
 void LCD_GPIO_Reset(void)
 {
 
-    
-	LCD_RST_SetHigh();
-	HAL_Delay(500);
+
 	LCD_RST_SetLow();
-    HAL_Delay(200);
+    HAL_Delay(100);
     LCD_RST_SetHigh();
-	HAL_Delay(50);
+	HAL_Delay(100);
 
 }
 /*******************************************************************************
@@ -392,7 +390,7 @@ void DISPLAY_image(void)
 void TFT_LCD_Init(void)
 {
     /* 关闭睡眠模式 */
-	//LCD_GPIO_Reset();
+	LCD_GPIO_Reset();
 
 	//TFT_BACKLIGHT_ON();
     LCD_Write_Cmd(0x11);

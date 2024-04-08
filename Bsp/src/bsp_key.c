@@ -20,6 +20,26 @@ uint8_t value2 = 0;
 uint8_t value3 = 0;
 uint8_t value4 = 0;
 
+/**
+ * @brief       读取GPIO某个引脚的状态
+ * @param       p_gpiox: GPIOA~GPIOG, GPIO指针
+ * @param       0X0000~0XFFFF, 引脚位置, 每个位代表一个IO, 第0位代表Px0, 第1位代表Px1, 依次类推. 比如0X0101, 代表同时设置Px0和Px8.
+ *   @arg       SYS_GPIO_PIN0~SYS_GPIO_PIN15, 1<<0 ~ 1<<15
+ * @retval      返回引脚状态, 0, 低电平; 1, 高电平
+ */
+uint8_t sys_gpio_pin_get(GPIO_TypeDef *p_gpiox, uint16_t pinx)
+{
+    if (p_gpiox->IDR & pinx)
+    {
+        return 1;   /* pinx的状态为1 */
+    }
+    else
+    {
+        return 0;   /* pinx的状态为0 */
+    }
+}
+
+
 /**************************************************************
 	*
 	*Function Name:uint8_t KEY_Scan(void)
@@ -163,7 +183,7 @@ uint8_t KEY_Scan(void)
 *
 *********************************************************************/
 #if INTERRUPT_KEY
-void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
  
     

@@ -4,7 +4,7 @@ static void TFT_Donnot_Set_Timer_Time(void);
 
 void TimeTimer_Pro_Handler(void)
 {
-  static uint8_t timer_blink_times;
+ 
   
   switch(pro_t.timer_mode_flag){
 
