@@ -52,7 +52,7 @@ void Fan_Pro_Handler(void)
 		 if(gctl_t.gTimer_ctl_fan_adc_times > 50 )
 		 	{ 
 	        gctl_t.gTimer_ctl_fan_adc_times =0;
-	        Get_Fan_Adc_Fun(ADC_CHANNEL_0,5); //Modify :2023.09.03  //Get_Fan_Adc_Fun(ADC_CHANNEL_0,10); 
+	        Get_Fan_Adc_Fun(); //Modify :2023.09.03  //Get_Fan_Adc_Fun(ADC_CHANNEL_0,10); 
 	     }
 		
 	   break;

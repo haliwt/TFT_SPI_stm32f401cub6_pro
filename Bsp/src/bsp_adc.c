@@ -1,9 +1,9 @@
 #include "bsp_adc.h"
 #include "bsp.h"
 
-static uint16_t Get_Adc_Channel(uint32_t ch) ;
+static uint16_t Get_Adc_Channel(uint32_t ch,uint32_t rank) ;
 
-static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times);
+static uint16_t Get_Adc_Average(uint32_t ch,uint32_t,uint8_t times);
 
 static void Judge_PTC_Temperature_Value(uint16_t adc_ptc);
 
@@ -20,16 +20,18 @@ uint16_t fan_detect_voltage;
 	*
 	*
 *****************************************************************/
-static uint16_t Get_Adc_Channel(uint32_t ch)   
+static uint16_t Get_Adc_Channel(uint32_t ch,uint32_t rank)   
 {
-    ADC_ChannelConfTypeDef ADC1_ChanConf;
+    ADC_ChannelConfTypeDef adc_channel;
 
-	ADC1_ChanConf.Channel=ch;                                   //Í¨µÀ
-    //ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序列
-   // ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
-
-
-	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        //Í¨µÀÅäÖÃ
+	 /* ÅäÖÃ¶ÔÓ¦ADCÍ¨µÀ */
+   
+    adc_channel.Channel = ch;               /* ÉèÖÃADCX¶ÔÍ¨µÀch */
+    adc_channel.Rank = rank;                /* ÉèÖÃ²ÉÑùÐòÁÐ */
+	adc_channel.Offset = 0;
+    adc_channel.SamplingTime = ADC_SAMPLETIME_480CYCLES;       /* ÉèÖÃ²ÉÑùÊ±¼ä */
+           
+    HAL_ADC_ConfigChannel(&hadc1,&adc_channel);        //Í¨µÀÅäÖÃ
 	
     HAL_ADC_Start(&hadc1);                               //start ADC transmit
 	
@@ -46,26 +48,26 @@ static uint16_t Get_Adc_Channel(uint32_t ch)
 	*
 	*
 *****************************************************************/
-static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times)
+static uint16_t Get_Adc_Average(uint32_t ch,uint32_t rank,uint8_t times)
 {
 	uint32_t temp_val=0;
 	uint8_t t;
 	for(t=0;t<times;t++)
 	{
-		temp_val+=Get_Adc_Channel(ch);
+		temp_val+=Get_Adc_Channel(ch,rank);
 		delay_ms(5);
 	}
 	return temp_val/times;
 } 
 
 
-
-void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times)
+//ADC_CHANNEL_1 PTC
+void Get_PTC_Temperature_Voltage(void)
 {
     static uint8_t times_i;
 	uint16_t adcx;
 	
-	adcx = Get_Adc_Average(channel,times);
+	adcx = Get_Adc_Average(ADC_CHANNEL_1,2,5);
 
     ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
 
@@ -127,13 +129,13 @@ static void Judge_PTC_Temperature_Value(uint16_t adc_ptc)
 	*
 	*
 *****************************************************************/
-void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
+void Get_Fan_Adc_Fun(void)
 {
 	uint16_t adc_fan_hex;
 	
 	
 	
-	adc_fan_hex = Get_Adc_Average(channel,times);
+	adc_fan_hex = Get_Adc_Average(ADC_CHANNEL_0,1,5);
 
     fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 	HAL_Delay(5);
