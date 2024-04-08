@@ -59,10 +59,12 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, SPI_NSS_Pin|LED_POWER_Pin, GPIO_PIN_RESET);
 
+    /*Configure GPIO pin Output Level LED state*/
+  HAL_GPIO_WritePin(GPIOB, LED_WIFI_Pin|LED_KILL_Pin|LED_PTC_Pin|LED_RAT_Pin, GPIO_PIN_SET);
+
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, TFT_BACKLIGHT_Pin|TFT_DCX_Pin|TFT_RESET_Pin|LED_WIFI_Pin
-                          |LED_KILL_Pin|LED_KEY_TIM_Pin|PLASMA_CTL_Pin|RELAY_CTL_Pin
-                          |WIFI_EN_Pin|LED_PTC_Pin|LED_RAT_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, TFT_BACKLIGHT_Pin|TFT_DCX_Pin|TFT_RESET_Pin|PLASMA_CTL_Pin|RELAY_CTL_Pin
+                          |WIFI_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PCPin PCPin PCPin */
   GPIO_InitStruct.Pin = FAN_CTL_2_Pin|FAN_CTL_1_Pin|TEMP_SENSOR_Pin;
