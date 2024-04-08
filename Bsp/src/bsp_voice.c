@@ -145,111 +145,48 @@ void Voice_Decoder_Handler(void)
 
    static uint8_t voice_cmd_flag;
 
-  if(v_t.rx_voice_cmd_enable ==1 && v_t.gTimer_voice_time < 15){
-  	   Voice_GPIO_Dir_Iniput_Init();
-	   v_t.rx_enable_voice_output=0xff;
-		
-		voice_cmd_flag=1;
-	if(v_t.rx_voice_data_enable==1){
-		
-		v_t.rx_voice_data_enable =0;
-
-	key= v_t.RxBuf[0] + v_t.RxBuf[1]; //key= data4+ data6 = ; //A5 FA 00 81 01 00 21 FB 
-
-	result = BinarySearch_Voice_Data(voice_sound_data,key);
-
-
-    if(result < 0x0A && result > 0){
-	   voice_cmd_fun(result);
-
-    }
-    else if(result > 9 && result < 31){ //set temperature value 
-		   
-            voice_set_temperature_value(result);
+  
+   if(v_t.voice_wakeword_enable ==1 && v_t.gTimer_voice_time_counter_start < 16){
+		   voice_cmd_flag=1;
+		if(v_t.voice_power_on_cmd==1 || pro_t.gPower_On == power_on){
+			VOICE_OUTPUT_SOUND_ENABLE();
 			
-		
-
-	}
-	else if(result > 30 && result <55){ //set timer timing value 
 	
-		input_set_timer_timing_flag =1;
-		voice_set_timer_timing_value(result);
-		
-		
-
-	 }
-    }
-
-   
-	}
-
-
-    if(v_t.gTimer_voice_time > 14 && voice_cmd_flag==1){
-	   voice_cmd_flag++;
-
-       v_t.rx_voice_cmd_enable =0;
-	   v_t.recoder_cmd_counter++;
-
-	  // Voice_GPIO_Dir_Output_Init();
-	   VOICE_MUTE_ENABLE();
-	}
-
+		key= v_t.RxBuf[0] + v_t.RxBuf[1]; //key= data4+ data6 = ; //A5 FA 00 81 01 00 21 FB 
 	
-
+		result = BinarySearch_Voice_Data(voice_sound_data,key);
 	
-
-	if(pro_t.gPower_On == power_on &&  voice_cmd_flag==2){
-
-	    switch(v_t.rx_enable_voice_output){
-
-		 case 1:
-		   VOICE_MUTE_DISABLE();
-		   Voice_GPIO_Dir_Iniput_Init();
-
-
-		 break;
-
-
-
-         case 2:
-		 
-	       if(v_t.gTimer_voice_sound_input_time< 10){
-		   	
-			 //Voice_GPIO_Dir_Output_Init();
-			   VOICE_MUTE_ENABLE();
-
-            }
-		    else{
-				v_t.rx_enable_voice_output=3;
-			}
-           
-			
-			
-		 break;
-
-		 case 3:
-    	
-		    v_t.gTimer_voice_sound_input_time=0;
-			Voice_GPIO_Dir_Iniput_Init();
-		    VOICE_MUTE_DISABLE();
-
-		 break;
-
-		 case 0xff:
-			Voice_GPIO_Dir_Iniput_Init();
-			VOICE_MUTE_DISABLE();
-
-		 break;
-
-		 
-
-		  }
-
+	
+		if(result < 0x0A && result > 0){
+		   voice_cmd_fun(result);
+	
+		}
+		
+	   if(result > 9 && result < 31){ //set temperature value 
+			   
+			   voice_set_temperature_value(result);
 	   }
-
-
+	   else if(result > 30 && result <55){ //set timer timing value 
+		
 	
-
+			voice_set_timer_timing_value(result);
+			
+			
+	
+		 }
+		}
+		
+	   
+	}
+	
+	  
+	  if(v_t.gTimer_voice_time_counter_start > 15 && voice_cmd_flag==1){
+		   voice_cmd_flag++;
+		   v_t.voice_wakeword_counter++;
+		  // v_t.voice_decoder_flag=0;
+		   v_t.voice_wakeword_enable =0;
+		 
+	   }
 
   
 	
@@ -271,46 +208,9 @@ static void voice_cmd_fun(uint8_t cmd)
 	
 	switch(cmd){
 
-	case voice_power_on:
-	  
-	   	if(pro_t.gPower_On == power_on){
-			
-           v_t.voice_soun_output_enable = 1;
-	
-            
-        }
-		else{
-            v_t.voice_soun_output_enable = 1;
-	
-		    pro_t.gPower_On = power_on;   
-            pro_t.long_key_flag =0;
-            pro_t.run_process_step=0;
-
-			gctl_t.ptc_warning =0;
-		    gctl_t.fan_warning =0;
-			
-		}
-		
-	break;
-
-	case voice_power_off:
-		if(pro_t.gPower_On == power_off){
-			v_t.voice_soun_output_enable = 0;
-			
-
-		}
-		else{
-			v_t.voice_soun_output_enable = 0;
-		    pro_t.power_off_flag=1;
-			pro_t.gPower_On = power_off; 
-			v_t.voice_cmd_power_off_flag =1;
-		
-			
-		}
-	break;
 
 	case voice_link_wifi:
-		if(v_t.voice_soun_output_enable ==1){
+		
 		if(wifi_link_net_state()==0){
 		    
 		    wifi_t.link_tencent_step_counter=0;
@@ -322,7 +222,7 @@ static void voice_cmd_fun(uint8_t cmd)
 			wifi_t.gTimer_linking_tencent_duration=0; //166s -2分7秒
            
 		}
-		}
+		
 		
 		
 
@@ -331,7 +231,7 @@ static void voice_cmd_fun(uint8_t cmd)
 
 	case voice_open_ptc:
 
-	if(v_t.voice_soun_output_enable ==1){
+
      if(ptc_state()==1 ){
       // buzzer_sound();
 	 }
@@ -343,14 +243,14 @@ static void voice_cmd_fun(uint8_t cmd)
 	    LED_PTC_ICON_ON();
 
 	 }
-	}
+	
 	
      
    
     break;
 
 	case voice_close_ptc:
-		if(v_t.voice_soun_output_enable ==1){
+	
 		 if(ptc_state() == 0){
           
           //  buzzer_sound();
@@ -362,12 +262,12 @@ static void voice_cmd_fun(uint8_t cmd)
 			Ptc_Off();
 		    LED_PTC_ICON_OFF();
 		 }
-		}
+		
 		
 	break;
 
 	case voice_open_plasma:
-		if(v_t.voice_soun_output_enable ==1){
+	
 		 if(plasma_state()==1){
 			//buzzer_sound();//SendData_Buzzer();
 			
@@ -379,12 +279,12 @@ static void voice_cmd_fun(uint8_t cmd)
 		 Plasma_On();
 		 LED_KILL_ICON_ON() ;
 		}
-		}
+		
 	
   
 	break;
    case voice_close_plasma:
-   	if(v_t.voice_soun_output_enable ==1){
+  
    	 if(plasma_state()==0){
 	
 
@@ -395,12 +295,12 @@ static void voice_cmd_fun(uint8_t cmd)
 		 Plasma_Off();
 		 LED_KILL_ICON_OFF() ;
 	 }
-   	}
+   	
 	
 	break;
 
 	case voice_open_rat:
-		if(v_t.voice_soun_output_enable ==1){
+
 		 if(ultrasonic_state() ==1){
 		
 
@@ -411,11 +311,11 @@ static void voice_cmd_fun(uint8_t cmd)
 			Ultrasonic_Pwm_Output();
 		    LED_RAT_ICON_ON();
 		 }
-		}
+		
 		
 	break;
 	case voice_close_rat:
-		if(v_t.voice_soun_output_enable ==1){
+	
 		if(ultrasonic_state() ==0){
 		//	buzzer_sound();//SendData_Buzzer();
 
@@ -426,7 +326,7 @@ static void voice_cmd_fun(uint8_t cmd)
 		 Ultrasonic_Pwm_Stop();
 		 LED_RAT_ICON_OFF();
 		}
-		}
+		
 		
 	break;
 	
@@ -444,7 +344,7 @@ static void voice_cmd_fun(uint8_t cmd)
 *************************************************************************************/
 static void  voice_set_temperature_value(uint8_t value)
 {
-        if(v_t.voice_soun_output_enable ==1){
+      
 			value = 10+value;
 		//	pro_t.buzzer_sound_flag =1;
 			gctl_t.gSet_temperature_value = value;
@@ -453,13 +353,8 @@ static void  voice_set_temperature_value(uint8_t value)
 	        v_t.voice_set_temperature_value_flag=1;
 	       TFT_Disp_Voice_Temp_Value(0,gctl_t.gSet_temperature_value); 
 
-        }
-		else{
-          // VOICE_SOUND_DISABLE();
-		   VOICE_MUTE_ENABLE();
-   
-		}
-
+        
+		
 }
 /***********************************************************
  *  *
@@ -471,7 +366,7 @@ static void  voice_set_temperature_value(uint8_t value)
 ***********************************************************/
 static void voice_set_timer_timing_value(uint8_t time)
 {
-    if(v_t.voice_soun_output_enable ==1){
+
 	pro_t.mode_key_pressed_flag =0;
 //	Buzzer_KeySound();
 	pro_t.gTimer_pro_mode_key_be_select = 0; 
@@ -479,7 +374,7 @@ static void voice_set_timer_timing_value(uint8_t time)
     v_t.voice_set_timer_timing_value = time - 30;
     
 	gctl_t.gSet_timer_hours = v_t.voice_set_timer_timing_value ;
-	v_t.voice_input_timer_flag =1;
+
 
 	pro_t.mode_key_run_item_step = mode_key_timer_time;
 	pro_t.timer_mode_flag=timer_set_time; //set timer mode enable
@@ -491,12 +386,8 @@ static void voice_set_timer_timing_value(uint8_t time)
 	
 
 	TFT_Disp_Voice_Set_TimerTime_Init();
-    }
-	else{
-      // VOICE_SOUND_DISABLE();
-	   VOICE_MUTE_ENABLE();
-
-	}
+   
+	
 
 }
 /****************************************************************************************
@@ -540,53 +431,7 @@ static int8_t BinarySearch_Voice_Data(const uint8_t *pta,uint8_t key)
    return -1;
 
 }
-/**********************************************************************************
- *  *
-    *Function Name: void Voice_Hello_Word_Handler(uint8_t(*hello_handler)(void))
-    *Function: decoder to command 
-    *Input Ref: NO
-    *Return Ref:  NO
-    * 
-***********************************************************************************/
-void Voice_GPIO_Dir_Output_Init(void)
-{
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	/* GPIO Ports Clock Enable */
-	__HAL_RCC_GPIOC_CLK_ENABLE();
-
-
-	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOC,VOICE_IN_Pin,GPIO_PIN_RESET);
-
-
-
-	/*Configure GPIO pins : PCPin PCPin */
-	GPIO_InitStruct.Pin = VOICE_IN_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-
-}
-
-void Voice_GPIO_Dir_Iniput_Init(void)
-{
-
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-
-/*Configure GPIO pins : PCPin PCPin */
-  GPIO_InitStruct.Pin = VOICE_IN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;//GPIO_MODE_OUTPUT_PP;
-
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-}
 /***********************************************************************************
  *  *
     *Function Name: static void voice_cmd_fun(uint8_t cmd)
