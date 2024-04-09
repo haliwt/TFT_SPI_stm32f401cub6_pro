@@ -306,6 +306,7 @@ void ADD_Key_Fun(void)
 		gctl_t.local_set_temp_value = 1;
     	TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
 	    gctl_t.gTimer_ctl_publish_set_temperature_value = 0;
+		pro_t.add_or_dec_is_cofirm_key_flag =0;
 
     }
     if(timer_timing_flag ==1){
@@ -399,6 +400,7 @@ void DEC_Key_Fun(void)
 			gctl_t.local_set_temp_value =1;
     		TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
 		    gctl_t.gTimer_ctl_publish_set_temperature_value = 0;
+			pro_t.add_or_dec_is_cofirm_key_flag =0;
 
     	}
 	    if(timer_timing_flag ==1){

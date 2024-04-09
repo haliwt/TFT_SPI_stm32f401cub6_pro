@@ -652,7 +652,6 @@ void Json_Parse_Command_Fun(void)
 		 Ptc_Off();
 	     LED_PTC_ICON_OFF();
 		 gctl_t.ptc_flag=0;
-		 //gctl_t.gSet_temperature_value =20;
 		 pro_t.add_or_dec_is_cofirm_key_flag =1;
 		 
          MqttData_Publish_SetPtc(0);
