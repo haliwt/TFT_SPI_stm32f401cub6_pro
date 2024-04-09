@@ -8,6 +8,9 @@ uint16_t  POINT_COLOR=WHITE;
 
 static void lcd_draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
 
+static void TFT_Display_Chinese_WorksTime(void);
+static void TFT_Display_Chinese_TimerTiming(void);
+static void TFT_Disp_Only_Humidity_Value(uint8_t hum_value);
 
 
 
@@ -22,26 +25,33 @@ static void lcd_draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, ui
 void TFT_Display_Handler(void)
 {
 
-    
     TFT_Display_Temp_Symbol();
 
 	TFT_Display_Humidity_Symbol();
-	
+
+	if(pro_t.timer_mode_flag==works_time){
+
+
+	    TFT_Display_Chinese_WorksTime();
+		TFT_Display_WorksTime();
+    }
+	else{
+
+	   TFT_Display_Chinese_TimerTiming();
+	   TFT_Only_Disp_Timing();
+    }
+
+	#if 0
 	//lcd_draw_rectangle(157,35,163,110,WHITE);  //display veritcal "I"
-	//TFT_St7789_FillBlock(157,35,6,75,WHITE);
-
-   //temperature value 
-   TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
-   //huimidity value
-
-  // TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
-
-   TFT_Display_WorksTime();
- 
-
-
+	TFT_St7789_FillBlock(157,35,6,75,WHITE);
+	#endif 
+ 	//TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
+	TFT_Disp_Voice_Temp_Value(0,gctl_t.dht11_temp_value);
+    //TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
+   TFT_Disp_Only_Humidity_Value(gctl_t.dht11_hum_value);
+	
+   
 }
-
 /***********************************************************************************************
 	*
 	*Function Name:void TFT_Display_Temp_Symbol(void)
@@ -156,6 +166,26 @@ void TFT_Display_WorksTime(void)
 		gctl_t.time_out_flag =0;
 
 	}
+
+}
+
+static void TFT_Display_Chinese_WorksTime(void)
+{
+
+	TFT_Disp_WorksTime_24_24_onBlack(112,150,0,0);//works one "工"
+	TFT_Disp_WorksTime_24_24_onBlack(136,150,0,1);//works tow "作"
+	TFT_Disp_WorksTime_24_24_onBlack(160,150,0,2);//"时"
+	TFT_Disp_WorksTime_24_24_onBlack(184,150,0,3);//“间”
+
+}
+
+static void TFT_Display_Chinese_TimerTiming(void)
+{
+	TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
+	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
+	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
+	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+
 
 }
 /***********************************************************************************************
@@ -488,7 +518,7 @@ void TFT_Disp_Timer_Split_Symbol(void)
 		 else if(pro_t.gTimer_pro_time_split_symbol >3 ){
                 pro_t.gTimer_pro_time_split_symbol=0;
 		        TFT_Disp_Time_Split_Symbol(160,173,1); //时间分割符号 turn off
-
+		       // TFT_Display_Handler();
 		 }
 
      }
@@ -542,11 +572,7 @@ void TFT_Disp_Voice_Temp_Value(uint8_t bc,uint8_t temp_value)
   
    
    	TFT_Disp_Numbers_Pic_413(5,40,bc,temp_decade); //间隔58
-
- 
-
-
-   TFT_Disp_Numbers_Pic_413(63,40,bc,temp_unit);
+	TFT_Disp_Numbers_Pic_413(63,40,bc,temp_unit);
    
 
 
@@ -587,6 +613,29 @@ void TFT_Disp_Humidity_Value(uint8_t hum_value)
    }
 
 }
+
+static void TFT_Disp_Only_Humidity_Value(uint8_t hum_value)
+{
+
+   static uint8_t hum_unit,hum_decade;
+
+
+   hum_decade = hum_value /10;
+
+   hum_unit = hum_value%10;
+
+   
+
+   TFT_Disp_Numbers_Pic_413(168,40,0,hum_decade); //间隔58
+  
+
+   
+   TFT_Disp_Numbers_Pic_413(226,40,0, hum_unit);
+
+   
+
+}
+
 /**************************************************************************
 *
 * Function Name:void TFT_DrawPoint(uint16_t x,uint16_t y,uint16_t color)

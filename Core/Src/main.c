@@ -109,7 +109,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim10);
 
 
-  HAL_UART_Receive_IT(&huart1,wifi_t.usart2_dataBuf,1);
+  HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
   
   HAL_UART_Receive_IT(&huart2,voice_inputBuf,1);//HAL_UART_Receive_IT(&huart1,voice_inputBuf,8);
   bsp_Init();

@@ -108,6 +108,7 @@ static void RunWifi_Command_Handler(void)
 			wifi_t.get_rx_beijing_time_enable=0;
 			wifi_t.gTimer_main_pro_times =0;
 			wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;//wifi_tencent_subscription_data;
+			wifi_t.gTimer_auto_detected_net_state_times=0;
 			step_flag =1;
 
 
@@ -129,6 +130,7 @@ static void RunWifi_Command_Handler(void)
 		wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
 		wifi_t.gTimer_publish_dht11=0;
 		wifi_t.gTimer_auto_detected_net_state_times =0;
+	
 		step_flag=1;
 
 		}
@@ -153,6 +155,7 @@ static void RunWifi_Command_Handler(void)
 		step_flag++;
 		Update_Dht11_Totencent_Value();
 		wifi_t.gTimer_publish_dht11=0;
+		wifi_t.gTimer_auto_detected_net_state_times=0;
 	}
 
 
@@ -183,6 +186,8 @@ static void RunWifi_Command_Handler(void)
 		
 		wifi_t.runCommand_order_lable= wifi_get_beijing_time;
 		wifi_t.set_beijing_time_flag =1;
+		Update_DHT11_Value();
+		TFT_Display_Handler();
 		
 
 
@@ -245,7 +250,9 @@ static void RunWifi_Command_Handler(void)
 
 	case wifi_auto_repeat_link_cloud://06
 
-	if(wifi_t.gTimer_publish_dht11 >0){
+	if(wifi_t.gTimer_publish_dht11>0){
+		
+	
 
 	switch(wifi_t.auto_link_login_tencent_cloud_flag){
 
@@ -260,7 +267,7 @@ static void RunWifi_Command_Handler(void)
 	break;
 
 	case 1:  //don't link to tencet cloud net.
-
+   
 		auto_repeat_link_netware_fun();
 		wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
 	    wifi_t.gTimer_auto_detected_net_state_times=0;  
@@ -271,6 +278,7 @@ static void RunWifi_Command_Handler(void)
 	}
 
 	}
+	
 
 	break;
 

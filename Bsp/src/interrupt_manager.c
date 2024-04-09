@@ -39,19 +39,21 @@ void USART_Cmd_Error_Handler(void)
 
           temp = USART2->DR;
 		 
-		    HAL_UART_Receive_IT(&huart1,wifi_t.usart2_dataBuf,1);
+		    HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
 		
      }
 
-	 if(gctl_t.gTimer_ctl_dma_state >18){
+	 if(gctl_t.gTimer_ctl_dma_state >34){
            gctl_t.gTimer_ctl_dma_state =0;
 		   flag_dma1_tx_state = HAL_DMA_GetState(&hdma_spi1_tx);
 	      // flag_dma1_rx_state = HAL_DMA_GetState(&hdma_spi1_rx);
 	 
-		   if(flag_dma1_tx_state ==HAL_DMA_STATE_TIMEOUT){
-			   LCD_GPIO_Reset();
+		   if(flag_dma1_tx_state ==HAL_DMA_STATE_ERROR){
+		   	   TFT_BACKLIGHT_OFF();
   			   TFT_LCD_Init();
-		       TFT_Display_WorksTime();
+		   	   Update_DHT11_Value();
+		       TFT_Display_Handler();
+			   TFT_BACKLIGHT_ON();
 		   }
 	 }
 }
@@ -77,10 +79,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	     
 	      if(wifi_t.linking_tencent_cloud_doing  ==1){ //link tencent netware of URL
 
-			wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart2_dataBuf[0];
+			wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart1_dataBuf[0];
 			wifi_t.wifi_uart_counter++;
 
-			if(*wifi_t.usart2_dataBuf==0X0A) // 0x0A = "\n"
+			if(*wifi_t.usart1_dataBuf==0X0A) // 0x0A = "\n"
 			{
 				//wifi_t.usart2_rx_flag = 1;
 				Wifi_Rx_InputInfo_Handler();
@@ -91,15 +93,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		  else{
 
 		         if(wifi_t.get_rx_beijing_time_enable==1){
-					wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart2_dataBuf[0];
+					wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart1_dataBuf[0];
 					wifi_t.wifi_uart_counter++;
 				}
 				else if(wifi_t.get_rx_auto_repeat_net_enable ==1){
 
-					wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart2_dataBuf[0];
+					wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart1_dataBuf[0];
 					wifi_t.wifi_uart_counter++;
 
-					if(*wifi_t.usart2_dataBuf==0X0A) // 0x0A = "\n"
+					if(*wifi_t.usart1_dataBuf==0X0A) // 0x0A = "\n"
 					{
 						
 						Wifi_Rx_Auto_Link_Net_Handler();
@@ -113,7 +115,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 				}
 	      }
-	  HAL_UART_Receive_IT(&huart1,wifi_t.usart2_dataBuf,1);
+	  HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
 	  
 //	__HAL_UART_CLEAR_NEFLAG(&huart2);
 //	__HAL_UART_CLEAR_FEFLAG(&huart2);
@@ -427,6 +429,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  wifi_t.gTimer_auto_detected_net_state_times++;
 	  wifi_t.gTimer_get_beijing_time++;
 	  wifi_t.gTimer_read_beijing_time++;
+	
 	
 	  
 	 

@@ -87,7 +87,7 @@ typedef struct _WIFI_FUN{
 	
 	//wifi
 	unsigned char wifi_data[150]; 
-	uint8_t usart2_dataBuf[1];
+	uint8_t usart1_dataBuf[1];
   
     //uint8_t usart2_rx_flag;
 	
@@ -139,7 +139,9 @@ typedef struct _WIFI_FUN{
 	uint8_t gTimer_login_tencent_times;
 	uint8_t gTimer_power_first_link_tencent ;
 	uint8_t gTimer_main_pro_times;
+	
     uint16_t gTimer_get_beijing_time;
+	
 	
 	
 		

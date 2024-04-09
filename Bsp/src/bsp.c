@@ -63,8 +63,7 @@ void bsp_Idle(void)
 	 
 	
 	    Update_DHT11_Value();
-	    TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
-        TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
+	   
         TFT_Display_Handler();
 		 pro_t.power_on_first =1;
 
