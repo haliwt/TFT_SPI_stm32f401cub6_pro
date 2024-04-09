@@ -128,7 +128,7 @@ void TFT_Process_Handler(void)
 		Power_Off_Fun();
 		Device_NoAction_Power_Off();
 		LED_Mode_Key_Off();
-		
+		MqttData_Publish_PowerOff_Ref();
 		
 	}
 	if(wifi_link_net_state() ==1  && wifi_t.gTimer_main_pro_times > 50){
@@ -216,9 +216,10 @@ static void TFT_Pocess_Command_Handler(void)
 		gctl_t.gTimer_ctl_dma_state =0;
 		pro_t.add_or_dec_is_cofirm_key_flag =0; //key set example "ptc,kill,driver rat" function. don't compart tempartur value
 
-		//test item 
-		//gctl_t.ptc_warning=1;
-		//gctl_t.fan_warning = 1;
+        if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0){
+		    MqttData_Publish_Init();
+
+        }
 		
 	 break;
 
@@ -326,7 +327,7 @@ static void TFT_Pocess_Command_Handler(void)
 
 	  if(pro_t.gTimer_pro_action_publis > 4 && wifi_link_net_state()==1){
 	   	  pro_t.gTimer_pro_action_publis=0;
-	       Device_Action_Publish_Handler();
+	     //  Device_Action_Publish_Handler();
 
        }
 		  
@@ -336,7 +337,7 @@ static void TFT_Pocess_Command_Handler(void)
       // handler of wifi 
 	  case pro_wifi_init: //7
 	   
-      Wifi_Pro_Runing_Init();
+     // Wifi_Pro_Runing_Init();
 		pro_t.run_process_step=pro_disp_dht11_value;
 
 	  break;
