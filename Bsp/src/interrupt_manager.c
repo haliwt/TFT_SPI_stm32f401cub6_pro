@@ -26,7 +26,7 @@ void USART_Cmd_Error_Handler(void)
 	        
 	          temp = USART1->DR;
 	     
-	         HAL_UART_Receive_IT(&huart1,voice_inputBuf,1);//UART receive data interrupt 1 byte
+	         HAL_UART_Receive_IT(&huart2,voice_inputBuf,1);//UART receive data interrupt 1 byte
 			 // UART_Start_Receive_IT(&huart1,inputBuf,1);
 			
 	  }
@@ -34,12 +34,12 @@ void USART_Cmd_Error_Handler(void)
 	 if(gctl_t.gTimer_ctl_usart2_error >8){
 	  	gctl_t.gTimer_ctl_usart2_error=0;
 
-           __HAL_UART_CLEAR_OREFLAG(&huart2);
+           __HAL_UART_CLEAR_OREFLAG(&huart1);
         
 
           temp = USART2->DR;
 		 
-		    HAL_UART_Receive_IT(&huart2,wifi_t.usart2_dataBuf,1);
+		    HAL_UART_Receive_IT(&huart1,wifi_t.usart2_dataBuf,1);
 		
      }
 
@@ -65,8 +65,8 @@ void USART_Cmd_Error_Handler(void)
 *******************************************************************************/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    static uint8_t state_uart1,voice_cmd_time = 0xff,voice_wakewor_int=0xff;
-    uint32_t temp ;;
+    static uint8_t state_uart1,voice_wakewor_int=0xff;
+    
    
     //wifi usart1
     if(huart->Instance==USART1)
@@ -461,7 +461,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 *******************************************************************************/
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if(huart==&huart1) //voice  sound send 
+	if(huart==&huart2) //voice  sound send 
 	{
 		v_t.transOngoingFlag=0; //UART Transmit interrupt flag =0 ,RUN
 	}

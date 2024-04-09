@@ -22,7 +22,7 @@ uint8_t usart2_flag;
 ***********************************************************/
 uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 {
-	if(HAL_OK == HAL_UART_Transmit(&huart2, pdata, len, 10000))
+	if(HAL_OK == HAL_UART_Transmit(&huart1, pdata, len, 10000))
 	{
 		return len;
 	}
@@ -72,7 +72,7 @@ void SmartPhone_TryToLink_TencentCloud(void)
 	if(wifi_t.power_on_login_tencent_cloud_flag==3){
 		wifi_t.power_on_login_tencent_cloud_flag++;
 		
-       HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//开始连接
+       HAL_UART_Transmit(&huart1, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//开始连接
 	   wifi_t.gTimer_power_first_link_tencent=0;
 	}
 	if(wifi_t.gTimer_power_first_link_tencent >3 &&  wifi_t.power_on_login_tencent_cloud_flag==4){
@@ -169,7 +169,7 @@ void Wifi_SoftAP_Config_Handler(void)
 	        if(wifi_t.link_tencent_step_counter==driver_esp8266_step_4){
 				wifi_t.link_tencent_step_counter =driver_esp8266_step_5;
 				wifi_t.gTimer_login_tencent_times=0;
-         	   HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+         	   HAL_UART_Transmit(&huart1, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
 	        }
 
 			if(wifi_t.gTimer_login_tencent_times > 1){
@@ -208,7 +208,7 @@ void Wifi_SoftAP_Config_Handler(void)
 	     if(wifi_t.link_tencent_step_counter ==driver_esp8266_step_6){
 		 	wifi_t.link_tencent_step_counter =driver_esp8266_step_7;
 				wifi_t.gTimer_login_tencent_times=0;
-		     HAL_UART_Transmit(&huart2, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
+		     HAL_UART_Transmit(&huart1, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
 
 	     }
 		 if(wifi_t.gTimer_login_tencent_times > 4){//6
@@ -270,7 +270,7 @@ void SmartPhone_LinkTencent_Cloud(void)
 	   if(wifi_t.link_tencent_step_counter ==driver_esp8266_step_8){
 	   	      wifi_t.link_tencent_step_counter =driver_esp8266_step_9;
 			  wifi_t.gTimer_login_tencent_times=0;
-	       HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+	       HAL_UART_Transmit(&huart1, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
 	   }
 
 	   if(wifi_t.gTimer_login_tencent_times >1){
@@ -294,21 +294,21 @@ void SmartPhone_LinkTencent_Cloud(void)
 void wifi_Disconnect_Fun(void)
 {
 
-  HAL_UART_Transmit(&huart2, "AT+TCMQTTDISCONN\r\n", strlen("AT+TCMQTTDISCONN\r\n"), 5000);//开始连接
+  HAL_UART_Transmit(&huart1, "AT+TCMQTTDISCONN\r\n", strlen("AT+TCMQTTDISCONN\r\n"), 5000);//开始连接
 
 }
 
 void Get_BeiJing_Time_Cmd(void)
 {
 
-  HAL_UART_Transmit(&huart2, "AT+CIPSNTPCFG=1,8,\"cn.ntp.org.cn\",\"ntp.sjtu.edu.cn\"\r\n", strlen("AT+CIPSNTPCFG=1,800,\"cn.ntp.org.cn\",\"ntp.sjtu.edu.cn\"\r\n"), 5000);//开始连接
+  HAL_UART_Transmit(&huart1, "AT+CIPSNTPCFG=1,8,\"cn.ntp.org.cn\",\"ntp.sjtu.edu.cn\"\r\n", strlen("AT+CIPSNTPCFG=1,800,\"cn.ntp.org.cn\",\"ntp.sjtu.edu.cn\"\r\n"), 5000);//开始连接
 
 }
 
 void Get_Beijing_Time(void)
 {
 
-   HAL_UART_Transmit(&huart2, "AT+CIPSNTPTIME?\r\n", strlen("AT+CIPSNTPTIME?\r\n"), 3000);//开始连接
+   HAL_UART_Transmit(&huart1, "AT+CIPSNTPTIME?\r\n", strlen("AT+CIPSNTPTIME?\r\n"), 3000);//开始连接
 
 
 }
@@ -336,7 +336,7 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
 
 	 case wifi_set_cwmode:
     	    WIFI_IC_ENABLE();
-         	HAL_UART_Transmit(&huart2, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+         	HAL_UART_Transmit(&huart1, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
      
             HAL_Delay(1000);
 	
@@ -359,7 +359,7 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
 void Wifi_Link_Tencent_Net_State(void)
 {
 
-   HAL_UART_Transmit(&huart2, "AT+TCMQTTSTATE?\r\n", strlen("AT+TCMQTTSTATE?\r\n"), 5000);
+   HAL_UART_Transmit(&huart1, "AT+TCMQTTSTATE?\r\n", strlen("AT+TCMQTTSTATE?\r\n"), 5000);
 
    //AT+CWRECONNCFG?
  //  HAL_UART_Transmit(&huart2, "AT+CWRECONNCFG?\r\n", strlen("AT+CWRECONNCFG?\r\n"), 5000);
@@ -370,7 +370,7 @@ void Wifi_Link_Tencent_Net_State(void)
 void Wifi_Reconnect_Tencent_Net(void)
 {
 
-   HAL_UART_Transmit(&huart2, "AT+CWJAP\r\n", strlen("AT+CWJAP\r\n"), 5000);
+   HAL_UART_Transmit(&huart1, "AT+CWJAP\r\n", strlen("AT+CWJAP\r\n"), 5000);
 
    //AT+CWRECONNCFG?
  //  HAL_UART_Transmit(&huart2, "AT+CWRECONNCFG?\r\n", strlen("AT+CWRECONNCFG?\r\n"), 5000);

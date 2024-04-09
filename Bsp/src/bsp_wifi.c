@@ -49,6 +49,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		InitWifiModule_Hardware();//InitWifiModule();
         SmartPhone_TryToLink_TencentCloud();
 		if(wifi_link_net_state()==1){
+			
 			wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;//04
 	    }
        
@@ -166,6 +167,13 @@ static void RunWifi_Command_Handler(void)
 	}
 
 
+
+	break;
+
+	case wifi_subscriber_form_tencent_cloud_cmd:
+
+		Subscriber_Data_FromCloud_Handler(); //WT.EDIT 2024.04.09
+		wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 
 	break;
 

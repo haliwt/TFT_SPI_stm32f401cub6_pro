@@ -68,7 +68,7 @@ void Subscriber_Data_FromCloud_Handler(void)
          device_id=HAL_GetUIDw0();
       
          sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/UYIJIA01-%d\",0\r\n", PRODUCT_ID, device_id);
-         HAL_UART_Transmit(&huart2, device_massage, strlen((const char *)device_massage), 5000); 
+         HAL_UART_Transmit(&huart1, device_massage, strlen((const char *)device_massage), 5000); 
          free(device_massage);
   
 
@@ -463,7 +463,7 @@ void Tencent_Cloud_Rx_Handler(void)
 		wifi_t.get_rx_beijing_time_enable=0;
 		wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 		wifi_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
-	    __HAL_UART_CLEAR_OREFLAG(&huart2);
+	    __HAL_UART_CLEAR_OREFLAG(&huart1);
 		strcpy((char*)TCMQTTRCVPUB,(char *)wifi_t.wifi_data);
 	    
 	
