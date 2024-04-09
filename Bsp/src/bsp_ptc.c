@@ -164,42 +164,42 @@ void Temperature_Ptc_Pro_Handler(void)
                
                 gctl_t.ptc_flag = 0 ;//run_t.gDry = 0;
 			    Ptc_Off();
-			    HAL_Delay(50);
 		        LED_PTC_ICON_OFF();
-				
-              
-                
-           
-               }
-               else if(dht11_temp_value() <39 && pro_t.add_or_dec_is_cofirm_key_flag ==0){
+				if(wifi_link_net_state()==1){
+					MqttData_Publish_SetPtc(0);
+	      			HAL_Delay(100);
+				}
+			}
+            else if(dht11_temp_value() <39 && pro_t.add_or_dec_is_cofirm_key_flag ==0){
                
 				 gctl_t.ptc_flag = 1;//run_t.gDry = 1;
 		         Ptc_On();
-			     HAL_Delay(50);
 			     LED_PTC_ICON_ON();
+				 if(wifi_link_net_state()==1){
+                	MqttData_Publish_SetPtc(1);
+		       	    HAL_Delay(100);
+				 }
                 
                 }
 
               }
 		   
-
-
-		   break;
+		break;
 
 
 		   case disp_set_temp_value_item:
 
 		   if(pro_t.gTimer_pro_temp_delay> 61 && ptc_error_state()==0 && pro_t.add_or_dec_is_cofirm_key_flag ==0){
                pro_t.gTimer_pro_temp_delay =0;
-
-		 
-		  
-		  if(set_temp_value() <= dht11_temp_value()|| dht11_temp_value() >40){//envirment temperature
+				if(set_temp_value() <= dht11_temp_value()|| dht11_temp_value() >40){//envirment temperature
 	  
 				gctl_t.ptc_flag = 0 ;//run_t.gDry = 0;
 			    Ptc_Off();
 		        LED_PTC_ICON_OFF();
-                 
+				if(wifi_link_net_state()==1){
+                	MqttData_Publish_SetPtc(0);
+	      			HAL_Delay(100);
+				 }
 
             }
 			else if(set_temp_value()> dht11_temp_value()){
@@ -207,6 +207,10 @@ void Temperature_Ptc_Pro_Handler(void)
 		         gctl_t.ptc_flag = 1;//run_t.gDry = 1;
 		         Ptc_On();
 			     LED_PTC_ICON_ON();
+				 if(wifi_link_net_state()==1){
+                	MqttData_Publish_SetPtc(1);
+		       	    HAL_Delay(100);
+				 }
 			    
             }
 				 

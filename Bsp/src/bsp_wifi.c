@@ -42,9 +42,7 @@ void WIFI_Process_Handler(void)
 static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
    
-    
-   
-	if(wifi_t.first_power_on_link_net==0 && wifi_t.power_on_login_tencent_cloud_flag !=5){
+    if(wifi_t.first_power_on_link_net==0 && wifi_t.power_on_login_tencent_cloud_flag !=5){
         //Buzzer_KeySound();
 		InitWifiModule_Hardware();//InitWifiModule();
         SmartPhone_TryToLink_TencentCloud();
@@ -78,9 +76,6 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 				  wifi_t.gTimer_power_first_link_tencent=0;
             }
 
-			
-			
-		  
 	}
 }
 /********************************************************************************
