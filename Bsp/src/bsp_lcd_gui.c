@@ -291,19 +291,19 @@ void TFT_DonnotDisp_Works_Time(void)
 void Power_Off_Retain_Beijing_Time(void)
 {
 
-//   if(wifi_link_net_state()==1){
-//	if(gctl_t.gTimer_ctl_disp_works_time_second > 59){
-//		   gctl_t.gTimer_ctl_disp_works_time_second =0;
-//		   gctl_t.disp_works_minutes++;
-//		   if(gctl_t.disp_works_minutes>59){
-//			   gctl_t.disp_works_minutes=0;
-//			   gctl_t.disp_works_hours++;
-//			   if(gctl_t.disp_works_hours > 99){
-//				   gctl_t.disp_works_hours=0;
-//			   }
-//		   }
-//	 }
-//   }
+   if(wifi_link_net_state()==1){
+	if(gctl_t.gTimer_ctl_disp_works_time_second > 59){
+		   gctl_t.gTimer_ctl_disp_works_time_second =0;
+		   gctl_t.disp_works_minutes++;
+		   if(gctl_t.disp_works_minutes>59){
+			   gctl_t.disp_works_minutes=0;
+			   gctl_t.disp_works_hours++;
+			   if(gctl_t.disp_works_hours > 99){
+				   gctl_t.disp_works_hours=0;
+			   }
+		   }
+	 }
+   }
    
 
 }

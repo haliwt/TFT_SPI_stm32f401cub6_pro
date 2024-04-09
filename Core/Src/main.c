@@ -112,7 +112,8 @@ int main(void)
   HAL_UART_Receive_IT(&huart1,wifi_t.usart2_dataBuf,1);
   
   HAL_UART_Receive_IT(&huart2,voice_inputBuf,1);//HAL_UART_Receive_IT(&huart1,voice_inputBuf,8);
-  pro_t.buzzer_sound_flag=1;
+  bsp_Init();
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */

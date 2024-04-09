@@ -418,6 +418,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	   gctl_t.gTimer_ctl_usart1_error++; 
 	   gctl_t.gTimer_ctl_usart2_error++; 
 	   gctl_t.gTimer_ctl_dma_state++ ;
+	   gctl_t.gTimer_ctl_publish_set_temperature_value++;
 	
 	  //wifi counter 
 	 

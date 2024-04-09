@@ -22,7 +22,7 @@ uint8_t usart2_flag;
 ***********************************************************/
 uint8_t at_send_data(uint8_t* pdata, uint16_t len)
 {
-	if(HAL_OK == HAL_UART_Transmit(&huart1, pdata, len, 10000))
+	if(HAL_OK == HAL_UART_Transmit(&huart1, pdata, len, 0xffff))
 	{
 		return len;
 	}

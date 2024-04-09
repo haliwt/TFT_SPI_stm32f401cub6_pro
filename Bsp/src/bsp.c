@@ -39,8 +39,10 @@ uint16_t power_off_counter;
 
 void bsp_Init(void)
 {
+   pro_t.buzzer_sound_flag=1;
 
    pro_t.mode_key_run_item_step=0xff;
+   wifi_t.gTimer_main_pro_times=60;
 
   
 }
@@ -123,19 +125,27 @@ void TFT_Process_Handler(void)
 	    wifi_t.power_off_step=0; 
 	    fan_continuce_flag =1;
 		pro_t.gTimer_pro_fan =0;
+		wifi_t.gTimer_main_pro_times=0;	
+		gctl_t.gTimer_ctl_disp_works_time_second=0;
 
 		TFT_BACKLIGHT_OFF();
 		Power_Off_Fun();
 		Device_NoAction_Power_Off();
 		LED_Mode_Key_Off();
-		MqttData_Publish_PowerOff_Ref();
+		if(wifi_link_net_state() ==1){
+		  MqttData_Publish_PowerOff_Ref();
+		}
 		
 	}
 	if(wifi_link_net_state() ==1  && wifi_t.gTimer_main_pro_times > 50){
 		wifi_t.gTimer_main_pro_times=0;	
+		gctl_t.ptc_warning=0;
+		gctl_t.fan_warning =0;
+		wifi_t.repeat_login_tencent_cloud_init_ref=0;
 		MqttData_Publish_PowerOff_Ref();
+
 		
-    }
+	}
 
 	if(fan_continuce_flag ==1){
 
@@ -154,19 +164,13 @@ void TFT_Process_Handler(void)
 	if(v_t.voice_cmd_power_off_flag ==1){
 		v_t.voice_cmd_power_off_flag ++;;
 
-       
+    }
 
-
-	}
-
-    gctl_t.ptc_warning=0;
-	gctl_t.fan_warning =0;
-	wifi_t.repeat_login_tencent_cloud_init_ref=0;
-	
-
-	wifi_t.smartphone_app_power_on_flag=0; //手机定时关机和开机，设置参数的标志位
-	
 	Power_Off_Retain_Beijing_Time();
+
+  	wifi_t.smartphone_app_power_on_flag=0; //手机定时关机和开机，设置参数的标志位
+	
+	
 	
 	Breath_Led();
 	
@@ -325,10 +329,24 @@ static void TFT_Pocess_Command_Handler(void)
 
 		}
 
-	  if(pro_t.gTimer_pro_action_publis > 4 && wifi_link_net_state()==1){
-	   	  pro_t.gTimer_pro_action_publis=0;
-	     //  Device_Action_Publish_Handler();
+	  if(wifi_link_net_state()==1){
 
+		  if(pro_t.gTimer_pro_action_publis > 4 ){
+		   	  pro_t.gTimer_pro_action_publis=0;
+		
+		      	Device_Action_Publish_Handler();
+		   }
+
+		   if(gctl_t.local_set_temp_value == 1 &&  gctl_t.gTimer_ctl_publish_set_temperature_value >2){
+
+			    gctl_t.local_set_temp_value ++;
+	           //publish tencent cloud data
+	            MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
+				HAL_Delay(100);//350
+	          
+
+
+		    }
        }
 		  
 	  pro_t.run_process_step=pro_wifi_init;
@@ -369,9 +387,13 @@ static void Power_On_Fun(void)
 	  gctl_t.ptc_flag = 1;
       gctl_t.plasma_flag = 1;
 	  gctl_t.ultrasonic_flag =1;
+	  gctl_t.gSet_temperature_value =40;
   }
-   
-   gctl_t.gSet_temperature_value =40;
+  else{
+      if(gctl_t.ptc_flag ==0){ //don't auto turn off heater plate.
+      	  pro_t.add_or_dec_is_cofirm_key_flag =1;
+      }
+ }
 
  
    //timer timing

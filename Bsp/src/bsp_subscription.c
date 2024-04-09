@@ -451,9 +451,7 @@ void Wifi_Rx_InputInfo_Handler(void)
 void Tencent_Cloud_Rx_Handler(void)
 {
 
-   
-
-    if(wifi_t.rx_data_success==1){
+  if(wifi_t.rx_data_success==1){
          wifi_t.rx_data_success=0;
          wifi_t.set_beijing_time_flag =0; //WT.EDIT 2023.06.12
 		 // wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
@@ -484,7 +482,7 @@ void Tencent_Cloud_Rx_Handler(void)
 	
 	if(strstr((char *)wifi_t.wifi_data,"ptc\":0")){
             if(power_on_state() ==power_on){
-			//	  gctl_t.ptc_flag=0;
+			   
 	           wifi_t.response_wifi_signal_label = PTC_OFF_ITEM;
 	         
              }
@@ -492,7 +490,7 @@ void Tencent_Cloud_Rx_Handler(void)
     }
     else if(strstr((char *)wifi_t.wifi_data,"ptc\":1")){
             if(power_on_state() ==power_on){
-	       //   gctl_t.ptc_flag=1;
+	     
 			  wifi_t.response_wifi_signal_label = PTC_ON_ITEM;
 				
             }
@@ -653,10 +651,13 @@ void Json_Parse_Command_Fun(void)
 		 buzzer_sound()	;
 		 Ptc_Off();
 	     LED_PTC_ICON_OFF();
+		 gctl_t.ptc_flag=0;
+		 //gctl_t.gSet_temperature_value =20;
+		 pro_t.add_or_dec_is_cofirm_key_flag =1;
 		 
          MqttData_Publish_SetPtc(0);
 		 HAL_Delay(100);
-	     gctl_t.ptc_flag=0;
+	    
 
 		wifi_t.response_wifi_signal_label = 0xff;
 		 wifi_t.gTimer_auto_detected_net_state_times=0;
@@ -845,7 +846,8 @@ void Json_Parse_Command_Fun(void)
 
 	  case APP_TIMER_POWER_ON_REF :
 
-	       wifi_t.set_beijing_time_flag=0;
+		   pro_t.gTimer_pro_temp_delay =0;
+		   wifi_t.set_beijing_time_flag=0;
 		   wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
          
 		   smartphone_app_timer_power_on_handler();
@@ -1010,18 +1012,20 @@ static void smartphone_app_timer_power_on_handler(void)
 	 if(strstr((char *)TCMQTTRCVPUB,"ptc\":1")){
 			
 			gctl_t.ptc_flag=1;
-		}
-		else if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
+	 }
+	 else{ //if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
 			
 			gctl_t.ptc_flag=0;
-		}
+			pro_t.gTimer_pro_temp_delay =0;
+		    pro_t.add_or_dec_is_cofirm_key_flag =1;
+	 }
 
 	 if(strstr((char *)TCMQTTRCVPUB,"sonic\":1")){
 
 			 gctl_t.ultrasonic_flag=1;
 
 		}
-        else if(strstr((char *)TCMQTTRCVPUB,"sonic\":0")){
+        else{// if(strstr((char *)TCMQTTRCVPUB,"sonic\":0")){
 
              gctl_t.ultrasonic_flag=0;
 
@@ -1030,7 +1034,7 @@ static void smartphone_app_timer_power_on_handler(void)
 		if(strstr((char *)TCMQTTRCVPUB,"Anion\":1")){
 			 gctl_t.plasma_flag=1;
         }
-		else if(strstr((char *)TCMQTTRCVPUB,"Anion\":0")){
+		else{ // if(strstr((char *)TCMQTTRCVPUB,"Anion\":0")){
 			 gctl_t.plasma_flag=0;
         }
 
@@ -1046,15 +1050,16 @@ static void smartphone_app_timer_power_on_handler(void)
 	
 		buzzer_sound();
 
-		Device_Action_Publish_Handler();
+		//Device_Action_Publish_Handler();
 		pro_t.gPower_On = power_on;   
 		pro_t.long_key_flag =0;
 		pro_t.run_process_step=0;
 		wifi_t.smartphone_app_power_on_flag=1;
+		if(gctl_t.ptc_flag ==0)pro_t.add_or_dec_is_cofirm_key_flag =1;
 
         MqttData_Publis_App_PowerOn_Ref(0x01,gctl_t.plasma_flag,gctl_t.ptc_flag,gctl_t.ultrasonic_flag);
 		
-		HAL_Delay(300);//
+		HAL_Delay(200);//
 
 	
 	

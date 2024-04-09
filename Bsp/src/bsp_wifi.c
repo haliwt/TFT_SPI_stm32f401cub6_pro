@@ -447,7 +447,7 @@ static void auto_repeat_tencnet_net(void)
           
 			wifi_t.wifi_uart_counter=0;
 	        wifi_t.soft_ap_config_flag =0;
-	        HAL_UART_Transmit(&huart2, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
+	        HAL_UART_Transmit(&huart1, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
 		    HAL_Delay(1000);
 			HAL_Delay(1000);
 			HAL_Delay(1000);

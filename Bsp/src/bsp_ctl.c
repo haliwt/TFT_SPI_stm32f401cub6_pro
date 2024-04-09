@@ -56,9 +56,12 @@ void bsp_ctl_init(void)
 
    gctl_t.fan_warning =0;
    gctl_t.ptc_warning = 0;
-   gctl_t.ptc_flag=1;
-   gctl_t.plasma_flag =1;
-   gctl_t.ultrasonic_flag =1;
+   if(wifi_t.smartphone_app_power_on_flag==0){
+	   gctl_t.ptc_flag=1;
+	   gctl_t.plasma_flag =1;
+	   gctl_t.ultrasonic_flag =1;
+
+   }
    
   // UartVarInit();
 
@@ -326,29 +329,30 @@ uint8_t Fan_Error_Default_Handler(void)
 void Device_Action_Publish_Handler(void)
 {
 
+ static uint8_t ptc_flag =0xff,plasma_flag=0xff,ultr_flag=0xff;
 
-  static uint8_t ptc_flag =0xff,plasma_flag=0xff,ultr_flag=0xff;
+	  if(ptc_flag != ptc_state()){
+	  	   ptc_flag = ptc_state();
+	 
+		  if(ptc_state()== 1){
 
-  if(ptc_flag != ptc_state()){
-  	   ptc_flag = ptc_state();
- 
-	  if(ptc_state()== 1){
+		     Ptc_On();
+			 LED_PTC_ICON_ON();
+		     MqttData_Publish_SetPtc(0x01);  
+			 HAL_Delay(30);//350
 
-	     Ptc_On();
-		 LED_PTC_ICON_ON();
-	     MqttData_Publish_SetPtc(0x01);  
-		 HAL_Delay(30);//350
+		  }
+		  else{
+		  	pro_t.add_or_dec_is_cofirm_key_flag =1;
+		    Ptc_Off();
+			LED_PTC_ICON_OFF();
+		    MqttData_Publish_SetPtc(0); 
+			HAL_Delay(30);//350
 
+
+		  }
 	  }
-	  else{
-	    Ptc_Off();
-		LED_PTC_ICON_OFF();
-	    MqttData_Publish_SetPtc(0); 
-		HAL_Delay(30);//350
-
-
-	  }
-  }
+  
    
   if(plasma_flag != plasma_state()){
   	   plasma_flag = plasma_state();
