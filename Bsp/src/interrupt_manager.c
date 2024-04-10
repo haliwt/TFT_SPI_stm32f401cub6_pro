@@ -124,7 +124,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
      
 	}
 
-
+ //voice sound 
   if(huart->Instance==USART2){
 
 		switch(state_uart1)
