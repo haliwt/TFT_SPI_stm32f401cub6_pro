@@ -53,7 +53,7 @@ void TimeTimer_Pro_Handler(void)
 
 	case timer_set_time://02
 
-		if(pro_t.gTimer_pro_mode_long_key > 4){
+		if(pro_t.gTimer_pro_mode_long_key > 3){
             	  pro_t.gTimer_pro_mode_long_key =0;
 		
 

@@ -143,38 +143,43 @@ void Rx_Voice_Data_Handler(void(*rx_voice_handler)(uint8_t data))
 void Voice_Decoder_Handler(void)
 {
 
-  
-
-  
-   if(v_t.voice_wakeword_enable ==1 && v_t.gTimer_voice_time_counter_start < 16){
+  if(v_t.voice_wakeword_enable ==1 && v_t.gTimer_voice_time_counter_start < 16){
 		   voice_cmd_flag=1;
 		   if(pro_t.gPower_On == power_on)v_t.voice_power_on_cmd=1;
+		   else v_t.voice_power_on_cmd=0;
 		if(v_t.voice_power_on_cmd==1){
-			VOICE_OUTPUT_SOUND_ENABLE();
 			
-	
-		key= v_t.RxBuf[0] + v_t.RxBuf[1]; //key= data4+ data6 = ; //A5 FA 00 81 01 00 21 FB 
-	
+			
+	    key= v_t.RxBuf[0] + v_t.RxBuf[1]; //key= data4+ data6 = ; //A5 FA 00 81 01 00 21 FB 
+	    
+	    if(key < 0x8F){
 		result = BinarySearch_Voice_Data(voice_sound_data,key);
+		
 	
 	
 		if(result < 0x0A && result > 0){
 		   voice_cmd_fun(result);
+		   v_t.RxBuf[0]=0x8F;
+		   v_t.RxBuf[1]=0x8F;
 	
 		}
 		
 	   if(result > 9 && result < 31){ //set temperature value 
 			   
 			   voice_set_temperature_value(result);
+			  v_t.RxBuf[0]=0x8F;
+		       v_t.RxBuf[1]=0x8F;
 	   }
 	   else if(result > 30 && result <55){ //set timer timing value 
 		
 	
 			voice_set_timer_timing_value(result);
 			
-			
-	
+			 v_t.RxBuf[0]=0x8F;
+		     v_t.RxBuf[1]=0x8F;
 		 }
+		}
+
 		}
 		
 	   
@@ -183,10 +188,10 @@ void Voice_Decoder_Handler(void)
 	  
 	  if(v_t.gTimer_voice_time_counter_start > 15 && voice_cmd_flag==1){
 		   voice_cmd_flag++;
-		   v_t.voice_wakeword_counter++;
-		  // v_t.voice_decoder_flag=0;
 		   v_t.voice_wakeword_enable =0;
 		   VOICE_OUTPUT_SOUND_DISABLE();
+		   v_t.RxBuf[0]=0x8F;
+		   v_t.RxBuf[1]=0x8F;
 	   }
 
   
@@ -233,14 +238,12 @@ static void voice_cmd_fun(uint8_t cmd)
 	case voice_open_ptc:
 
 
-     if(ptc_state()==1 ){
+     if(ptc_state()==0){
       // buzzer_sound();
-	 }
-	 else{
-		
-		//buzzer_sound();
+   
 		gctl_t.ptc_flag =1;
 		Ptc_On();
+	    pro_t.add_or_dec_is_cofirm_key_flag=1;
 	    LED_PTC_ICON_ON();
 
 	 }
@@ -252,15 +255,11 @@ static void voice_cmd_fun(uint8_t cmd)
 
 	case voice_close_ptc:
 	
-		 if(ptc_state() == 0){
-          
-          //  buzzer_sound();
-
-		 }
-		 else{
-			//buzzer_sound();
+		 if(ptc_state() == 1){
+            //buzzer_sound();
 			gctl_t.ptc_flag =0;
 			Ptc_Off();
+			pro_t.add_or_dec_is_cofirm_key_flag=1;
 		    LED_PTC_ICON_OFF();
 		 }
 		
@@ -352,7 +351,24 @@ static void  voice_set_temperature_value(uint8_t value)
 			pro_t.gTimer_pro_set_tem_value_blink=0;
 			gctl_t.gSet_temperature_value_item=set_temp_value_item;
 	        v_t.voice_set_temperature_value_flag=1;
-	       TFT_Disp_Voice_Temp_Value(0,gctl_t.gSet_temperature_value); 
+	       TFT_Disp_Voice_Temp_Value(0,gctl_t.gSet_temperature_value);
+
+		   if(gctl_t.gSet_temperature_value >= gctl_t.dht11_temp_value){
+
+		    	if(ptc_state()==0){
+					gctl_t.ptc_flag =1;
+					Ptc_On();
+					LED_PTC_ICON_ON();
+		    	}
+
+			}
+			else{
+		   		if(ptc_state()==1){
+                    gctl_t.ptc_flag = 0;
+			   		Ptc_Off();
+			   		LED_PTC_ICON_OFF();
+				}
+			}
 
         
 		
@@ -368,29 +384,26 @@ static void  voice_set_temperature_value(uint8_t value)
 static void voice_set_timer_timing_value(uint8_t time)
 {
 
-	pro_t.mode_key_pressed_flag =0;
-//	Buzzer_KeySound();
-	pro_t.gTimer_pro_mode_key_be_select = 0; 
+ 
 
-    v_t.voice_set_timer_timing_value = time - 30;
-    
-	gctl_t.gSet_timer_hours = v_t.voice_set_timer_timing_value ;
-
-
-	pro_t.mode_key_run_item_step = mode_key_timer_time;
-	pro_t.timer_mode_flag=timer_set_time; //set timer mode enable
-	//to switch works or timer item flag  dis chines words
-	 gctl_t.timer_timing_words_changed_flag ++;
-	 gctl_t.timing_words_changed_flag++;
-	 /*************************************/
-	
-	
-
-	TFT_Disp_Voice_Set_TimerTime_Init();
    
-	
+		pro_t.mode_key_pressed_flag =0;
+	//	Buzzer_KeySound();
+		pro_t.gTimer_pro_mode_key_be_select = 0; 
 
-}
+	    v_t.voice_set_timer_timing_value = time - 30;
+	    
+		gctl_t.gSet_timer_hours = v_t.voice_set_timer_timing_value ;
+
+
+		if(pro_t.timer_mode_flag!=timer_time){//set timer mode enable
+		 pro_t.timer_mode_flag=timer_time;
+		//to switch works or timer item flag  dis chines words
+		 gctl_t.timer_timing_words_changed_flag ++;
+		 gctl_t.timing_words_changed_flag++;
+		}
+		TFT_Disp_Voice_Set_TimerTime_Init();
+   }
 /****************************************************************************************
  *  *
     *Function Name: static int8_t BinarySearch_Voice_Data(const uint8_t *pta,uint8_t key)

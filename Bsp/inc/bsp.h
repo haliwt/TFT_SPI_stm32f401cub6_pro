@@ -198,6 +198,7 @@ typedef struct{
   uint8_t gTimer_pro_action_publis;
   uint8_t gTimer_pro_mode_long_key;
   uint8_t gTimer_pro_display_dht11_hum;
+  uint8_t gTimer_pro_over_40temp;
   
 	
 

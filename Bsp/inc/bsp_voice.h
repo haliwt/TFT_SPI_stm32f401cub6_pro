@@ -38,16 +38,16 @@ typedef struct{
 	uint8_t voice_ctl_flag;
 	uint8_t RxBuf[RX_BUF_SIZE];
 	uint8_t rx_voice_data_enable;
-	uint8_t rxCounter;
-	uint8_t voice_to_buzzer_flag ;
+	
+
 
 	uint8_t voice_wakeword_enable;
-	uint8_t voice_cmd_power_off_flag;
-	uint8_t rx_enable_voice_output ;
+
+
 	uint8_t transOngoingFlag;
 
 	uint8_t voice_power_on_cmd;
-	uint8_t voice_wakeword_counter;
+
 	
 
 	//voice ctl display function "icon" 

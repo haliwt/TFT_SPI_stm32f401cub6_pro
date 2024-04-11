@@ -152,7 +152,7 @@ void Mode_Key_Config_Fun_Handler(void)
 				if(gctl_t.select_main_fun_numbers == 0){
 					gctl_t.select_main_fun_numbers = 5;
 				}
-				pro_t.add_or_dec_is_cofirm_key_flag =0;
+			
 				
                 Device_Action_Led_OnOff_Handler();
 			 }
@@ -168,7 +168,7 @@ void Mode_Key_Config_Fun_Handler(void)
 				if(confirm_data==0){
 					confirm_data++;
 					pro_t.gTimer_pro_confir_delay=0;
-				   // pro_t.add_or_dec_is_cofirm_key_flag =0;
+				 
 
 				}
 
@@ -244,10 +244,7 @@ void ADD_Key_Fun(void)
 		switch(pro_t.mode_key_run_item_step){
 
 		case 0xff:
-            if(pro_t.key_mode_long_time_over_flag ==0 && pro_t.mode_key_select_label==0){
-			   pro_t.mode_key_run_item_step=mode_key_temp;
-
-            }
+         
 
 		case mode_key_temp: //set temperature value add number
 			//pro_t.buzzer_sound_flag = 1;
@@ -259,8 +256,8 @@ void ADD_Key_Fun(void)
             if(gctl_t.gSet_temperature_value > 40) gctl_t.gSet_temperature_value= 20;
 
              pro_t.gTimer_pro_set_tem_value_blink =0;
-			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
-        
+			// gctl_t.gSet_temperature_value_item = set_temp_value_item;
+             pro_t.add_or_dec_is_cofirm_key_flag =0;
 			disp_temp_value =1;
 			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);	
 			}
@@ -302,11 +299,12 @@ void ADD_Key_Fun(void)
 	}
 	
     if(disp_temp_value ==1){
-		disp_temp_value =2;
+		disp_temp_value ++;
 		gctl_t.local_set_temp_value = 1;
-    	TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+	     pro_t.add_or_dec_is_cofirm_key_flag =0;
+  
 	    gctl_t.gTimer_ctl_publish_set_temperature_value = 0;
-		pro_t.add_or_dec_is_cofirm_key_flag =0;
+
 		if(gctl_t.gSet_temperature_value >= gctl_t.dht11_temp_value){
 
 		    if(ptc_state()==0){
@@ -326,7 +324,7 @@ void ADD_Key_Fun(void)
 
 
 		}
-
+		TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
     }
     if(timer_timing_flag ==1){
 		timer_timing_flag=0;
@@ -360,9 +358,7 @@ void DEC_Key_Fun(void)
 	     switch(pro_t.mode_key_run_item_step ){
 
 		   case 0xff:
-            if(pro_t.key_mode_long_time_over_flag ==0 && pro_t.mode_key_select_label ==0){
-		 	 pro_t.mode_key_run_item_step= mode_key_temp;
-            }
+           
 
 		   case mode_key_temp:  //default tempearture value 
 	        // pro_t.buzzer_sound_flag = 1;
@@ -374,6 +370,7 @@ void DEC_Key_Fun(void)
    
 			 pro_t.gTimer_pro_set_tem_value_blink =0;
 			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
+			 pro_t.add_or_dec_is_cofirm_key_flag =0;
              disp_temp_value =1;
 	        
 			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
@@ -415,11 +412,12 @@ void DEC_Key_Fun(void)
 	    	}
 	   	  }
 		if(disp_temp_value ==1){
-		    disp_temp_value =2;
+		    disp_temp_value ++;
 			gctl_t.local_set_temp_value =1;
-    		TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+		    pro_t.add_or_dec_is_cofirm_key_flag =0;
+    	
 		    gctl_t.gTimer_ctl_publish_set_temperature_value = 0;
-			pro_t.add_or_dec_is_cofirm_key_flag =0;
+			
 			if(gctl_t.gSet_temperature_value >= gctl_t.dht11_temp_value){
 
 		    	if(ptc_state()==0){
@@ -436,6 +434,8 @@ void DEC_Key_Fun(void)
 			   		LED_PTC_ICON_OFF();
 				}
 			}
+
+		    TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
 
     	}
 	    if(timer_timing_flag ==1){

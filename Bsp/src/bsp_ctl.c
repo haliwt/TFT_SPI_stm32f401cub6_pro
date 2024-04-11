@@ -343,7 +343,6 @@ void Device_Action_Publish_Handler(void)
 
 		  }
 		  else{
-		  	pro_t.add_or_dec_is_cofirm_key_flag =1;
 		    Ptc_Off();
 			LED_PTC_ICON_OFF();
 		    MqttData_Publish_SetPtc(0); 

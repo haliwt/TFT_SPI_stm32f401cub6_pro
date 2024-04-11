@@ -160,16 +160,13 @@ void TFT_Process_Handler(void)
       
 
 	}
-	if(v_t.voice_cmd_power_off_flag ==1){
-		v_t.voice_cmd_power_off_flag ++;;
 
-    }
 
 	Power_Off_Retain_Beijing_Time();
-
+    v_t.voice_power_on_cmd=0;
   	wifi_t.smartphone_app_power_on_flag=0; //手机定时关机和开机，设置参数的标志位
 	
-	
+	TFT_BACKLIGHT_OFF();
 	
 	Breath_Led();
 	
@@ -475,8 +472,8 @@ static void Key_Interrup_Handler(void)
         case add_key_id:
 		 	
 		 	if(ADD_KEY_VALUE()==KEY_DOWN){
-			    HAL_Delay(10);
-			if(ADD_KEY_VALUE()==KEY_DOWN)
+			   // HAL_Delay(10);
+			//if(ADD_KEY_VALUE()==KEY_DOWN)
 			      ADD_Key_Fun();//DEC_Key_Fun();
 			  
 
@@ -487,8 +484,8 @@ static void Key_Interrup_Handler(void)
 
 		case dec_key_id:
            if(DEC_KEY_VALUE()==KEY_DOWN){
-			 HAL_Delay(10);
-			if(DEC_KEY_VALUE()==KEY_DOWN)
+			// HAL_Delay(10);
+			///if(DEC_KEY_VALUE()==KEY_DOWN)
 			    DEC_Key_Fun();//ADD_Key_Fun();
 			 }
 
