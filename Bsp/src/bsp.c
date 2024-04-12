@@ -236,6 +236,13 @@ static void TFT_Pocess_Command_Handler(void)
             if(pro_t.mode_key_run_item_step != mode_key_temp){
 			   TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
             }
+			if(v_t.voice_set_temperature_value_flag==2){
+			  v_t.voice_set_temperature_value_flag++;
+
+              TFT_Disp_Voice_Temp_Value(0,gctl_t.dht11_temp_value);
+
+
+			}
 			
 
 	   }

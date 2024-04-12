@@ -544,19 +544,15 @@ void TFT_Disp_Temp_Value(uint8_t bc,uint8_t temp_value)
   
    if(refresh_one != temp_decade){
    	refresh_one = temp_decade;
-	//__disable_irq();
+
    	TFT_Disp_Numbers_Pic_413(5,40,bc,temp_decade); //间隔58
-   //	__enable_irq();
 
    }
 
    if(refresh_two != temp_unit ){
    	  refresh_two = temp_unit;
 	 
-   //__disable_irq();
    TFT_Disp_Numbers_Pic_413(63,40,bc,temp_unit);
-
-   //	__enable_irq();
    }
 
 }

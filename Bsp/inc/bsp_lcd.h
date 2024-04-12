@@ -2,6 +2,7 @@
 #define __BSP_LCD_H
 #include "main.h"
 
+#define DISPLY_NTC_VALUE      1
 
 //LCD屏幕分辨率定义
 //横屏显示
@@ -64,7 +65,6 @@ void Frame(void);
 
 void DISP_WINDOWS(void);
 
-void DISPLAY_image(void);
 
 #endif 
 

@@ -196,13 +196,7 @@ void Rx_Voice_Data_Handler(void(*rx_voice_handler)(uint8_t data))
 void Voice_Decoder_Handler(void)
 {
 
-        
-
-//  if(v_t.voice_wakeword_enable ==1 && v_t.gTimer_voice_time_counter_start < 16){
-//		   voice_cmd_flag=1;
-//		   if(pro_t.gPower_On == power_on)v_t.voice_power_on_cmd=1;
-//		   else v_t.voice_power_on_cmd=0;
-	while(v_t.voice_power_on_cmd){
+  while(v_t.voice_power_on_cmd){
 
 	  	v_t.voice_power_on_cmd=0;
 			
@@ -239,29 +233,8 @@ void Voice_Decoder_Handler(void)
 	   
 		}
 	   
-	 
-
-		
 	 }
 
-	
-		
-	   
-	//}
-	
-	  
-//	  if(v_t.gTimer_voice_time_counter_start > 15 && voice_cmd_flag==1){
-//		   voice_cmd_flag++;
-//		   v_t.voice_wakeword_enable =0;
-//		   VOICE_OUTPUT_SOUND_DISABLE();
-//		   v_t.RxBuf[0]=0x9F;
-//		   v_t.RxBuf[1]=0x9F;
-//	   }
-
-  
-	
-    
-	
 }
 
 
@@ -662,10 +635,13 @@ static void  voice_set_temperature_value(uint8_t value)
 			send_tx_set_temp_data(value);
 		//	pro_t.buzzer_sound_flag =1;
 			gctl_t.gSet_temperature_value = value;
-			pro_t.gTimer_pro_set_tem_value_blink=0;
+		
 			gctl_t.gSet_temperature_value_item=set_temp_value_item;
 	        v_t.voice_set_temperature_value_flag=1;
+			pro_t.add_or_dec_is_cofirm_key_flag=0;
 	       TFT_Disp_Voice_Temp_Value(0,gctl_t.gSet_temperature_value);
+
+		   pro_t.gTimer_pro_set_tem_value_blink=0;
 
 		   if(gctl_t.gSet_temperature_value >= gctl_t.dht11_temp_value){
 
