@@ -73,10 +73,10 @@ extern touchpad_t ctl_t;
 
 
 
-//void Read_NTC_Temperature_Power_On(void);
+void Read_NTC_Temperature_Power_On(void);
 
 void Read_NTC_Temperature_Value_Handler(void);
-//void Display_Speicial_Temperature_Value(uint8_t temp);
+void Display_Speicial_Temperature_Value(uint8_t temp);
 
 
 

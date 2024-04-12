@@ -215,7 +215,7 @@ void Temperature_Ptc_Pro_Handler(void)
             }
 				 
 	        }
-			if(dht11_temp_value() >40 && pro_t.gTimer_pro_over_40temp > 61){//envirment temperature
+			if(dht11_temp_value() >39 && pro_t.gTimer_pro_over_40temp > 61){//envirment temperature
                pro_t.gTimer_pro_over_40temp=0;
                 gctl_t.ptc_flag = 0 ;//run_t.gDry = 0;
 			    Ptc_Off();
