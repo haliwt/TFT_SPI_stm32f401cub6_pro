@@ -49,6 +49,9 @@ void (*rx_voice_data)(uint8_t data);
 
 static void sendData_VoiceSound_Warning_Ptc(void);
 static void sendData_VoiceSound_Warning_Fan(void);
+static void voice_send_turn_on_power_on_cmd(void);
+static void voice_send_function_cmd(uint8_t cmd1,uint8_t cmd2);
+
 
 
 
@@ -84,23 +87,59 @@ static uint8_t const voice_timer_array[24]={
 };
 
 #endif 
+/*
+   0x28 - link wifi net
+   0x2a -dry on 
+   0x2c -dry on
+   0x2e - dry off
+   0x30 - dry off
+
+   0x32 - kill on
+   0x34 - kill on
+   0x36 -- kill off
+   0x38 ---kill off
+
+   0x3a -- rat on
+   0x3c -- rat on
+   0x3e -- rat off
+   0x40 -- rat off
+   
+   
+
+*/
 //算法是:data4 + data6 = element
-static uint8_t const voice_sound_data[55]={
+static uint8_t const voice_sound_data[63]={
 
 	0x22,0x24,0x26,0x28,0x2a, //0x24 = power_on ,0x26= power_off
 	0x2c,0x2e,0x30,0x32,0x34,
     0x36,0x38,0x3a,0x3c,0x3e,
-	0x40,0x42,0x44,0x46,0x48,
-	0x4a,0x4c,0x4e,0x50,0x52,
-	0x54,0x56,0x58,0x5a,0x5c,
-	0x5e,
+	0x40,
+	//温度设置
+	0x42,0x44,0x46,0x48,0x4a,
+	0x4c,0x4e,0x50,0x52,0x54,
+	0x56,0x58,0x5a,0x5c,0x5e,
     0x60,0x62,0x64,0x66,0x68,
-	0x6a,0x6c,0x6e,0x70,0x72,
-	0x74,0x76,0x78,0x7a,0x7c,
-	0x7e,0x80,0x82,0x84,0x86,
-	0x88,0x8a,0x8c,0x8e
+	0x6a,
+    //定时时间设置
+	0x6c,0x6e,0x70,0x72,0x74,
+	0x76,0x78,0x7a,0x7c,0x7e,
+	0x80,0x82,0x84,0x86,0x88,
+	0x8a,0x8c,0x8e,0x90,0x92,
+	0x94,0x96,0x98,0x9a,0x9c,
+	0x9e
 
 };
+
+
+//static const uint8_t voice_sound_set_temp[]={
+
+//	    0x42,0x44,0x46,0x48,0x4a,
+//		0x4c,0x4e,0x50,0x52,0x54,
+//		0x56,0x58,0x5a,0x5c,0x5e,
+//		0x60,0x62,0x64,0x66,0x68,
+//		0x6a,
+
+//};
 
 
 
@@ -110,11 +149,15 @@ static int8_t BinarySearch_Voice_Data(const uint8_t *pta,uint8_t key);
 static void voice_cmd_fun(uint8_t cmd);
 static void  voice_set_temperature_value(uint8_t value);
 static void voice_set_timer_timing_value(uint8_t time);
+static void voice_send_has_been_power_on_cmd(void);
+static void voice_send_power_on_cmd(void);
+
+
 
 uint8_t key;
 int8_t result;
 
-uint8_t voice_cmd_flag;
+//uint8_t voice_cmd_flag;
 
 
 /***********************************************************
@@ -143,56 +186,67 @@ void Rx_Voice_Data_Handler(void(*rx_voice_handler)(uint8_t data))
 void Voice_Decoder_Handler(void)
 {
 
-  if(v_t.voice_wakeword_enable ==1 && v_t.gTimer_voice_time_counter_start < 16){
-		   voice_cmd_flag=1;
-		   if(pro_t.gPower_On == power_on)v_t.voice_power_on_cmd=1;
-		   else v_t.voice_power_on_cmd=0;
-		if(v_t.voice_power_on_cmd==1){
+        
+
+//  if(v_t.voice_wakeword_enable ==1 && v_t.gTimer_voice_time_counter_start < 16){
+//		   voice_cmd_flag=1;
+//		   if(pro_t.gPower_On == power_on)v_t.voice_power_on_cmd=1;
+//		   else v_t.voice_power_on_cmd=0;
+	while(v_t.voice_power_on_cmd){
+
+	  	v_t.voice_power_on_cmd=0;
 			
-			
-	    key= v_t.RxBuf[0] + v_t.RxBuf[1]; //key= data4+ data6 = ; //A5 FA 00 81 01 00 21 FB 
+		 if(v_t.gTimer_voice_time_counter_start< 15){
+	       key= v_t.RxBuf[0] + v_t.RxBuf[1]; //key= data4+ data6 = ; //A5 FA 00 81 01 00 21 FB 
 	    
-	    if(key < 0x8F){
-		result = BinarySearch_Voice_Data(voice_sound_data,key);
-		
 	
+			result = BinarySearch_Voice_Data(voice_sound_data,key);
+			
 	
-		if(result < 0x0A && result > 0){
+	    if(result < 0x10 ){
 		   voice_cmd_fun(result);
-		   v_t.RxBuf[0]=0x8F;
-		   v_t.RxBuf[1]=0x8F;
+		
 	
 		}
-		
-	   if(result > 9 && result < 31){ //set temperature value 
+		else if(result > 15 && result < 37){ //set temperature value 
 			   
 			   voice_set_temperature_value(result);
-			  v_t.RxBuf[0]=0x8F;
-		       v_t.RxBuf[1]=0x8F;
+		
 	   }
-	   else if(result > 30 && result <55){ //set timer timing value 
+	   else if(result > 36 && result <61){ //set timer timing value 
 		
 	
 			voice_set_timer_timing_value(result);
 			
-			 v_t.RxBuf[0]=0x8F;
-		     v_t.RxBuf[1]=0x8F;
 		 }
-		}
+	     else if(result==62){
 
+
+
+
+		 }
+
+	   
 		}
+	   
+	 
+
+		
+	 }
+
+	
 		
 	   
-	}
+	//}
 	
 	  
-	  if(v_t.gTimer_voice_time_counter_start > 15 && voice_cmd_flag==1){
-		   voice_cmd_flag++;
-		   v_t.voice_wakeword_enable =0;
-		   VOICE_OUTPUT_SOUND_DISABLE();
-		   v_t.RxBuf[0]=0x8F;
-		   v_t.RxBuf[1]=0x8F;
-	   }
+//	  if(v_t.gTimer_voice_time_counter_start > 15 && voice_cmd_flag==1){
+//		   voice_cmd_flag++;
+//		   v_t.voice_wakeword_enable =0;
+//		   VOICE_OUTPUT_SOUND_DISABLE();
+//		   v_t.RxBuf[0]=0x9F;
+//		   v_t.RxBuf[1]=0x9F;
+//	   }
 
   
 	
@@ -214,8 +268,27 @@ static void voice_cmd_fun(uint8_t cmd)
 	
 	switch(cmd){
 
+    case voice_power_on:
+      if(pro_t.gPower_On == power_on){
+          voice_send_has_been_power_on_cmd();
+
+	  }
+	  else{
+	  	   pro_t.gPower_On = power_on;
+		  voice_send_power_on_cmd();
+
+	  }
+
+
+
+	break;
+	
+
 
 	case voice_link_wifi:
+
+	  if(pro_t.gPower_On == power_on){
+		voice_send_function_cmd(0x04,0xA6);
 		
 		if(wifi_link_net_state()==0){
 		    
@@ -231,12 +304,23 @@ static void voice_cmd_fun(uint8_t cmd)
 		
 		
 		
+	   }
+	   else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
 
 	
 	break;
 
+
+		
 	case voice_open_ptc:
 
+	 if(pro_t.gPower_On == power_on){
+
+	 voice_send_function_cmd(0x05,0xA7);
 
      if(ptc_state()==0){
       // buzzer_sound();
@@ -247,13 +331,48 @@ static void voice_cmd_fun(uint8_t cmd)
 	    LED_PTC_ICON_ON();
 
 	 }
-	
+	 }
+	 else{
+		 voice_send_turn_on_power_on_cmd();
+
+
+	 }
 	
      
    
     break;
 
+	case voice_open_ptc_2 :
+	if(pro_t.gPower_On == power_on){
+	
+		voice_send_function_cmd(0x06,0xA8);
+	
+		if(ptc_state()==0){
+		 // buzzer_sound();
+	  
+		   gctl_t.ptc_flag =1;
+		   Ptc_On();
+		   pro_t.add_or_dec_is_cofirm_key_flag=1;
+		   LED_PTC_ICON_ON();
+	
+		}
+		}
+		else{
+			voice_send_turn_on_power_on_cmd();
+	
+	
+		}
+	   
+
+	
+
+	break;
+
 	case voice_close_ptc:
+
+	    if(pro_t.gPower_On == power_on){
+
+		voice_send_function_cmd(0x07,0xA9);
 	
 		 if(ptc_state() == 1){
             //buzzer_sound();
@@ -262,12 +381,42 @@ static void voice_cmd_fun(uint8_t cmd)
 			pro_t.add_or_dec_is_cofirm_key_flag=1;
 		    LED_PTC_ICON_OFF();
 		 }
+	    }
+		else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
+		
+		
+	break;
+
+	case voice_close_ptc_2:
+
+	    if(pro_t.gPower_On == power_on){
+
+		voice_send_function_cmd(0x08,0xAA);
+	
+		 if(ptc_state() == 1){
+            //buzzer_sound();
+			gctl_t.ptc_flag =0;
+			Ptc_Off();
+			pro_t.add_or_dec_is_cofirm_key_flag=1;
+		    LED_PTC_ICON_OFF();
+		 }
+	    }
+		else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
 		
 		
 	break;
 
 	case voice_open_plasma:
-	
+	     if(pro_t.gPower_On == power_on){
+		 voice_send_function_cmd(0x09,0xAB);
 		 if(plasma_state()==1){
 			//buzzer_sound();//SendData_Buzzer();
 			
@@ -279,13 +428,47 @@ static void voice_cmd_fun(uint8_t cmd)
 		 Plasma_On();
 		 LED_KILL_ICON_ON() ;
 		}
+	     }
+		 else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
+		
+	
+  
+	break;
+
+	case voice_open_plasma_2:
+	     if(pro_t.gPower_On == power_on){
+		 voice_send_function_cmd(0x0A,0xAC);
+		 if(plasma_state()==1){
+			//buzzer_sound();//SendData_Buzzer();
+			
+		}
+		else{
+
+		// buzzer_sound();//SendData_Buzzer();
+		 gctl_t.plasma_flag=1;
+		 Plasma_On();
+		 LED_KILL_ICON_ON() ;
+		}
+	     }
+		 else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
 		
 	
   
 	break;
    case voice_close_plasma:
   
-   	 if(plasma_state()==0){
+	 if(pro_t.gPower_On == power_on){
+	 voice_send_function_cmd(0x0B,0xAD);
+
+	 if(plasma_state()==0){
 	
 
 	 }
@@ -295,11 +478,47 @@ static void voice_cmd_fun(uint8_t cmd)
 		 Plasma_Off();
 		 LED_KILL_ICON_OFF() ;
 	 }
+
+	 }
+	 else{
+
+        voice_send_turn_on_power_on_cmd();
+
+	  }
+   	
+	
+	break;
+
+	case voice_close_plasma_2:
+  
+	 if(pro_t.gPower_On == power_on){
+	 voice_send_function_cmd(0x0C,0xAE);
+
+	 if(plasma_state()==0){
+	
+
+	 }
+	 else{
+   	  
+	     gctl_t.plasma_flag=0;
+		 Plasma_Off();
+		 LED_KILL_ICON_OFF() ;
+	 }
+
+	 }
+	 else{
+
+        voice_send_turn_on_power_on_cmd();
+
+	  }
    	
 	
 	break;
 
 	case voice_open_rat:
+
+	 if(pro_t.gPower_On == power_on){
+		 voice_send_function_cmd(0x0D,0xAF);
 
 		 if(ultrasonic_state() ==1){
 		
@@ -311,11 +530,44 @@ static void voice_cmd_fun(uint8_t cmd)
 			Ultrasonic_Pwm_Output();
 		    LED_RAT_ICON_ON();
 		 }
+	 }
+	 else{
+
+        voice_send_turn_on_power_on_cmd();
+
+	  }
+		
+		
+	break;
+
+	case voice_open_rat_2:
+
+	 if(pro_t.gPower_On == power_on){
+		 voice_send_function_cmd(0x0E,0xB0);
+
+		 if(ultrasonic_state() ==1){
+		
+
+         }
+		 else{
+	
+            gctl_t.ultrasonic_flag =1;
+			Ultrasonic_Pwm_Output();
+		    LED_RAT_ICON_ON();
+		 }
+	 }
+	 else{
+
+        voice_send_turn_on_power_on_cmd();
+
+	  }
 		
 		
 	break;
 	case voice_close_rat:
-	
+
+	 if(pro_t.gPower_On == power_on){
+	 	voice_send_function_cmd(0x0F,0xB1);
 		if(ultrasonic_state() ==0){
 		//	buzzer_sound();//SendData_Buzzer();
 
@@ -326,6 +578,38 @@ static void voice_cmd_fun(uint8_t cmd)
 		 Ultrasonic_Pwm_Stop();
 		 LED_RAT_ICON_OFF();
 		}
+	 }
+	 else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
+	 
+		
+		
+	break;
+
+	case voice_close_rat_2:
+
+	 if(pro_t.gPower_On == power_on){
+	 	voice_send_function_cmd(0x10,0xB2);
+		if(ultrasonic_state() ==0){
+		//	buzzer_sound();//SendData_Buzzer();
+
+		}
+		else{
+	   //  buzzer_sound();
+		  gctl_t.ultrasonic_flag =0;
+		 Ultrasonic_Pwm_Stop();
+		 LED_RAT_ICON_OFF();
+		}
+	 }
+	 else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
+	 
 		
 		
 	break;
@@ -344,8 +628,8 @@ static void voice_cmd_fun(uint8_t cmd)
 *************************************************************************************/
 static void  voice_set_temperature_value(uint8_t value)
 {
-      
-			value = 10+value;
+       if(pro_t.gPower_On == power_on){
+			value = 4+value;
 		//	pro_t.buzzer_sound_flag =1;
 			gctl_t.gSet_temperature_value = value;
 			pro_t.gTimer_pro_set_tem_value_blink=0;
@@ -369,6 +653,12 @@ static void  voice_set_temperature_value(uint8_t value)
 			   		LED_PTC_ICON_OFF();
 				}
 			}
+       }
+		else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	     }
 
         
 		
@@ -385,7 +675,7 @@ static void voice_set_timer_timing_value(uint8_t time)
 {
 
  
-
+       if(pro_t.gPower_On == power_on){
    
 		pro_t.mode_key_pressed_flag =0;
 	//	Buzzer_KeySound();
@@ -403,6 +693,12 @@ static void voice_set_timer_timing_value(uint8_t time)
 		 gctl_t.timing_words_changed_flag++;
 		}
 		TFT_Disp_Voice_Set_TimerTime_Init();
+       }
+	   else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
    }
 /****************************************************************************************
  *  *
@@ -490,7 +786,7 @@ static void sendData_VoiceSound_Warning_Ptc(void)
 	{
 		while(v_t.transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
 		v_t.transOngoingFlag=1;
-		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+		HAL_UART_Transmit_IT(&huart2,outputBuf,transferSize);
 	}
 
 
@@ -539,8 +835,108 @@ static void sendData_VoiceSound_Warning_Fan(void)
 	{
 		while(v_t.transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
 		v_t.transOngoingFlag=1;
-		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+		HAL_UART_Transmit_IT(&huart2,outputBuf,transferSize);
 	}
+
+
+
+}
+
+static void voice_send_has_been_power_on_cmd(void)
+{
+	
+	outputBuf[0]=0xA5; //master
+	outputBuf[1]=0XFA; //41
+	outputBuf[2]=0X00; //44	// 'D' data
+	outputBuf[3]=0X03; //	// 'R' rotator motor for select filter
+	outputBuf[4]=0X43; // // one command parameter
+	outputBuf[5]=0X00;
+	outputBuf[6]=0XE5;
+	outputBuf[7]=0XFB;
+	
+	//for(i=3;i<6;i++) crc ^= outputBuf[i];
+	//outputBuf[i]=crc;
+	transferSize=8;
+	if(transferSize)
+	{
+		while(v_t.transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+		v_t.transOngoingFlag=1;
+		HAL_UART_Transmit_IT(&huart2,outputBuf,transferSize);
+	}
+
+}
+static void voice_send_power_on_cmd(void)
+{
+	
+	outputBuf[0]=0xA5; //master
+	outputBuf[1]=0XFA; //41
+	outputBuf[2]=0X00; //44	// 'D' data
+	outputBuf[3]=0X03; //	// 'R' rotator motor for select filter
+	outputBuf[4]=0X02; // // one command parameter
+	outputBuf[5]=0X00;
+	outputBuf[6]=0XA4;
+	outputBuf[7]=0XFB;
+	
+
+	transferSize=8;
+	if(transferSize)
+	{
+		while(v_t.transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+		v_t.transOngoingFlag=1;
+		HAL_UART_Transmit_IT(&huart2,outputBuf,transferSize);
+	}
+
+
+
+}
+
+static void voice_send_turn_on_power_on_cmd(void)
+{
+
+	    outputBuf[0]=0xA5; //master
+		outputBuf[1]=0XFA; //41
+		outputBuf[2]=0X00; //44 // 'D' data
+		outputBuf[3]=0X03; //	// 'R' rotator motor for select filter
+		outputBuf[4]=0X42; // // one command parameter
+		outputBuf[5]=0X00;
+		outputBuf[6]=0XE4;
+		outputBuf[7]=0XFB;
+		
+	
+		transferSize=8;
+		if(transferSize)
+		{
+			while(v_t.transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+			v_t.transOngoingFlag=1;
+			HAL_UART_Transmit_IT(&huart2,outputBuf,transferSize);
+		}
+
+
+
+
+}
+
+static void voice_send_function_cmd(uint8_t cmd1,uint8_t cmd2)
+{
+	
+   outputBuf[0]=0xA5; //master
+   outputBuf[1]=0XFA; //41
+   outputBuf[2]=0X00; //44 // 'D' data
+   outputBuf[3]=0X03; //   // 'R' rotator motor for select filter
+   outputBuf[4]=cmd1; // // one command parameter
+   outputBuf[5]=0X00;
+   outputBuf[6]=cmd2;
+   outputBuf[7]=0XFB;
+   
+
+   transferSize=8;
+   if(transferSize)
+   {
+	   while(v_t.transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+	   v_t.transOngoingFlag=1;
+	   HAL_UART_Transmit_IT(&huart2,outputBuf,transferSize);
+   }
+	
 
 
 

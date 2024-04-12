@@ -43,6 +43,7 @@ void bsp_Init(void)
 
    pro_t.mode_key_run_item_step=0xff;
    wifi_t.gTimer_main_pro_times=60;
+   VOICE_OUTPUT_SOUND_ENABLE();
 
   
 }
@@ -163,7 +164,6 @@ void TFT_Process_Handler(void)
 
 
 	Power_Off_Retain_Beijing_Time();
-    v_t.voice_power_on_cmd=0;
   	wifi_t.smartphone_app_power_on_flag=0; //手机定时关机和开机，设置参数的标志位
 	
 	TFT_BACKLIGHT_OFF();
