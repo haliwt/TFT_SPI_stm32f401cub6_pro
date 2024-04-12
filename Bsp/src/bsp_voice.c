@@ -52,6 +52,7 @@ static void sendData_VoiceSound_Warning_Fan(void);
 static void voice_send_turn_on_power_on_cmd(void);
 static void voice_send_function_cmd(uint8_t cmd1,uint8_t cmd2);
 static void send_tx_set_temp_data(uint8_t temp);
+static void  send_tx_set_timer_value(uint8_t set_temp);
 
 
 
@@ -120,7 +121,7 @@ static uint8_t const voice_sound_data[63]={
 	0x56,0x58,0x5a,0x5c,0x5e,
     0x60,0x62,0x64,0x66,0x68,
 	0x6a,
-    //定时时间设置
+    //定时时间设置(37 ~ 61)
 	0x6c,0x6e,0x70,0x72,0x74,
 	0x76,0x78,0x7a,0x7c,0x7e,
 	0x80,0x82,0x84,0x86,0x88,
@@ -149,8 +150,17 @@ static int8_t BinarySearch_Voice_Data(const uint8_t *pta,uint8_t key);
 static void voice_cmd_fun(uint8_t cmd);
 static void  voice_set_temperature_value(uint8_t value);
 static void voice_set_timer_timing_value(uint8_t time);
+
 static void voice_send_has_been_power_on_cmd(void);
 static void voice_send_power_on_cmd(void);
+
+static void voice_send_has_been_power_off_cmd(void); 
+
+static void voice_send_power_off_cmd(void);
+
+
+static void voice_cancel_timer_timing(void);
+
 
 
 
@@ -213,7 +223,7 @@ void Voice_Decoder_Handler(void)
 			   voice_set_temperature_value(result);
 		
 	   }
-	   else if(result > 36 && result <61){ //set timer timing value 
+	   else if(result > 36 && result <62){ //set timer timing value 
 		
 	
 			voice_set_timer_timing_value(result);
@@ -221,8 +231,8 @@ void Voice_Decoder_Handler(void)
 		 }
 	     else if(result==62){
 
-
-
+			
+            voice_cancel_timer_timing();
 
 		 }
 
@@ -274,12 +284,30 @@ static void voice_cmd_fun(uint8_t cmd)
 
 	  }
 	  else{
-	  	   pro_t.gPower_On = power_on;
+	  	  pro_t.gPower_On = power_on;
+		  pro_t.run_process_step=0;
 		  voice_send_power_on_cmd();
 
 	  }
 
 
+
+	break;
+
+	case voice_power_off:
+
+	if(pro_t.gPower_On == power_on){
+		pro_t.gPower_On = power_off;
+		pro_t.power_off_flag = 1;
+		
+		 voice_send_power_off_cmd();
+		
+	
+	}
+   else{
+			  
+	  voice_send_has_been_power_off_cmd(); 
+	}
 
 	break;
 	
@@ -673,19 +701,28 @@ static void  voice_set_temperature_value(uint8_t value)
     *Return Ref:  NO
     * 
 ***********************************************************/
-static void voice_set_timer_timing_value(uint8_t time)
+static void voice_set_timer_timing_value(uint8_t set_hours)
 {
-
+     uint8_t set_value;
  
        if(pro_t.gPower_On == power_on){
+
+	   set_value = set_hours - 36;
+	   
+	   send_tx_set_timer_value(set_value);
    
 		pro_t.mode_key_pressed_flag =0;
 	//	Buzzer_KeySound();
 		pro_t.gTimer_pro_mode_key_be_select = 0; 
 
-	    v_t.voice_set_timer_timing_value = time - 30;
 	    
-		gctl_t.gSet_timer_hours = v_t.voice_set_timer_timing_value ;
+	    if(set_value == 3)set_value=2;
+		else if(set_value > 3){
+
+			set_value--;
+
+		}
+		gctl_t.gSet_timer_hours = set_value ;
 
 
 		if(pro_t.timer_mode_flag!=timer_time){//set timer mode enable
@@ -702,6 +739,34 @@ static void voice_set_timer_timing_value(uint8_t time)
 
 	   }
    }
+
+
+static void voice_cancel_timer_timing(void)
+{
+     uint8_t set_temp;
+ 
+       if(pro_t.gPower_On == power_on){
+
+	     voice_send_function_cmd(0x3F,0xE1);
+	  
+      
+	
+	    
+	   if(pro_t.timer_mode_flag!=works_time){//set timer mode enable
+		 pro_t.timer_mode_flag=works_time;
+		//to switch works or timer item flag  dis chines words
+		 gctl_t.timer_timing_words_changed_flag ++;
+		 gctl_t.timing_words_changed_flag++;
+		}
+		TFT_Display_WorksTime();
+       }
+	   else{
+
+           voice_send_turn_on_power_on_cmd();
+
+	   }
+   }
+
 /****************************************************************************************
  *  *
     *Function Name: static int8_t BinarySearch_Voice_Data(const uint8_t *pta,uint8_t key)
@@ -892,6 +957,53 @@ static void voice_send_power_on_cmd(void)
 
 }
 
+static void voice_send_has_been_power_off_cmd(void)
+{
+	outputBuf[0]=0xA5; //master
+	outputBuf[1]=0XFA; //41
+	outputBuf[2]=0X00; //44	// 'D' data
+	outputBuf[3]=0X03; //	// 'R' rotator motor for select filter
+	outputBuf[4]=0X44; // // one command parameter
+	outputBuf[5]=0X00;
+	outputBuf[6]=0XE6;
+	outputBuf[7]=0XFB;
+	
+	//for(i=3;i<6;i++) crc ^= outputBuf[i];
+	//outputBuf[i]=crc;
+	transferSize=8;
+	if(transferSize)
+	{
+		while(v_t.transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+		v_t.transOngoingFlag=1;
+		HAL_UART_Transmit_IT(&huart2,outputBuf,transferSize);
+	}
+
+}
+
+static void voice_send_power_off_cmd(void)
+{
+	outputBuf[0]=0xA5; //master
+	outputBuf[1]=0XFA; //41
+	outputBuf[2]=0X00; //44	// 'D' data
+	outputBuf[3]=0X03; //	// 'R' rotator motor for select filter
+	outputBuf[4]=0X03; // // one command parameter
+	outputBuf[5]=0X00;
+	outputBuf[6]=0XA5;
+	outputBuf[7]=0XFB;
+	
+	//for(i=3;i<6;i++) crc ^= outputBuf[i];
+	//outputBuf[i]=crc;
+	transferSize=8;
+	if(transferSize)
+	{
+		while(v_t.transOngoingFlag); //UART interrupt transmit flag ,disable one more send data.
+		v_t.transOngoingFlag=1;
+		HAL_UART_Transmit_IT(&huart2,outputBuf,transferSize);
+	}
+
+}
+
+
 static void voice_send_turn_on_power_on_cmd(void)
 {
 
@@ -1037,3 +1149,117 @@ static void send_tx_set_temp_data(uint8_t temp)
 
 
 }
+
+static void send_tx_set_timer_value(uint8_t set_hours)
+{
+
+	switch(set_hours){
+	
+		case 1:
+			voice_send_function_cmd(0x26,0xC8);
+		break;
+	
+		case 2: //2 HOURS
+			voice_send_function_cmd(0x27,0xC9);
+		break;
+	
+		case 3: //2小时
+			voice_send_function_cmd(0x28,0xCA);
+		break;
+	
+		case 4://3
+			voice_send_function_cmd(0x29,0xCB);
+		break;
+	
+		case 5://4
+			voice_send_function_cmd(0x2A,0xCC);
+		break;
+	
+		case 6://5
+			voice_send_function_cmd(0x2B,0xCD);
+		break;
+	
+		case 7://6
+			   voice_send_function_cmd(0x2C,0xCE);
+		   break;
+	   
+		case 8://7
+		voice_send_function_cmd(0x2D,0xCF);
+		break;
+	
+		case 9://8
+		voice_send_function_cmd(0x2E,0xD0);
+		break;
+	
+		case 10://9
+		voice_send_function_cmd(0x2F,0xD1);
+		break;
+	
+		case 11://10
+		voice_send_function_cmd(0x30,0xD2);
+		break;
+	
+		case 12://11
+		voice_send_function_cmd(0x31,0xD3);
+		break;
+	
+		case 13://12
+		voice_send_function_cmd(0x32,0xD4);
+		break;
+	   
+		case 14://13
+		voice_send_function_cmd(0x33,0xD5);
+		break;
+	
+		case 15://14
+		voice_send_function_cmd(0x34,0xD6);
+		break;
+	
+		case 16://15
+		voice_send_function_cmd(0x35,0xD7);
+		break;
+	
+		case 17://16
+		voice_send_function_cmd(0x36,0xD8);
+		break;
+	
+		case 18://17
+		voice_send_function_cmd(0x37,0xD9);
+		break;
+	
+	
+		case 19://18
+		voice_send_function_cmd(0x38,0xDA);
+		break;
+	
+		case 20://19
+		voice_send_function_cmd(0x39,0xDB);
+		break;
+	
+		case 21://20
+		voice_send_function_cmd(0x3A,0xDC);
+		break;
+
+		case 22://21
+		voice_send_function_cmd(0x3B,0xDD);
+		break;
+
+		case 23://22
+		voice_send_function_cmd(0x3C,0xDE);
+		break;
+
+		case 24://23
+		voice_send_function_cmd(0x3D,0xDF);
+		break;
+
+		case 25://24
+		voice_send_function_cmd(0x3E,0xE0);
+		break;
+	
+		}
+
+
+
+
+}
+
