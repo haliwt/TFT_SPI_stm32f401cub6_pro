@@ -51,7 +51,7 @@ static void sendData_VoiceSound_Warning_Ptc(void);
 static void sendData_VoiceSound_Warning_Fan(void);
 static void voice_send_turn_on_power_on_cmd(void);
 static void voice_send_function_cmd(uint8_t cmd1,uint8_t cmd2);
-
+static void send_tx_set_temp_data(uint8_t temp);
 
 
 
@@ -114,7 +114,7 @@ static uint8_t const voice_sound_data[63]={
 	0x2c,0x2e,0x30,0x32,0x34,
     0x36,0x38,0x3a,0x3c,0x3e,
 	0x40,
-	//温度设置
+	//温度设置20~40度（16~36）
 	0x42,0x44,0x46,0x48,0x4a,
 	0x4c,0x4e,0x50,0x52,0x54,
 	0x56,0x58,0x5a,0x5c,0x5e,
@@ -629,7 +629,9 @@ static void voice_cmd_fun(uint8_t cmd)
 static void  voice_set_temperature_value(uint8_t value)
 {
        if(pro_t.gPower_On == power_on){
-			value = 4+value;
+
+	        value = 4+value;
+			send_tx_set_temp_data(value);
 		//	pro_t.buzzer_sound_flag =1;
 			gctl_t.gSet_temperature_value = value;
 			pro_t.gTimer_pro_set_tem_value_blink=0;
@@ -942,4 +944,96 @@ static void voice_send_function_cmd(uint8_t cmd1,uint8_t cmd2)
 
 }
 
+static void send_tx_set_temp_data(uint8_t temp)
+{
+   switch(temp){
 
+    case 20:
+		voice_send_function_cmd(0x11,0xB3);
+    break;
+
+	case 21:
+		voice_send_function_cmd(0x12,0xB4);
+    break;
+
+	case 22:
+		voice_send_function_cmd(0x13,0xB5);
+    break;
+
+	case 23:
+		voice_send_function_cmd(0x14,0xB6);
+    break;
+
+	case 24:
+		voice_send_function_cmd(0x15,0xB7);
+    break;
+
+	case 25:
+		voice_send_function_cmd(0x16,0xB8);
+    break;
+
+	case 26:
+		   voice_send_function_cmd(0x17,0xB9);
+	   break;
+   
+	case 27:
+	voice_send_function_cmd(0x18,0xBA);
+	break;
+
+	case 28:
+	voice_send_function_cmd(0x19,0xBB);
+	break;
+
+	case 29:
+	voice_send_function_cmd(0x1A,0xBC);
+	break;
+
+	case 30:
+	voice_send_function_cmd(0x1B,0xBD);
+	break;
+
+	case 31:
+	voice_send_function_cmd(0x1C,0xBE);
+	break;
+
+	case 32:
+	voice_send_function_cmd(0x1D,0xBF);
+	break;
+   
+	case 33:
+	voice_send_function_cmd(0x1E,0xC0);
+	break;
+
+	case 34:
+	voice_send_function_cmd(0x1F,0xC1);
+	break;
+
+	case 35:
+	voice_send_function_cmd(0x20,0xC2);
+	break;
+
+	case 36:
+	voice_send_function_cmd(0x21,0xC3);
+	break;
+
+	case 37:
+	voice_send_function_cmd(0x22,0xC4);
+	break;
+
+
+	case 38:
+	voice_send_function_cmd(0x23,0xC5);
+	break;
+
+	case 39:
+	voice_send_function_cmd(0x24,0xC6);
+	break;
+
+	case 40:
+	voice_send_function_cmd(0x25,0xC7);
+	break;
+
+	}
+
+
+}
