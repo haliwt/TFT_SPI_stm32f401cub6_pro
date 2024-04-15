@@ -110,7 +110,8 @@ static void RunWifi_Command_Handler(void)
 			wifi_t.gTimer_main_pro_times =0;
 			wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;//wifi_tencent_subscription_data;
 			wifi_t.gTimer_auto_detected_net_state_times=0;
-			
+			  // Wifi_Pro_Runing_Init();
+         
 
 
 		}

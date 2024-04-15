@@ -22,6 +22,7 @@ static void Key_Interrup_Handler(void);
 void bsp_Init(void);
 
 uint16_t power_off_counter;
+uint8_t power_on_thefirst_times ;
 
 
 
@@ -166,6 +167,8 @@ void TFT_Process_Handler(void)
     }
 
 	Power_Off_Retain_Beijing_Time();
+	power_on_thefirst_times=0;
+	wifi_t.wifi_config_net_lable =0;
 
   	wifi_t.smartphone_app_power_on_flag=0; //手机定时关机和开机，设置参数的标志位
 	
@@ -196,6 +199,7 @@ void TFT_Process_Handler(void)
 static void TFT_Pocess_Command_Handler(void)
 {
   
+ 
 	if(power_on_state() == power_on){
   
     switch(pro_t.run_process_step){
@@ -219,10 +223,7 @@ static void TFT_Pocess_Command_Handler(void)
 		gctl_t.gTimer_ctl_dma_state =0;
 		pro_t.add_or_dec_is_cofirm_key_flag =0; //key set example "ptc,kill,driver rat" function. don't compart tempartur value
 
-        if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0){
-		 //   MqttData_Publish_Init();
-
-        }
+       
 		
 	 break;
 
@@ -333,19 +334,10 @@ static void TFT_Pocess_Command_Handler(void)
 		  if(pro_t.gTimer_pro_action_publis > 4 ){
 		   	  pro_t.gTimer_pro_action_publis=0;
 		
-		      	//Device_Action_Publish_Handler();
+		      	Device_Action_Publish_Handler();
 		   }
 
-		   if(gctl_t.local_set_temp_value == 1 &&  gctl_t.gTimer_ctl_publish_set_temperature_value >2){
 
-			    gctl_t.local_set_temp_value ++;
-	           //publish tencent cloud data
-	          //  MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
-			//	HAL_Delay(100);//350
-	          
-
-
-		    }
        }
 		  
 	  pro_t.run_process_step=pro_wifi_init;
@@ -354,7 +346,16 @@ static void TFT_Pocess_Command_Handler(void)
       // handler of wifi 
 	  case pro_wifi_init: //7
 	   
-     // Wifi_Pro_Runing_Init();
+         if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && wifi_t.wifi_config_net_lable ==0 && power_on_thefirst_times==0){
+             power_on_thefirst_times++;
+		
+		    MqttData_Publish_Update_Data();
+
+			HAL_Delay(200);
+
+		    
+		}
+			
 		pro_t.run_process_step=pro_disp_dht11_value;
 
 	  break;

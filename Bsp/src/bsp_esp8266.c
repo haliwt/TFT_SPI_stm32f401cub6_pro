@@ -301,7 +301,7 @@ void SmartPhone_LinkTencent_Cloud(void)
 
        wifi_t.soft_ap_config_success=0;
 	   if( wifi_t.wifi_config_net_lable ==0xff){
-	   	     
+	   	     wifi_t.wifi_config_net_lable =0xfe;
 			  wifi_t.gTimer_login_tencent_times=0;
 	       HAL_UART_Transmit(&huart1, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
 	   }

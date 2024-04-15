@@ -38,6 +38,7 @@ static void property_report_SetState(uint8_t dat);
 static void property_report_power_off_state(void);
 static void app_power_on_property_report_state(uint8_t open_data,uint8_t plasma_data,uint8_t ptc_data,uint8_t ultra_data);
 
+static void property_report_update_data(void);
 
 
 typedef struct {
@@ -83,8 +84,8 @@ static void Mqtt_Value_update_data(void)
 	sg_info.ptc  = gctl_t.ptc_flag;
 	sg_info.anion =gctl_t.plasma_flag;
 	sg_info.sonic = gctl_t.ultrasonic_flag ;
-    sg_info.find =  wifi_t.set_wind_speed_value;
-	sg_info.set_temperature = gctl_t.dht11_temp_value;
+    sg_info.find =  100;//wifi_t.set_wind_speed_value;
+	sg_info.set_temperature = 40;//gctl_t.dht11_temp_value;
 
 }
 
@@ -151,7 +152,7 @@ static void property_report_state(void)
 }
 
 
-void property_report_update_data(void)
+static void property_report_update_data(void)
 {
 	char  message[256]    = {0};
 	int   message_len	   = 0;
