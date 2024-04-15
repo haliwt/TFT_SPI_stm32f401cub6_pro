@@ -94,11 +94,8 @@ static void property_report_ultrasonic_warning(uint8_t warning)
 void Publish_Data_ToTencent_Initial_Data(void)
 {
     
-          
-      MqttData_Publish_Init();
+     MqttData_Publish_Init();
 	         
-	
-
 }
 	
 

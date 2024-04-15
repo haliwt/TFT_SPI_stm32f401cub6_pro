@@ -22,11 +22,10 @@ void Key_Speical_Power_Fun_Handler(void)
             pro_t.wifi_led_fast_blink_flag=1;
 			
 			//WIFI CONNCETOR process
-			wifi_t.link_tencent_step_counter=0;
 			wifi_t.esp8266_login_cloud_success =0;
 			wifi_t.runCommand_order_lable=wifi_link_tencent_cloud;
 			wifi_t.wifi_config_net_lable= wifi_set_restor;
-			wifi_t.gTimer_login_tencent_times=0;
+			wifi_t.link_tencent_step_counter=0;
 			wifi_t.gTimer_linking_tencent_duration=0; //166s -2分7秒
 			buzzer_sound();
 			

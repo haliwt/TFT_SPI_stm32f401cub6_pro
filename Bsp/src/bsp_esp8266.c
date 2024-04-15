@@ -93,37 +93,61 @@ void SmartPhone_TryToLink_TencentCloud(void)
 *****************************************************************************************/
 void ReConnect_Wifi_Net_ATReset_Hardware(void)
 {
+
+
+      switch(wifi_t.link_tencent_step_counter){
+
+	  case 0:
 	  
-	   if(wifi_t.link_tencent_step_counter==0){
-		  wifi_t.gTimer_login_tencent_times=0;
-		  wifi_t.link_tencent_step_counter=driver_esp8266_rest;
-		   WIFI_IC_DISABLE();
-		   
-	   }
+		 
 	
-	   if(wifi_t.gTimer_login_tencent_times > 0 && wifi_t.link_tencent_step_counter==driver_esp8266_rest){
+		  WIFI_IC_DISABLE();
+	      wifi_t.gTimer_login_tencent_times=0;
+		  wifi_t.link_tencent_step_counter =1;
+	   
+
+	   break;
+
+	   case 1:
+	
+	   if(wifi_t.gTimer_login_tencent_times > 0 ){
 		   wifi_t.gTimer_login_tencent_times=0;
-		   wifi_t.link_tencent_step_counter=driver_esp8266_step_2;
+		    
+
 		   WIFI_IC_ENABLE();
+	       wifi_t.link_tencent_step_counter =2;
 		   
 
 		}
-		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
-		if(wifi_t.link_tencent_step_counter==driver_esp8266_step_2){
-		 wifi_t.link_tencent_step_counter=driver_esp8266_step_3;
-		 wifi_t.gTimer_login_tencent_times=0;
-		 at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
 
-		}
+	   break;
+
+	   case 2:
+		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+	
+		
+		 at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+	     wifi_t.link_tencent_step_counter=3;
+
+		
+
+	   break;
+
+	   case 3:
 
         if(wifi_t.gTimer_login_tencent_times > 0){
-		   WIFI_IC_ENABLE();
+		 
 		  wifi_t.gTimer_login_tencent_times=0;
 
-          wifi_t.link_tencent_step_counter=driver_esp8266_step_4;
+           WIFI_IC_ENABLE();
+			wifi_t.link_tencent_step_counter =0xff;
 
 
 		}
+	   
+
+		break;
+      }
 		
 	  Wifi_Fast_Led_Blink();
 
@@ -156,12 +180,12 @@ void Wifi_SoftAP_Config_Handler(void)
     case wifi_set_restor:
            Wifi_Fast_Led_Blink();
            ReConnect_Wifi_Net_ATReset_Hardware();//InitWifiModule_Hardware()
-		
+		   //HAL_Delay(1000);
 		   wifi_t.gTimer_login_tencent_times=0;
-	       if(wifi_t.link_tencent_step_counter==driver_esp8266_step_4){
-             wifi_t.wifi_config_net_lable =wifi_set_cwmode;
+	       if(wifi_t.link_tencent_step_counter==0xff){
+			    wifi_t.wifi_config_net_lable =wifi_set_cwmode;
 		   }
-		   wifi_t.wifi_config_net_lable =wifi_set_cwmode;
+		  
 		      Wifi_Fast_Led_Blink();
 	break;
 
