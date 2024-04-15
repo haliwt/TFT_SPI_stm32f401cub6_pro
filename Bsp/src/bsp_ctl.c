@@ -419,13 +419,13 @@ void Device_Action_No_Wifi_Handler(void)
 
   if(ptc_state()== 1){
 
-      //Ptc_On();
+      Ptc_On();
 	 LED_PTC_ICON_ON();
    
 
   }
   else{
-   /// Ptc_Off();
+     Ptc_Off();
 	LED_PTC_ICON_OFF();
    
 

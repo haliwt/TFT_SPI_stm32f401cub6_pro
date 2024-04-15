@@ -797,6 +797,22 @@ void Json_Parse_Command_Fun(void)
 			pro_t.gTimer_pro_temp_delay= 100;
 			pro_t.gTimer_pro_mode_key_be_select = 0;
 			TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+			if(gctl_t.gSet_temperature_value > gctl_t.dht11_temp_value){
+
+		    	if(ptc_state()==0){
+					gctl_t.ptc_flag =1;
+					Ptc_On();
+					LED_PTC_ICON_ON();
+		    	}
+
+			}
+			else{
+		   		if(ptc_state()==1){
+                    gctl_t.ptc_flag = 0;
+			   		Ptc_Off();
+			   		LED_PTC_ICON_OFF();
+				}
+			}
 		}
       wifi_t.response_wifi_signal_label = 0xff;
 	  wifi_t.gTimer_auto_detected_net_state_times=0;

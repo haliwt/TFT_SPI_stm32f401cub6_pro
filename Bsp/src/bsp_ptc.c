@@ -191,7 +191,7 @@ void Temperature_Ptc_Pro_Handler(void)
 
 		   if(pro_t.gTimer_pro_temp_delay> 61 && ptc_error_state()==0 && pro_t.add_or_dec_is_cofirm_key_flag ==0){
                pro_t.gTimer_pro_temp_delay =0;
-				if(set_temp_value() <= dht11_temp_value()|| dht11_temp_value() >40){//envirment temperature
+				if(set_temp_value() <= dht11_temp_value()|| dht11_temp_value() >39){//envirment temperature
 	  
 				gctl_t.ptc_flag = 0 ;//run_t.gDry = 0;
 			    Ptc_Off();
@@ -238,7 +238,7 @@ void Temperature_Ptc_Pro_Handler(void)
 
 		   }
 
-
+           pro_t.mode_key_run_item_step=0xff;
 		   break;
 	}
 
