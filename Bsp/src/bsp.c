@@ -199,7 +199,7 @@ void TFT_Process_Handler(void)
 static void TFT_Pocess_Command_Handler(void)
 {
   
- 
+   static uint8_t set_timer_value=0xff ;
 	if(power_on_state() == power_on){
   
     switch(pro_t.run_process_step){
@@ -335,6 +335,13 @@ static void TFT_Pocess_Command_Handler(void)
 		   	  pro_t.gTimer_pro_action_publis=0;
 		
 		      	Device_Action_Publish_Handler();
+
+                if(set_timer_value != gctl_t.gSet_temperature_value){
+					set_timer_value = gctl_t.gSet_temperature_value;
+				MqttData_Publis_SetTemp(set_timer_value);
+				HAL_Delay(30);
+                }
+		       
 		   }
 
 
