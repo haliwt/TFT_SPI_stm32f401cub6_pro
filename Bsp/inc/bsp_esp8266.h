@@ -26,6 +26,7 @@ typedef enum _esp8266_para{
 
 	wifi_set_restor=0x01,
 	wifi_set_cwmode,
+	wifi_set_read_ic_uid,
 	wifi_set_softap,
 	wifi_set_tcdevreg,
 	wifi_set_tcsap,

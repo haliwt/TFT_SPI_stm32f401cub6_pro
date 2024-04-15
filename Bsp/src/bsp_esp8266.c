@@ -156,23 +156,33 @@ void Wifi_SoftAP_Config_Handler(void)
     case wifi_set_restor:
            Wifi_Fast_Led_Blink();
            ReConnect_Wifi_Net_ATReset_Hardware();//InitWifiModule_Hardware()
-		   Wifi_Fast_Led_Blink();
+		
+		   wifi_t.gTimer_login_tencent_times=0;
 	       if(wifi_t.link_tencent_step_counter==driver_esp8266_step_4){
              wifi_t.wifi_config_net_lable =wifi_set_cwmode;
 		   }
+		   wifi_t.wifi_config_net_lable =wifi_set_cwmode;
+		      Wifi_Fast_Led_Blink();
 	break;
 
 
 	 case wifi_set_cwmode:
     	    WIFI_IC_ENABLE();
-			Wifi_Fast_Led_Blink();
-	        if(wifi_t.link_tencent_step_counter==driver_esp8266_step_4){
-				wifi_t.link_tencent_step_counter =driver_esp8266_step_5;
+		
+	        if(wifi_t.gTimer_login_tencent_times> 0){
 				wifi_t.gTimer_login_tencent_times=0;
+				//wifi_t.wifi_config_net_lable =wifi_set_cwmode;
          	   HAL_UART_Transmit(&huart1, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+			   wifi_t.wifi_config_net_lable =wifi_set_read_ic_uid;
 	        }
 
-			if(wifi_t.gTimer_login_tencent_times > 1){
+	    Wifi_Fast_Led_Blink();
+
+	break;
+
+     case wifi_set_read_ic_uid:
+
+			if(wifi_t.gTimer_login_tencent_times > 2){
 				wifi_t.gTimer_login_tencent_times=0;
 				wifi_t.wifi_config_net_lable =wifi_set_softap;
 				ic_id = HAL_GetUIDw0();
@@ -187,34 +197,33 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	  case wifi_set_softap:
             WIFI_IC_ENABLE();
-			if(wifi_t.link_tencent_step_counter ==driver_esp8266_step_5){
-				wifi_t.link_tencent_step_counter =driver_esp8266_step_6;
+			if(wifi_t.gTimer_login_tencent_times > 0){
 				wifi_t.gTimer_login_tencent_times=0;
+			
+				
             sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,ic_id);
-			usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+			 usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+		     wifi_t.wifi_config_net_lable=wifi_set_tcdevreg;
 
 			}
-			if(wifi_t.gTimer_login_tencent_times > 4){
-	  		
-              wifi_t.gTimer_login_tencent_times =0;
-              wifi_t.wifi_config_net_lable=wifi_set_tcdevreg;
-			}
+			
+		
 		
 	       Wifi_Fast_Led_Blink();
 
 
 	 case wifi_set_tcdevreg://dynamic register
 
-	     if(wifi_t.link_tencent_step_counter ==driver_esp8266_step_6){
-		 	wifi_t.link_tencent_step_counter =driver_esp8266_step_7;
+	     if(wifi_t.gTimer_login_tencent_times > 4){
+		 
 				wifi_t.gTimer_login_tencent_times=0;
-		     HAL_UART_Transmit(&huart1, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册 
+		     HAL_UART_Transmit(&huart1, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册
 
-	     }
-		 if(wifi_t.gTimer_login_tencent_times > 4){//6
-	         wifi_t.gTimer_login_tencent_times =0;
-             wifi_t.wifi_config_net_lable=wifi_set_tcsap;
+			  wifi_t.wifi_config_net_lable=wifi_set_tcsap;
          }
+
+	
+	     wifi_t.wifi_config_net_lable=wifi_set_tcsap;
 	     Wifi_Fast_Led_Blink();
 
 	 break;
@@ -222,16 +231,16 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	 case wifi_set_tcsap: //5
 	 
-           if(wifi_t.link_tencent_step_counter ==driver_esp8266_step_7){
-		 	wifi_t.link_tencent_step_counter =driver_esp8266_step_8;
+         if(wifi_t.gTimer_login_tencent_times > 4){
+		
 			  wifi_t.gTimer_login_tencent_times=0;
 
 	        sprintf((char *)device_massage, "AT+TCSAP=\"UYIJIA01-%d\"\r\n",ic_id);
             usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
-           }
+           
 
 		   
-		  if(wifi_t.gTimer_login_tencent_times > 1){
+		  
 		   
 			 wifi_t.gTimer_login_tencent_times = 0;
 
@@ -267,8 +276,8 @@ void SmartPhone_LinkTencent_Cloud(void)
 	if(wifi_t.soft_ap_config_success==1){
 
        wifi_t.soft_ap_config_success=0;
-	   if(wifi_t.link_tencent_step_counter ==driver_esp8266_step_8){
-	   	      wifi_t.link_tencent_step_counter =driver_esp8266_step_9;
+	   if( wifi_t.wifi_config_net_lable ==0xff){
+	   	     
 			  wifi_t.gTimer_login_tencent_times=0;
 	       HAL_UART_Transmit(&huart1, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 5000);//开始连接
 	   }

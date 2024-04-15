@@ -67,7 +67,7 @@ void USART_Cmd_Error_Handler(void)
 *******************************************************************************/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    static uint8_t state_uart1;
+    static uint8_t state_uart1,voice_wakewor_int=0xff;
     
    
     //wifi usart1
@@ -124,15 +124,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
      
 	}
 
- //voice sound 
+
   if(huart->Instance==USART2){
 
 		switch(state_uart1)
 		{
 		case 0:  //#0
 			if(voice_inputBuf[0]==0xA5){  //hex :4D - "M" -fixed mainboard
-			   state_uart1=1; //=1
-               
+				state_uart1=1; //=1
+              
 			}
 			else{
 				state_uart1=0; //=1
@@ -178,27 +178,50 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 	     if(voice_inputBuf[0]==0x01){
 		 	 
-			 v_t.voice_wakeword_enable=1;
-			 v_t.RxBuf[0]= voice_inputBuf[0];
-			 v_t.gTimer_voice_time_counter_start =0;
-		      state_uart1=0;
+			  VOICE_OUTPUT_SOUND_ENABLE();
+	           v_t.voice_wakeword_enable=1;
+			
+			  v_t.RxBuf[0]= voice_inputBuf[0];
+		
+
+			  state_uart1=5;
 		    
-		 }
-		 else if(v_t.voice_wakeword_enable==1){
-		  
-	      if(voice_inputBuf[0] >0 && voice_inputBuf[0] < 0x40) //指令Command 
-		  {
-              v_t.RxBuf[0]=voice_inputBuf[0]; //voice data4 + data6
-			 
+		     
+
+         }
+		 else if(v_t.voice_wakeword_enable ==1){
+	      if(voice_inputBuf[0] >0 && voice_inputBuf[0] < 0x38) //hex : 41 -'A'	-fixed master
+		   {
+               v_t.RxBuf[0]=voice_inputBuf[0]; //voice data4 + data6
+			   if(v_t.RxBuf[0]==0x02){
+			   	//power On command
+			   	  v_t.voice_power_on_cmd = 1;
+				 VOICE_OUTPUT_SOUND_ENABLE();
+				  if(pro_t.gPower_On == power_off){
+				  	pro_t.gPower_On = power_on;
+					pro_t.run_process_step=0;
+					gctl_t.ptc_warning =0;
+				    gctl_t.fan_warning =0;
+				  }
+
+				   pro_t.long_key_flag =0;
+				  
+
+               }
+			  
+			  
 			   state_uart1=5;
 
+			 
+		   }
+		   else
+			  state_uart1=0; 
 
 		  }
-	      }
 		  else{
 
 		   state_uart1=0; 
-		  // VOICE_OUTPUT_SOUND_DISABLE();
+		   VOICE_OUTPUT_SOUND_DISABLE();
 
 		
 		  }
@@ -218,21 +241,50 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	   break;
 
 	   case 6:
-        
-		 if(v_t.voice_wakeword_enable ==1){
+         if(voice_inputBuf[0] ==0x21){
+         
+			v_t.RxBuf[1]=voice_inputBuf[0];
+		
+			if(voice_wakewor_int !=v_t.voice_wakeword_counter){
+				voice_wakewor_int=	v_t.voice_wakeword_counter;
+                v_t.gTimer_voice_time_counter_start =0;
+			}
+			state_uart1=8; 
+         }
+		 else if(v_t.voice_wakeword_enable ==1){
 
-		 
-	      if(voice_inputBuf[0] >0x21 && voice_inputBuf[0] < 0x60) //hex : 41 -'A'	-fixed master
+		  if(pro_t.gPower_On == power_on)v_t.voice_power_on_cmd =1;
+	      if(voice_inputBuf[0] == 0x22){ //power on cmd
+		  
+               v_t.RxBuf[1]=voice_inputBuf[0];
+			   
+			   state_uart1=8; 
+		  }
+		  else if(voice_inputBuf[0]==0x23){ //power off
+			  v_t.RxBuf[1]=voice_inputBuf[0];
+			   
+				  //power_off command 
+				v_t.voice_power_on_cmd = 0;
+			  	if(pro_t.gPower_On == power_on){
+					pro_t.gPower_On = power_off;
+					
+					pro_t.power_off_flag=1;
+
+			  	}
+				VOICE_OUTPUT_SOUND_ENABLE();
+
+				  state_uart1=8; 
+
+          }
+	      else if(voice_inputBuf[0] >0x23 && voice_inputBuf[0] < 0x58 &&  v_t.voice_power_on_cmd == 1) //hex : 41 -'A'	-fixed master
 		  {
 
 			   v_t.RxBuf[1]=voice_inputBuf[0];
-			   v_t.gTimer_voice_time_counter_start =0;
-			   v_t.voice_power_on_cmd = 1;
-			   state_uart1=0; 
+			   state_uart1=7; 
 		   }
 	     }
 		 else{
-           // VOICE_OUTPUT_SOUND_DISABLE();
+            VOICE_OUTPUT_SOUND_DISABLE();
 			 state_uart1=0; 
 			 
 
@@ -241,8 +293,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	   break;
 
 	   case 7:
-	   	 
-	     if(voice_inputBuf[0]==0xFB) //hex : 41 -'A'	-fixed master
+	   	 if(pro_t.gPower_On == power_on)v_t.voice_power_on_cmd =1;
+		
+		  if(v_t.voice_wakeword_enable ==1 &&  v_t.voice_power_on_cmd ==1){
+	      if(voice_inputBuf[0]==0xFB) //hex : 41 -'A'	-fixed master
 		  {
             
              
@@ -255,28 +309,29 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 		  }
 		  
-	   
+	   	  }
+		  else{
+			  VOICE_OUTPUT_SOUND_ENABLE();
+
+			  state_uart1=0; 
+
+		  }
 		 
      break;
 
 	  case 8:
 	      if(voice_inputBuf[0]==0xFB) //hex : 41 -'A'	-fixed master
 		   {
-			state_uart1=0; 
+
+ 
+			  
+			   state_uart1=0; 
 
 		  }
-		   state_uart1=0; 
-		break;
+		
 		  
-	  case 9:
-	      if(voice_inputBuf[0]==0xFB) //hex : 41 -'A'	-fixed master
-		   {
-			
-			state_uart1=0; 
 
-		  }
-		   state_uart1=0; 
-		break;
+     break;
 
 	 
 	  }
@@ -354,7 +409,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  pro_t.gTimer_pro_mode_long_key++;
 	  pro_t.gTimer_pro_action_publis++;
 	  pro_t.gTimer_pro_display_dht11_hum++;
-	  pro_t.gTimer_pro_over_40temp++;
 	 
 
 	  //gctl_t 

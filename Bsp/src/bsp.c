@@ -43,7 +43,6 @@ void bsp_Init(void)
 
    pro_t.mode_key_run_item_step=0xff;
    wifi_t.gTimer_main_pro_times=60;
-   VOICE_OUTPUT_SOUND_ENABLE();
 
   
 }
@@ -161,12 +160,16 @@ void TFT_Process_Handler(void)
       
 
 	}
+	if(v_t.voice_cmd_power_off_flag ==1){
+		v_t.voice_cmd_power_off_flag ++;;
 
+    }
 
 	Power_Off_Retain_Beijing_Time();
+
   	wifi_t.smartphone_app_power_on_flag=0; //手机定时关机和开机，设置参数的标志位
 	
-	TFT_BACKLIGHT_OFF();
+	
 	
 	Breath_Led();
 	
@@ -217,7 +220,7 @@ static void TFT_Pocess_Command_Handler(void)
 		pro_t.add_or_dec_is_cofirm_key_flag =0; //key set example "ptc,kill,driver rat" function. don't compart tempartur value
 
         if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0){
-		    MqttData_Publish_Init();
+		 //   MqttData_Publish_Init();
 
         }
 		
@@ -236,13 +239,6 @@ static void TFT_Pocess_Command_Handler(void)
             if(pro_t.mode_key_run_item_step != mode_key_temp){
 			   TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
             }
-			if(v_t.voice_set_temperature_value_flag==2){
-			  v_t.voice_set_temperature_value_flag++;
-
-              TFT_Disp_Voice_Temp_Value(0,gctl_t.dht11_temp_value);
-
-
-			}
 			
 
 	   }
@@ -337,15 +333,15 @@ static void TFT_Pocess_Command_Handler(void)
 		  if(pro_t.gTimer_pro_action_publis > 4 ){
 		   	  pro_t.gTimer_pro_action_publis=0;
 		
-		      	Device_Action_Publish_Handler();
+		      	//Device_Action_Publish_Handler();
 		   }
 
 		   if(gctl_t.local_set_temp_value == 1 &&  gctl_t.gTimer_ctl_publish_set_temperature_value >2){
 
 			    gctl_t.local_set_temp_value ++;
 	           //publish tencent cloud data
-	            MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
-				HAL_Delay(100);//350
+	          //  MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
+			//	HAL_Delay(100);//350
 	          
 
 
@@ -479,8 +475,8 @@ static void Key_Interrup_Handler(void)
         case add_key_id:
 		 	
 		 	if(ADD_KEY_VALUE()==KEY_DOWN){
-			   // HAL_Delay(10);
-			//if(ADD_KEY_VALUE()==KEY_DOWN)
+			    HAL_Delay(10);
+			if(ADD_KEY_VALUE()==KEY_DOWN)
 			      ADD_Key_Fun();//DEC_Key_Fun();
 			  
 
@@ -491,8 +487,8 @@ static void Key_Interrup_Handler(void)
 
 		case dec_key_id:
            if(DEC_KEY_VALUE()==KEY_DOWN){
-			// HAL_Delay(10);
-			///if(DEC_KEY_VALUE()==KEY_DOWN)
+			 HAL_Delay(10);
+			if(DEC_KEY_VALUE()==KEY_DOWN)
 			    DEC_Key_Fun();//ADD_Key_Fun();
 			 }
 

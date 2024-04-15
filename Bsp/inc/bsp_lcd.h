@@ -2,7 +2,6 @@
 #define __BSP_LCD_H
 #include "main.h"
 
-#define DISPLY_NTC_VALUE      1
 
 //LCD屏幕分辨率定义
 //横屏显示
@@ -24,7 +23,7 @@
 extern uint8_t spi_tx_buffer[1];
 
 #define TFT_BACKLIGHT_ON()     (HAL_GPIO_WritePin(TFT_BACKLIGHT_GPIO_Port,TFT_BACKLIGHT_Pin,GPIO_PIN_RESET))  
-#define TFT_BACKLIGHT_OFF()    (HAL_GPIO_WritePin(TFT_BACKLIGHT_GPIO_Port,TFT_BACKLIGHT_Pin,GPIO_PIN_SET)) 
+#define TFT_BACKLIGHT_OFF()     (HAL_GPIO_WritePin(TFT_BACKLIGHT_GPIO_Port,TFT_BACKLIGHT_Pin,GPIO_PIN_SET)) 
 
 #define TFT_DCX_CMD()     (HAL_GPIO_WritePin(TFT_DCX_GPIO_Port,TFT_DCX_Pin,GPIO_PIN_RESET))  
 #define TFT_DCX_DATA()     (HAL_GPIO_WritePin(TFT_DCX_GPIO_Port,TFT_DCX_Pin,GPIO_PIN_SET))
@@ -65,6 +64,7 @@ void Frame(void);
 
 void DISP_WINDOWS(void);
 
+void DISPLAY_image(void);
 
 #endif 
 

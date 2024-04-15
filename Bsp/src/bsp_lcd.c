@@ -10,10 +10,10 @@ uint8_t spi_tx_buffer[1];
 
 
 static uint8_t SPI_WriteByte(uint8_t *txdata,uint16_t size);
+//static uint8_t lcd_buf[LCD_Buf_Size];
 
-
-
-
+static void LCD_Write_Data1(uint8_t dat1,uint8_t dat2);
+static void LCD_Write_Data1(uint8_t dat1,uint8_t dat2);
 
 
 uint8_t spi_it_tx[1];
@@ -272,6 +272,110 @@ void DISP_WINDOWS(void)
 		
         }
 }
+/*******************************************************************************
+ * 
+ * Function Name: void DISP_WINDOWS(void)
+ * Function : display TFT color
+ * Input Ref: NO
+ * Return Ref: NO
+ * 
+********************************************************************************/
+static void LCD_Write_Data1(uint8_t dat1,uint8_t dat2)
+{
+ 	
+      //A0=1;
+     // CSB=0;
+     TFT_DCX_DATA();
+    // LCD_NSS_SetLow();
+	 SPI_WriteByte(&dat1,1);
+      
+	//CSB=1;
+	//LCD_NSS_SetHigh();
+
+	 // CSB=0;
+	//LCD_NSS_SetLow();
+	 
+     SPI_WriteByte(&dat2,1);
+     
+	// CSB=1;
+	 //LCD_NSS_SetHigh();
+     
+  
+}
+
+/*******************************************************************************
+ * 
+ * Function Name: void DISP_WINDOWS(void)
+ * Function : display TFT color
+ * Input Ref: NO
+ * Return Ref: NO
+ * 
+********************************************************************************/
+void DISPLAY_image(void)
+{
+	uint16_t i,j;
+	static uint16_t p,q;
+
+
+	
+	TFT_DCX_DATA();
+//    LCD_NSS_SetLow();
+	DISP_WINDOWS();
+//   	for(i=0;i<80;i++)
+//	{
+//		for(j=0;j<240;j++)
+//		{
+//			LCD_Write_Data(BLACK); 
+//		}
+//	}
+	for(i=0;i<320;i++)
+	{
+//		for(j=0;j<56;j++)
+//		{
+//			LCD_Write_Data(BLACK);
+//		}
+		q=0;
+
+		for(j=0;j<240;j++)
+		{
+            
+			if(p<4440 && j< 121){
+			//LCD_Write_Data1(gImage_s07_main_picture[p],gImage_s07_main_picture[p+1]);
+			LCD_Write_Data1(gImage_s07_temp[p],gImage_s07_temp[p+1]);
+			p++;
+			q++;
+
+			}
+            else{
+				p++;
+			   LCD_Write_Data(BLACK >> 8);
+			    LCD_Write_Data(BLACK);
+               if(p==76800)p=0;
+
+            }
+			 
+
+         }
+			
+			 
+	}   
+	     	
+	
+//		for(j=0;j<56;j++)
+//			{
+//		       LCD_Write_Data(BLACK);
+// 			}
+//	}
+//	for(i=0;i<80;i++)
+//	{
+//		for(j=0;j<240;j++)
+//		{
+//			LCD_Write_Data(BLACK); 
+//		}
+//	}
+ 
+	//HOLD_DISP ();
+}
 
 
 /*******************************************************************************
@@ -282,6 +386,7 @@ void DISP_WINDOWS(void)
  * Return Ref: NO
  * 
 ***********************************************************************************/
+#if 1
 void TFT_LCD_Init(void)
 {
     /* 关闭睡眠模式 */
@@ -290,7 +395,7 @@ void TFT_LCD_Init(void)
 	//TFT_BACKLIGHT_ON();
     LCD_Write_Cmd(0x11);
 	HAL_Delay(120);
-    
+    #if 1
     /* 开始设置显存扫描模式，数据格式等 */
 	
     LCD_Write_Cmd(0x36);//修改此处，可以改变屏幕的显示方向，横屏，竖屏等
@@ -396,8 +501,117 @@ void TFT_LCD_Init(void)
     /*打开显示*/
  
 }
+#endif 
+
+
+//void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+//{
+//
+//  
+//
+//	HAL_SPI_Transmit_DMA(&hspi1,spi_tx_buffer,1);  
+//
+//
+//}
+#if 0
+void TFT_LCD_Init(void)
+{
+
+
+TFT_BACKLIGHT_ON();
+
+LCD_GPIO_Reset();
+
+
+LCD_Write_Cmd(0x11);     
+
+//Delay(120); //ms
+HAL_Delay(100);
+
+LCD_Write_Cmd( 0x36);     
+LCD_Write_Data( 0x00);   
+
+LCD_Write_Cmd( 0x3A);     
+LCD_Write_Data( 0x06);   
+
+LCD_Write_Cmd( 0xB2);     
+LCD_Write_Data( 0x0C);   
+LCD_Write_Data( 0x0C);   
+LCD_Write_Data( 0x00);   
+LCD_Write_Data( 0x33);   
+LCD_Write_Data( 0x33);   
+
+LCD_Write_Cmd( 0xB7);     
+LCD_Write_Data( 0x75); //VGH=14.97V, VGL=-10.43V  
+
+LCD_Write_Cmd( 0xBB);   //VCOM  
+LCD_Write_Data( 0x1F);   
+
+LCD_Write_Cmd( 0xC0);     
+LCD_Write_Data( 0x2C);   
+
+LCD_Write_Cmd( 0xC2);     
+LCD_Write_Data( 0x01);   
+
+LCD_Write_Cmd( 0xC3);   //GVDD  
+LCD_Write_Data( 0x13);   
+
+LCD_Write_Cmd( 0xC4);     
+LCD_Write_Data( 0x20);   
+
+LCD_Write_Cmd( 0xC6);     
+LCD_Write_Data( 0x0F);   
+
+LCD_Write_Cmd( 0xD0);     
+LCD_Write_Data( 0xA4);   
+LCD_Write_Data( 0xA1);   
+
+LCD_Write_Cmd( 0xE0);     
+LCD_Write_Data( 0xD0);   
+LCD_Write_Data( 0x1A);   
+LCD_Write_Data( 0x1E);   
+LCD_Write_Data( 0x0A);   
+LCD_Write_Data( 0x0A);   
+LCD_Write_Data( 0x27);   
+LCD_Write_Data( 0x3B);   
+LCD_Write_Data( 0x44);   
+LCD_Write_Data( 0x4A);   
+LCD_Write_Data( 0x2B);   
+LCD_Write_Data( 0x16);   
+LCD_Write_Data( 0x15);   
+LCD_Write_Data( 0x1A);   
+LCD_Write_Data( 0x1E);   
+
+LCD_Write_Cmd(0xE1);     
+LCD_Write_Data(0xD0);   
+LCD_Write_Data( 0x1A);   
+LCD_Write_Data( 0x1E);   
+LCD_Write_Data( 0x0A);   
+LCD_Write_Data( 0x0A);   
+LCD_Write_Data( 0x27);   
+LCD_Write_Data( 0x3A);   
+LCD_Write_Data( 0x43);   
+LCD_Write_Data( 0x49);   
+LCD_Write_Data( 0x2B);   
+LCD_Write_Data( 0x16);   
+LCD_Write_Data( 0x15);   
+LCD_Write_Data( 0x1A);   
+LCD_Write_Data( 0x1D);   
+
+LCD_Write_Cmd( 0x29); 
 
 
 
 
+}
+#endif 
+//void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+//{
+
+
+//   // HAL_SPI_Receive_DMA(&hspi1,recv_buf,5);
+//	HAL_SPI_Transmit_DMA(&hspi1,spi_it_tx,1);
+
+//}
+#endif 
 

@@ -68,7 +68,7 @@ void Subscriber_Data_FromCloud_Handler(void)
          device_id=HAL_GetUIDw0();
       
          sprintf((char *)device_massage,"AT+TCMQTTSUB=\"$thing/down/property/%s/UYIJIA01-%d\",0\r\n", PRODUCT_ID, device_id);
-         HAL_UART_Transmit(&huart1, device_massage, strlen((const char *)device_massage), 5000); 
+         HAL_UART_Transmit(&huart1, device_massage, strlen((const char *)device_massage), 0xffff); 
          free(device_massage);
   
 
@@ -793,7 +793,7 @@ void Json_Parse_Command_Fun(void)
             if(gctl_t.gSet_temperature_value <20 )   gctl_t.gSet_temperature_value=20;
             MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
 			HAL_Delay(100);//350
-			gctl_t.gSet_temperature_value_item =set_temp_value_item;;
+			gctl_t.gSet_temperature_value_item =1;
 			pro_t.gTimer_pro_temp_delay= 100;
 			pro_t.gTimer_pro_mode_key_be_select = 0;
 			TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
