@@ -44,7 +44,7 @@ void bsp_Init(void)
 
    pro_t.mode_key_run_item_step=0xff;
    wifi_t.gTimer_main_pro_times=60;
-
+   VOICE_OUTPUT_SOUND_ENABLE();
   
 }
 /*

@@ -6,8 +6,8 @@
 
 
 
-#define VOICE_OUTPUT_SOUND_ENABLE()       do{MUTE_GPIO_Port->BSRR |= (uint32_t)MUTE_Pin<<16;}while(0)//do{MUTE_GPIO_Port->BSRR |= MUTE_Pin;}while(0)
-#define VOICE_OUTPUT_SOUND_DISABLE()      do{MUTE_GPIO_Port->BSRR |= MUTE_Pin;}while(0)//do{MUTE_GPIO_Port->BSRR |= (uint32_t)MUTE_Pin<<16;}while(0)
+#define VOICE_OUTPUT_SOUND_ENABLE()       do{MUTE_GPIO_Port->BSRR |= MUTE_Pin;}while(0)
+#define VOICE_OUTPUT_SOUND_DISABLE()      do{MUTE_GPIO_Port->BSRR |= (uint32_t)MUTE_Pin<<16;}while(0)
 
 
 extern uint8_t voice_inputBuf[1];
@@ -20,11 +20,17 @@ typedef enum{
 	voice_power_off=0x02,
 	voice_link_wifi=0x03,
 	voice_open_ptc=0x04,
-	voice_close_ptc=0x05,
-	voice_open_plasma=0x06,
-	voice_close_plasma=0x07,
-	voice_open_rat=0x08,
-	voice_close_rat=0x09,
+	voice_open_ptc_2= 0x05,
+	voice_close_ptc=0x06,
+	voice_close_ptc_2= 0x07,
+	voice_open_plasma=0x08,
+	voice_open_plasma_2= 0x09,
+	voice_close_plasma=0x0A,
+	voice_close_plasma_2=0x0B,
+	voice_open_rat=0x0C,
+	voice_open_rat_2=0x0D,
+	voice_close_rat=0x0E,
+	voice_close_rat_2=0x0F,
 }voice_cmd;
 
 
