@@ -238,7 +238,8 @@ static void TFT_Pocess_Command_Handler(void)
 		    Update_DHT11_Value();
 		
             if(pro_t.mode_key_run_item_step != mode_key_temp){
-			   TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
+			   //TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
+			   TFT_Disp_Temp_Value(0,0x02);
             }
 			
 
@@ -249,7 +250,8 @@ static void TFT_Pocess_Command_Handler(void)
 		   pro_t.gTimer_pro_display_dht11_hum=0;
 
 
-		   TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
+		   //TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
+		   TFT_Disp_Humidity_Value(0x02);
 
 
 	   }

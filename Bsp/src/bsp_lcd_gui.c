@@ -46,9 +46,12 @@ void TFT_Display_Handler(void)
 	TFT_St7789_FillBlock(157,35,6,75,WHITE);
 	#endif 
  	//TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
-	TFT_Disp_Voice_Temp_Value(0,gctl_t.dht11_temp_value);
+	//TFT_Disp_Voice_Temp_Value(0,gctl_t.dht11_temp_value);
+	//TFT_Disp_Voice_Temp_Value(0,gctl_t.dht11_temp_value);
     //TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
-   TFT_Disp_Only_Humidity_Value(gctl_t.dht11_hum_value);
+   //TFT_Disp_Only_Humidity_Value(gctl_t.dht11_hum_value);
+
+   TFT_Disp_Voice_Temp_Value(0,0x02);
 	
    
 }
@@ -62,16 +65,19 @@ void TFT_Display_Handler(void)
 ***********************************************************************************************/
 void TFT_Display_Temp_Symbol(void)
 {
-   //TFT_Disp_Temp_Symbol_24_24(130,40); //temp symbol 
-   TFT_Disp_Temp_Symbol_24_24(123,40); //temp symbol “°C”
+   
+  // TFT_Disp_Temp_Symbol_24_24(123,40); //temp symbol “°C”
+   TFT_Disp_Temp_Symbol_24_24(110,40); //temp symbol “°C”
 #if TFT_DISP_TEMP_24
 	TFT_Disp_Temp_24_24_onBlack(122,10,2); //temp symbol 
 
 	TFT_Disp_Temp_24_24_onBlack(102,100,0);
 	TFT_Disp_Temp_24_24_onBlack(126,100,1);
 #else
-	 TFT_Disp_Temp_20_20(115,90,0); //(111,90,0);
-	 TFT_Disp_Temp_20_20(135,90,1); //(131,90,1)
+//	 TFT_Disp_Temp_20_20(115,90,0); //(111,90,0);
+//	 TFT_Disp_Temp_20_20(135,90,1); //(131,90,1)
+	 TFT_Disp_Temp_20_20(104,90,0); //(111,90,0);
+	 TFT_Disp_Temp_20_20(122,90,1); //(131,90,1)
 #endif 
 }
 
@@ -86,8 +92,8 @@ void TFT_Display_Temp_Symbol(void)
 void TFT_Display_Humidity_Symbol(void)
 {
 
-    //TFT_Disp_Humidity_Symbol_24_24(292,40);//(286,40);
-    TFT_Disp_Humidity_Symbol_24_24(285,40);//(286,40);//humidity symbol %
+   // TFT_Disp_Humidity_Symbol_24_24(285,40);
+   TFT_Disp_Humidity_Symbol_24_24(268,40);//(286,40);//humidity symbol %
     
 #if TFT_DISP_TEMP_24 
 	TFT_Disp_Humidity_24_24_onBlack(286,10,2); //humidity symbol %
@@ -95,8 +101,11 @@ void TFT_Display_Humidity_Symbol(void)
     TFT_Disp_Humidity_24_24_onBlack(268,100,0);
     TFT_Disp_Humidity_24_24_onBlack(292,100,1);
 #else
-    TFT_Disp_Humidity_20_20(278,90,0);//(275,90,0)
-	TFT_Disp_Humidity_20_20(298,90,1);//(295,90,1)
+//    TFT_Disp_Humidity_20_20(278,90,0);//(275,90,0) "湿"
+//	TFT_Disp_Humidity_20_20(298,90,1);//(295,90,1) "度"
+
+	TFT_Disp_Humidity_20_20(260,90,0);//(275,90,0) "湿"
+	TFT_Disp_Humidity_20_20(280,90,1);//(295,90,1) "度"
 
 #endif 
 
@@ -544,9 +553,15 @@ void TFT_Disp_Temp_Value(uint8_t bc,uint8_t temp_value)
   
    if(refresh_one != temp_decade){
    	refresh_one = temp_decade;
-	//__disable_irq();
+
+	#if NORMAL_DISPLAY
    	TFT_Disp_Numbers_Pic_413(5,40,bc,temp_decade); //间隔58
-   //	__enable_irq();
+   	#else 
+	TFT_MainDisp_Numbers_Pic_354(5,40,bc,temp_decade);
+
+
+	#endif 
+
 
    }
 
@@ -554,7 +569,12 @@ void TFT_Disp_Temp_Value(uint8_t bc,uint8_t temp_value)
    	  refresh_two = temp_unit;
 	 
    //__disable_irq();
-   TFT_Disp_Numbers_Pic_413(63,40,bc,temp_unit);
+   #if NORMAL_DISPLA
+   TFT_Disp_Numbers_Pic_413(63,40,bc,temp_unit);//63 -> 60
+   #else 
+   TFT_MainDisp_Numbers_Pic_354(59,40,bc,temp_unit);  
+
+   #endif 
 
    //	__enable_irq();
    }
@@ -570,9 +590,16 @@ void TFT_Disp_Voice_Temp_Value(uint8_t bc,uint8_t temp_value)
 
    temp_unit= temp_value%10; 
   
-   
+   #if NORMAL_DISPLAY
    	TFT_Disp_Numbers_Pic_413(5,40,bc,temp_decade); //间隔58
 	TFT_Disp_Numbers_Pic_413(63,40,bc,temp_unit);
+
+   #else
+   TFT_MainDisp_Numbers_Pic_354(5,40,bc,temp_decade);
+   TFT_MainDisp_Numbers_Pic_354(59,40,bc,temp_unit);
+
+
+   #endif 
    
 
 
@@ -600,7 +627,13 @@ void TFT_Disp_Humidity_Value(uint8_t hum_value)
 
    hum_default_one = hum_decade;
 
+   #if NORMAL_DISPLAY
+
    TFT_Disp_Numbers_Pic_413(168,40,0,hum_decade); //间隔58
+   #else
+   TFT_MainDisp_Numbers_Pic_354(160,40,0,hum_decade);
+
+   #endif 
   
 
    }
@@ -608,7 +641,12 @@ void TFT_Disp_Humidity_Value(uint8_t hum_value)
    if(hum_default_two != hum_unit){
 
    hum_default_two = hum_unit;
+   #if NORMAL_DISPLAY
    TFT_Disp_Numbers_Pic_413(226,40,0, hum_unit);
+   #else 
+   TFT_MainDisp_Numbers_Pic_354(214,40,0,hum_unit);
+
+   #endif 
 
    }
 
@@ -624,13 +662,18 @@ static void TFT_Disp_Only_Humidity_Value(uint8_t hum_value)
 
    hum_unit = hum_value%10;
 
-   
+   #if NORMAL_DISPLAY
 
    TFT_Disp_Numbers_Pic_413(168,40,0,hum_decade); //间隔58
-  
-
-   
    TFT_Disp_Numbers_Pic_413(226,40,0, hum_unit);
+
+   #else 
+
+   TFT_MainDisp_Numbers_Pic_354(160,40,0,hum_decade);
+   TFT_MainDisp_Numbers_Pic_354(214,40,0,hum_unit);
+
+
+   #endif 
 
    
 

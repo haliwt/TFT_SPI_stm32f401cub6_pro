@@ -2,6 +2,9 @@
 #define __BSP_FONT_APP_H
 #include "main.h"
 
+#define NORMAL_DISPLAY    0
+
+
 
 void TFT_Disp_WorksTime_24_24_onBlack(uint16_t x,uint16_t y,uint8_t sel,uint8_t num);
 
@@ -29,6 +32,7 @@ void TFT_Disp_Pic_Warnign_Words(uint16_t x,uint16_t y,uint8_t sel,uint8_t num);
 
 
 
+void TFT_MainDisp_Numbers_Pic_354(uint16_t x,uint16_t y,uint8_t bc,uint8_t num);
 
 
 #endif 

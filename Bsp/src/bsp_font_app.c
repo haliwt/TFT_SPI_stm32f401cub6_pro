@@ -9,6 +9,7 @@
 * Return       : 
 *
 ********************************************************************/
+#if NORMAL_DISPLAY
 void TFT_Disp_Numbers_Pic_413(uint16_t x,uint16_t y,uint8_t bc,uint8_t num)
 {
     uint16_t temp, t, tbit;
@@ -69,7 +70,69 @@ void TFT_Disp_Numbers_Pic_413(uint16_t x,uint16_t y,uint8_t bc,uint8_t num)
   
 	
 }
+#else 
+void TFT_MainDisp_Numbers_Pic_354(uint16_t x,uint16_t y,uint8_t bc,uint8_t num)
+{
+    uint16_t temp, t, tbit;
+    uint16_t x0=x;
+	uint8_t mode;
+	mode =0;
+    
+	static uint16_t color;
 
+	for(t = 0; t < 354; t++)	/*遍历打印所有像素点到LCD */
+	{   
+	
+		temp = font_main_pic_num[num][t]; 
+		
+		for(tbit = 0; tbit < 8; tbit++)	/* 打印一个像素点到液晶 */
+		{	
+			
+			
+			if(temp & 0x80){
+				
+				color =BLACK; // WHITE;
+
+			}
+			else if(0 == mode){
+				if(bc==0)
+				  color = WHITE;//BLACK;
+				else
+				  color = BLACK;
+
+			}
+			else color = BLACK;
+			TFT_DrawPoint(x, y,color );
+			
+			temp <<= 1;			
+			//y++; // 垂直扫描
+			x++;//水平扫描
+
+			if(x >= LCD_Width){
+                    pro_t.lcd_over_width_flag =1;
+					return;	/* 超区域了 */
+
+			}
+			
+			if((x - x0) == 43){ //英文数字是中文宽度的一半 110/2=45
+				x = x0;
+				y++;
+				
+			    if(y >= LCD_Height){
+				pro_t.lcd_over_height_flag=1;
+				return;		/* 超区域了 */
+
+			     }
+ 
+				break;
+			}
+		}  	 
+	}  
+  
+	
+}
+
+#endif 
 /**************************************************************************************************************
 *
 *Function Name:void TFT_display_char32_32_noBackColor(const uint8_t *address ,uint16_t startX,uint16_t startY,uint16_t color)
