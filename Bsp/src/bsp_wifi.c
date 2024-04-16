@@ -206,7 +206,7 @@ static void RunWifi_Command_Handler(void)
 
 
 
-	case wifi_publish_update_tencent_cloud_data://04
+	case wifi_publish_update_tencent_cloud_data://07
 
 	if(power_on_state() ==power_on && wifi_t.gTimer_get_beijing_time > 200 && (wifi_link_net_state()==1 && wifi_t.get_rx_auto_repeat_net_enable==0)){
 		wifi_t.beijing_time_flag =1;
@@ -278,7 +278,7 @@ static void RunWifi_Command_Handler(void)
 
 	break;
 
-	case wifi_auto_repeat_link_cloud://06
+	case wifi_auto_repeat_link_cloud://09
 
 	if(wifi_t.gTimer_publish_dht11>0){
 		
