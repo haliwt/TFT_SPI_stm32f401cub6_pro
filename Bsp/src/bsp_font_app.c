@@ -190,17 +190,17 @@ void TFT_display_char32_32_noBackColor(const uint8_t *address ,uint16_t startX,u
 
 /****************************************************************************************
 	*
-	*Function  Name :void TFT_Disp_Chinese_Timer_96_23(uint16_t x,uint16_t y,uint8_t num)
+	*Function  Name :void TFT_Disp_Chinese_Timer_96_24(uint16_t x,uint16_t y,uint8_t num)
 	*Function: "定时时间"
 	*Input Ref:NO
 	*Return Ref:NO
 	*
 ****************************************************************************************/
-void TFT_Disp_Chinese_Timer_96_23(uint16_t x,uint16_t y,uint8_t bc)
+void TFT_Disp_Chinese_Timer_96_24(uint16_t x,uint16_t y)
 {
-    uint16_t temp, t, tbit,mode;
+    uint16_t temp, t, tbit;
     uint16_t x0=x;
-    mode =0;
+   
 	static uint16_t color;
 
 	for(t = 0; t < 288; t++)	/*遍历打印所有像素点到LCD */
@@ -213,14 +213,7 @@ void TFT_Disp_Chinese_Timer_96_23(uint16_t x,uint16_t y,uint8_t bc)
 			
 			
 		    if(temp & 0x80)	color = BLACK;//WHITE;
-			else if(0 == mode){
-				if(bc==0)
-				  color = WHITE;// display normal
-				else
-				  color = BLACK; //don't normal
-
-			}
-			else color = BLACK;
+			else color = WHITE;
 			
 			
 
@@ -255,17 +248,17 @@ void TFT_Disp_Chinese_Timer_96_23(uint16_t x,uint16_t y,uint8_t bc)
 }
 /****************************************************************************************
 	*
-	*Function  Name :void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y,uint8_t sel,uint8_t num)
+	*Function  Name :void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y)
 	*Function: "工作时间"
 	*Input Ref: x, y ,bc-0 display ,bc=1 -> don't display 
 	*Return Ref:NO
 	*
 ****************************************************************************************/
-void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y,uint8_t bc)
+void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y)
 {
-    uint16_t temp, t, tbit,mode;
+    uint16_t temp, t, tbit;
     uint16_t x0=x;
-    mode =0;
+   
 	static uint16_t color;
 
 	for(t = 0; t < 288; t++)	/*遍历打印所有像素点到LCD */
@@ -278,14 +271,7 @@ void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y,uint8_t bc)
 		for(tbit = 0; tbit < 8; tbit++)	/* 打印一个像素点到液晶 */
 		{	
 			if(temp & 0x80)	color = BLACK;//WHITE; //words is "white",backgroud is "black"
-			else if(0 == mode){
-				if(bc==0)
-				  color = WHITE;// display normal
-				else
-				  color = BLACK; //don't normal
-
-			}
-			else color = BLACK;
+			else color = WHITE;
 			TFT_DrawPoint(x, y,color );
 			
 			temp <<= 1;			

@@ -23,7 +23,7 @@ void TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(uint16_t x,uint16_t y,uint8_t sel
 
 void TFT_Disp_Chinese_Humidity_39_18(uint16_t x,uint16_t y,uint8_t num);
 
-void TFT_Disp_Chinese_Timer_96_23(uint16_t x,uint16_t y,uint8_t bc);
+void TFT_Disp_Chinese_Timer_96_24(uint16_t x,uint16_t y);
 
 
 
@@ -47,7 +47,7 @@ void TFT_Disp_Humidity_Symbol_16_16(uint16_t x,uint16_t y);
 
 void TFT_Disp_Chinese_Temp_36_18(uint16_t x,uint16_t y);
 
-void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y,uint8_t bc);
+void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y);
 
 #endif 
 
