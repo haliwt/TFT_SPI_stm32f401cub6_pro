@@ -30,7 +30,7 @@
 #include "bsp_wifi.h"
 #include "bsp_image.h"
 #include "bsp_tft_font.h"
-#include "bsp_font.h"
+//#include "bsp_font.h"
 #include "bsp_font_app.h"
 #include "bsp_split_time.h"
 #include "interrupt_manager.h"

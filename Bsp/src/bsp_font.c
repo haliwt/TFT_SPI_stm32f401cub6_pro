@@ -1,4 +1,4 @@
-#include "bsp_font.h"
+//#include "bsp_font.h"
 #include "bsp.h"
 
 #define  CMD_SetPixel	0x2C	     //填充像素
@@ -8,8 +8,7 @@
 #define      ILI9341_DispWindow_Y_Star		    0     //起始点的Y坐标
 
 
-uint16_t LCD_X_LENGTH = 320;
-uint16_t LCD_Y_LENGTH = 240;
+
 
 
 

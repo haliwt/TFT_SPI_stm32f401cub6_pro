@@ -2,6 +2,15 @@
 #define __BSP_LCD_H
 #include "main.h"
 
+#define  CMD_SetPixel	0x2C	     //填充像素
+
+/***************************** ILI934 显示区域的起始坐标和总行列数 ***************************/
+#define      ILI9341_DispWindow_X_Star		    0     //起始点的X坐标
+#define      ILI9341_DispWindow_Y_Star		    0     //起始点的Y坐标
+
+
+
+
 
 //LCD屏幕分辨率定义
 //横屏显示

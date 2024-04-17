@@ -91,10 +91,8 @@ static void RunWifi_Command_Handler(void)
   
    static uint8_t  update_data_to_tencent_cloud_flag;
    static uint8_t receive_beijing_time;
- 
-
-
-   switch(wifi_t.runCommand_order_lable){
+   
+ 	switch(wifi_t.runCommand_order_lable){
 
          
 	case wifi_has_been_connected:
@@ -111,10 +109,7 @@ static void RunWifi_Command_Handler(void)
 			wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;//wifi_tencent_subscription_data;
 			wifi_t.gTimer_auto_detected_net_state_times=0;
 			  // Wifi_Pro_Runing_Init();
-         
-
-
-		}
+        }
 
 	break;
 
@@ -146,7 +141,7 @@ static void RunWifi_Command_Handler(void)
 	wifi_t.runCommand_order_lable = wifi_tencent_publish_init_data;
 
 	wifi_t.gTimer_auto_detected_net_state_times =0;
-	 MqttData_Publish_SetOpen(0x01);
+	// MqttData_Publish_SetOpen(0x01);
 	  wifi_t.gTimer_publish_dht11=0;        
     }
 	break;
@@ -165,23 +160,14 @@ static void RunWifi_Command_Handler(void)
     break;
 
 			
-
-
-
-	break;
-
-	case wifi_publis_data_delay:
+     case wifi_publis_data_delay:
 
 	   if( wifi_t.gTimer_publish_dht11 >1){
 
 	      Subscriber_Data_FromCloud_Handler();
 		 wifi_t.gTimer_publish_dht11=0;
 	       
-		   
-
-	   
-		
-	    wifi_t.runCommand_order_lable= wifi_publish_dht11_delay;
+		 wifi_t.runCommand_order_lable= wifi_publish_dht11_delay;
 	   }
 
 
@@ -198,13 +184,7 @@ static void RunWifi_Command_Handler(void)
 			  
 			 wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 	}
-
-
-
 	break;
-
-
-
 
 	case wifi_publish_update_tencent_cloud_data://07
 

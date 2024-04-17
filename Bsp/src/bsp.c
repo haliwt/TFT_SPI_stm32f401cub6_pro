@@ -11,22 +11,11 @@ static void TFT_Pocess_Command_Handler(void);
 
 static void Power_On_Fun(void);
 static void Power_Off_Fun(void);
-
-
-
 static void Key_Interrup_Handler(void);
-
-
-
-
 void bsp_Init(void);
 
 uint16_t power_off_counter;
 uint8_t power_on_thefirst_times ;
-
-
-
-
 
 /*
 *********************************************************************************************************
@@ -37,7 +26,6 @@ uint8_t power_on_thefirst_times ;
 *	返 回 值: 无
 *********************************************************************************************************
 */
-
 void bsp_Init(void)
 {
    pro_t.buzzer_sound_flag=1;
@@ -127,14 +115,17 @@ void TFT_Process_Handler(void)
 		pro_t.gTimer_pro_fan =0;
 		wifi_t.gTimer_main_pro_times=0;	
 		gctl_t.gTimer_ctl_disp_works_time_second=0;
-
-		TFT_BACKLIGHT_OFF();
+		pro_t.run_process_step=0;
+        TFT_BACKLIGHT_OFF();
+		
 		Power_Off_Fun();
 		Device_NoAction_Power_Off();
 		LED_Mode_Key_Off();
 		if(wifi_link_net_state() ==1){
 		  MqttData_Publish_PowerOff_Ref();
 		}
+		//TFT_Disp_Fan_RunIcon(0,0);
+		
 		
 	}
 	if(wifi_link_net_state() ==1  && wifi_t.gTimer_main_pro_times > 50){
@@ -150,13 +141,16 @@ void TFT_Process_Handler(void)
 	if(fan_continuce_flag ==1){
 
 	    if(pro_t.gTimer_pro_fan <61){
-            Fan_Run();        
+            Fan_Run(); 
+			
 
 		}
 		else{
 			fan_continuce_flag++;
 
             Fan_Stop();
+		    
+		    
 		}
       
 
@@ -206,9 +200,8 @@ static void TFT_Pocess_Command_Handler(void)
 
 
 	 case 0:
-	 
+	  
 		pro_t.gKey_value =0XFF;
-		TFT_Display_WorksTime();
 		Power_On_Fun();
 	    Fan_Run();
 		Device_Action_No_Wifi_Power_On_Handler();
@@ -251,10 +244,7 @@ static void TFT_Pocess_Command_Handler(void)
 
 
 		   TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
-		  
-
-
-	   }
+		}
 
 	 pro_t.run_process_step=pro_run_main_fun;
 	   

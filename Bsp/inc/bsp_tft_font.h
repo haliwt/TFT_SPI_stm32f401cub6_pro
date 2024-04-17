@@ -63,6 +63,7 @@ extern const uint8_t font9624_chinese_timer_time[288];
 
 
 
+extern const uint8_t fan_font_390_240[9360];
 
 
 
