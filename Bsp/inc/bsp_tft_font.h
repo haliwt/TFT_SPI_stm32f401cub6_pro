@@ -19,8 +19,10 @@ extern const uint8_t font2424_temp_symbol[72];
 
 extern const uint8_t font2424_humidity_symbol[72];
 
-extern const uint8_t font2424_works_time[4][72];
-extern const uint8_t font2424_timer_time[4][72];
+
+extern const uint8_t font9624_chinese_works_time[288];
+
+
 
 
 
@@ -34,10 +36,10 @@ extern const uint8_t font_colon_symbol[1][144];
 
 
 
-extern const uint8_t font2020_temp[2][60];
+//extern const uint8_t font2020_temp[2][60];
 
 
-extern const uint8_t font2020_humidity[2][60];
+
 
 
 
@@ -45,11 +47,19 @@ extern const uint8_t font2020_humidity[2][60];
 
 extern const uint8_t font_main_pic_num[10][354];
 
+extern const uint8_t font16x15_temp_symbol[30];
+
+extern const uint8_t font39x18_chinese_humidity[90];
 
 
 
 
 
+extern const uint8_t font1616_humidity_symbol[32];
+
+extern const uint8_t font3918_chinese_temp[90];
+
+extern const uint8_t font9624_chinese_timer_time[288];
 
 
 

@@ -68,18 +68,21 @@ void TFT_Display_Temp_Symbol(void)
 {
    
   // TFT_Disp_Temp_Symbol_24_24(123,40); //temp symbol “°C”
+ #if NORMAL_DISPLAY
    TFT_Disp_Temp_Symbol_24_24(110,40); //temp symbol “°C”
-#if TFT_DISP_TEMP_24
-	TFT_Disp_Temp_24_24_onBlack(122,10,2); //temp symbol 
+ #else
+    TFT_Disp_Temp_Symbol_16_15(110,40);
 
-	TFT_Disp_Temp_24_24_onBlack(102,100,0);
-	TFT_Disp_Temp_24_24_onBlack(126,100,1);
-#else
+ #endif 
+
 //	 TFT_Disp_Temp_20_20(115,90,0); //(111,90,0);
 //	 TFT_Disp_Temp_20_20(135,90,1); //(131,90,1)
-	 TFT_Disp_Temp_20_20(104,90,0); //(111,90,0);
-	 TFT_Disp_Temp_20_20(122,90,1); //(131,90,1)
-#endif 
+	// TFT_Disp_Temp_20_20(104,80,0); //(104,90,0); //"温"
+	// TFT_Disp_Temp_20_20(122,80,1); //(122,90,1)；//"度"
+	  TFT_Disp_Chinese_Temp_36_18(104,81);
+
+	 
+ 
 }
 
 /***********************************************************************************************
@@ -93,22 +96,24 @@ void TFT_Display_Temp_Symbol(void)
 void TFT_Display_Humidity_Symbol(void)
 {
 
-   // TFT_Disp_Humidity_Symbol_24_24(285,40);
+   #if NORMAL_DISPLAY
    TFT_Disp_Humidity_Symbol_24_24(268,40);//(286,40);//humidity symbol %
-    
-#if TFT_DISP_TEMP_24 
-	TFT_Disp_Humidity_24_24_onBlack(286,10,2); //humidity symbol %
+   #else 
 
-    TFT_Disp_Humidity_24_24_onBlack(268,100,0);
-    TFT_Disp_Humidity_24_24_onBlack(292,100,1);
-#else
+	TFT_Disp_Humidity_Symbol_16_16(268,40);
+
+   #endif 
+    
+  //display chinese words "湿度"
 //    TFT_Disp_Humidity_20_20(278,90,0);//(275,90,0) "湿"
 //	TFT_Disp_Humidity_20_20(298,90,1);//(295,90,1) "度"
 
-	TFT_Disp_Humidity_20_20(260,90,0);//(275,90,0) "湿"
-	TFT_Disp_Humidity_20_20(280,90,1);//(295,90,1) "度"
+ 	//TFT_Disp_Humidity_20_20(260,80,0);//(260,90,0) "湿"
+	//TFT_Disp_Humidity_20_20(280,80,1);//(280,90,1) "度"
 
-#endif 
+   TFT_Disp_Chinese_Humidity_39_18(260,81,0);
+
+ 
 
 
 }
@@ -151,10 +156,11 @@ void TFT_Display_WorksTime(void)
     }
     else if(disp_work_time != gctl_t.timing_words_changed_flag){
 		disp_work_time = gctl_t.timing_words_changed_flag;
-	    TFT_Disp_WorksTime_24_24_onBlack(112,150,0,0);//works one "工"
-		TFT_Disp_WorksTime_24_24_onBlack(136,150,0,1);//works tow "作"
-		TFT_Disp_WorksTime_24_24_onBlack(160,150,0,2);//"时"
-		TFT_Disp_WorksTime_24_24_onBlack(184,150,0,3);//“间”
+//	    TFT_Disp_WorksTime_24_24_onBlack(112,150,0,0);//works one "工"
+//		TFT_Disp_WorksTime_24_24_onBlack(136,150,0,1);//works tow "作"
+//		TFT_Disp_WorksTime_24_24_onBlack(160,150,0,2);//"时"
+//		TFT_Disp_WorksTime_24_24_onBlack(184,150,0,3);//“间”
+        TFT_Disp_Chinese_WorksTime_96_24(100,150,0);
 
     }
 	
@@ -181,20 +187,22 @@ void TFT_Display_WorksTime(void)
 
 static void TFT_Display_Chinese_WorksTime(void)
 {
+  
+   TFT_Disp_Chinese_WorksTime_96_24(100,150,0);
 
-	TFT_Disp_WorksTime_24_24_onBlack(112,150,0,0);//works one "工"
-	TFT_Disp_WorksTime_24_24_onBlack(136,150,0,1);//works tow "作"
-	TFT_Disp_WorksTime_24_24_onBlack(160,150,0,2);//"时"
-	TFT_Disp_WorksTime_24_24_onBlack(184,150,0,3);//“间”
+
+ 
 
 }
 
 static void TFT_Display_Chinese_TimerTiming(void)
 {
-	TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
-	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
-	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
-	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+//	TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
+//	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
+//	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
+//	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+	TFT_Disp_Chinese_Timer_96_23(100,150,0);
+
 
 
 }
@@ -359,10 +367,13 @@ void TFT_Disp_Set_TimerTime(uint8_t bc)
     //display works of words of chinese 
     if(disp_timer_words != gctl_t.timer_timing_words_changed_flag){
 		disp_timer_words = gctl_t.timer_timing_words_changed_flag;
-    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
-	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
-	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
-	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+//	    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
+//		TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
+//		TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
+//		TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+        TFT_Disp_Chinese_Timer_96_23(100,150,0);
+	    
+      
 
     }
 	
@@ -412,10 +423,12 @@ void TFT_Disp_Set_TimerTime_Init(void)
     if(disp_timer_words != gctl_t.timer_timing_words_changed_flag){
 		disp_timer_words = gctl_t.timer_timing_words_changed_flag;
     //display works of words of chinese 
-    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
-	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
-	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
-	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+//    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
+//	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
+//	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
+//	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+	TFT_Disp_Chinese_Timer_96_23(100,150,0);
+	
 
     }
 	
@@ -463,10 +476,12 @@ void TFT_Disp_Voice_Set_TimerTime_Init(void)
     if(disp_timer_words != gctl_t.timer_timing_words_changed_flag){
 		disp_timer_words = gctl_t.timer_timing_words_changed_flag;
     //display works of words of chinese 
-    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
-	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
-	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
-	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+//    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
+//	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
+//	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
+//	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+	TFT_Disp_Chinese_Timer_96_23(100,150,0);
+	
 
     }
 	

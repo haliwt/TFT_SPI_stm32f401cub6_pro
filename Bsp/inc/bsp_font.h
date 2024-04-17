@@ -12,7 +12,7 @@
 #define  ST7789V_MORE_PIXEL	 
 
 
-void GUI_DrawFont16(uint16_t x, uint16_t y, uint16_t fontcolor, uint16_t backgroundcolor, uint8_t *s,uint8_t mode);
+//void GUI_DrawFont16(uint16_t x, uint16_t y, uint16_t fontcolor, uint16_t backgroundcolor, uint8_t *s,uint8_t mode);
 
 
 
