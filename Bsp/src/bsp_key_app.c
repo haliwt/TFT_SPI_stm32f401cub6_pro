@@ -1,5 +1,10 @@
 #include "bsp.h"
 
+uint8_t set_timer_timing_up_flag ;
+
+uint8_t set_timer_timing_down_flag ;
+
+static void mode_longkey_settimer(void);
 
 /******************************************************************************
 	*
@@ -87,7 +92,7 @@ void Key_Speical_Mode_Fun_Handler(void)
 			pro_t.mode_key_select_label =0;
             Buzzer_KeySound();
 		    pro_t.gTimer_pro_mode_long_key=0;
-		    pro_t.key_mode_long_time_over_flag=1;
+		 
 			Mode_Long_Key_Fun();
 
 		   
@@ -147,7 +152,7 @@ void Mode_Key_Config_Fun_Handler(void)
                 gctl_t.memory_confimr_key_done = 0;
                 pro_t.mode_key_run_item_step = 0xff; //
                 pro_t.mode_key_select_label =0;
-                pro_t.key_mode_long_time_over_flag =0;//pro_t.mode_key_select_label
+              
 			    gctl_t.select_main_fun_numbers--; //return back the first confirm item 
 				if(gctl_t.select_main_fun_numbers == 0){
 					gctl_t.select_main_fun_numbers = 5;
@@ -176,8 +181,8 @@ void Mode_Key_Config_Fun_Handler(void)
 
 /************************************************************************
 	*
-	*Function Name: static void Mode_Long_Key_Fun(void) 
-	*Function : set timer timing is enable 
+	*Function Name: void Mode_Long_Key_Fun(void)  
+	*Function : set timer timing is enable by key long be pressed
 	*Input Ref:NO
 	*Return Ref:No
 	*
@@ -186,14 +191,12 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 {
 	  if(power_on_state() ==power_on){
 	   if(gctl_t.fan_warning ==0 && ptc_error_state() ==0){
-	  	  pro_t.mode_key_run_item_step = mode_key_timer_time;
+	   	
+	  	  pro_t.mode_key_run_item_step = mode_key_set_timer_value;
 		  pro_t.timer_mode_flag=timer_set_time; //set timer mode enable,
-	      pro_t.works_or_timer_disp_timing_flag = timer_time;
+	     
 		  pro_t.gTimer_pro_mode_long_key=0;
-		 
-
-
-	     TFT_Disp_Set_TimerTime_Init();
+		  TFT_Disp_Set_TimerTime_Init();
 
 	   }
 	  	 
@@ -241,10 +244,10 @@ void ADD_Key_Fun(void)
 			
 		break;
 
-		case mode_key_timer_time:
+		case mode_key_set_timer_value:
             pro_t.buzzer_sound_flag = 1;
 		    pro_t.gTimer_pro_mode_long_key=0;
-			gctl_t.mode_key_long_time_flag++;
+		
 			
 			gctl_t.gSet_timer_minutes=0;
 			gctl_t.gSet_timer_hours ++ ;//disp_t.disp_timer_time_hours++ ;//pro_t.dispTime_minutes = pro_t.dispTime_minutes + 60;
@@ -255,8 +258,8 @@ void ADD_Key_Fun(void)
 
 			}
 
-		   pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
-			timer_timing_flag=1;
+		  // pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
+			set_timer_timing_up_flag=1;
 		 
 			
 
@@ -314,10 +317,12 @@ void ADD_Key_Fun(void)
 		}
 
     }
-    if(timer_timing_flag ==1){
-		timer_timing_flag=0;
-	  TFT_Disp_Set_TimerTime(0);
+    if(set_timer_timing_up_flag ==1){
+		
+	 // TFT_Disp_Set_TimerTime(0);
 
+	   
+		mode_longkey_settimer();
 
     }
 
@@ -364,10 +369,11 @@ void DEC_Key_Fun(void)
 	        
 			break;
 
-			case mode_key_timer_time: //timer timing set "decrease -down"
+			case mode_key_set_timer_value: //timer timing set "decrease -down"
 			   
 			    pro_t.buzzer_sound_flag = 1;
-	            gctl_t.mode_key_long_time_flag++;
+	     
+			    pro_t.gTimer_pro_mode_long_key=0;
 			
 				gctl_t.gSet_timer_minutes=0;
 				gctl_t.gSet_timer_hours --;//disp_t.disp_timer_time_hours -- ;//pro_t.dispTime_minutes = pro_t.dispTime_minutes - 1;
@@ -378,8 +384,8 @@ void DEC_Key_Fun(void)
 					
 				}
 		
-		     pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
-		     timer_timing_flag=1;
+		
+		    set_timer_timing_down_flag=1;
 			 	
 			//TFT_Disp_Set_TimerTime(0);
 			break;
@@ -429,10 +435,10 @@ void DEC_Key_Fun(void)
 			}
 			
     	}
-	    if(timer_timing_flag ==1){
-		   timer_timing_flag=0;
-	     TFT_Disp_Set_TimerTime(0);
-
+	    if(set_timer_timing_down_flag==1){
+		  
+	     mode_longkey_settimer();
+          
   
        }
 	   
@@ -677,4 +683,50 @@ void Mode_Key_Confirm_Fun(void)
    
 }
 
+
+static void mode_longkey_settimer(void)
+{
+
+	if(pro_t.gTimer_pro_mode_long_key > 3){
+		pro_t.gTimer_pro_mode_long_key =0;
+		set_timer_timing_up_flag=0;
+	    set_timer_timing_down_flag =0;
+		if(gctl_t.gSet_timer_hours >0 ){
+
+		pro_t.timer_mode_flag = timer_time;
+		pro_t.mode_key_run_item_step =0xff;
+		gctl_t.gTimer_ctl_set_timer_time_senconds =0;
+
+		gctl_t.gSet_timer_minutes =0;
+
+		TFT_Disp_Onley_Set_TimerTime_Value();
+
+		}
+		else{
+
+
+		pro_t.mode_key_run_item_step =0xff;
+		pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
+		if(pro_t.works_or_timer_disp_timing_flag == works_time)
+		TFT_Display_WorksTime();
+
+
+
+		}
+	
+		pro_t.mode_key_select_label =0;
+
+	}
+	else{
+        if(gctl_t.gTimer_ctl_set_timer_value <1){
+	    	TFT_Only_Disp_Set_Timer_Blink();
+        }
+		else if(gctl_t.gTimer_ctl_set_timer_value > 0){
+			 gctl_t.gTimer_ctl_set_timer_value=0;
+		    TFT_Disp_Onley_Set_TimerTime_Value();
+
+		}
+	}
+
+}
 

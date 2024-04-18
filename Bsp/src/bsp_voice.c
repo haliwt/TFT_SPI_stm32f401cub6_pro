@@ -715,17 +715,13 @@ static void voice_set_timer_timing_value(uint8_t set_hours)
 
 static void voice_cancel_timer_timing(void)
 {
-    // uint8_t set_temp;
+ 
  
        if(pro_t.gPower_On == power_on){
 
 	     voice_send_function_cmd(0x3F,0xE1);
 	  
-      
-	
-	    gctl_t.gTimer_ctl_disp_works_time_second =70; //at once display works times of timing value
-	 
-	    pro_t.works_or_timer_disp_timing_flag = works_time;
+        pro_t.works_or_timer_disp_timing_flag = works_time;
 		
 	    pro_t.timer_mode_flag= works_time;
 		TFT_Display_WorksTime_Voice();

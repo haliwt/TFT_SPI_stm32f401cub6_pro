@@ -43,8 +43,6 @@ void TimeTimer_Pro_Handler(void)
 			TFT_Disp_Set_TimerTime(0);
 			}
 		
-		//TFT_Disp_Set_TimerTime(0);
-		TFT_Disp_Set_TimerTime(0);
 		TFT_DonnotDisp_Works_Time();
 
 		
@@ -52,28 +50,24 @@ void TimeTimer_Pro_Handler(void)
 
 	
 
-	case timer_set_time://02
+	 case timer_set_time://02
 
-		if(pro_t.gTimer_pro_mode_long_key > 4){
-            	  pro_t.gTimer_pro_mode_long_key =0;
+	 	if(pro_t.gTimer_pro_mode_long_key > 3 ){
+            	  
 		
 			if(gctl_t.gSet_timer_hours >0 ){
-
+       
 				pro_t.timer_mode_flag = timer_time;
 				pro_t.mode_key_run_item_step =0xff;
 				gctl_t.gTimer_ctl_set_timer_time_senconds =0;
-				gctl_t.timer_time_define_flag = 1;
+			
 				gctl_t.gSet_timer_minutes =0;
-				gctl_t.mode_key_long_time_flag=0;
-				TFT_Only_Disp_Set_Timer_Blink();
-				HAL_Delay(100);
 				TFT_Disp_Onley_Set_TimerTime_Value();
 				
-
 			}
 			else{
-				gctl_t.mode_key_long_time_flag=0;
-				gctl_t.timer_time_define_flag = 0;
+				
+		
 				pro_t.mode_key_run_item_step =0xff;
 				pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
 				TFT_Display_WorksTime();
@@ -81,18 +75,14 @@ void TimeTimer_Pro_Handler(void)
 
 
 			}
-			pro_t.key_mode_long_time_over_flag =0;
+		
 			pro_t.mode_key_select_label =0;
                
 		}
 
-		
-	
-
-		TFT_DonnotDisp_Works_Time();
 
 
-	break;
+	  break;
 	}
 
 
@@ -110,7 +100,7 @@ void TimeTimer_Pro_Handler(void)
 *********************************************************************************************************/
 static void TFT_Donnot_Set_Timer_Time(void)
 {
-    if(gctl_t.timer_time_define_flag == 1){
+    if(pro_t.timer_mode_flag == timer_time ){
 
 	if(gctl_t.gTimer_ctl_set_timer_time_senconds >59){
 		gctl_t.gTimer_ctl_set_timer_time_senconds =0;

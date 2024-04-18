@@ -205,8 +205,12 @@ static void TFT_Pocess_Command_Handler(void)
 	  
 		pro_t.gKey_value =0XFF;
 	    if(wifi_link_net_state() ==1){
-		    TFT_Display_WorksTime();
+		    
+		    TFT_Display_WorksTime_Voice();
 	    }
+		else{
+           TFT_Display_PowerOn_WorksTime_Init();
+		}
 	    
 		Power_On_Fun();
 	    Fan_Run();
@@ -404,15 +408,15 @@ static void Power_On_Fun(void)
  
    //timer timing
    gctl_t.mode_flag = works_time;
-   gctl_t.timer_time_define_flag = 0;
+  
     pro_t.timer_mode_flag=works_time;
 	 gctl_t.gSet_timer_hours =0;
 	 gctl_t.gSet_timer_minutes =0;
 
 	 //mode key long times 
 	  pro_t.mode_key_run_item_step=0xff;
-	 gctl_t.mode_key_long_time_flag=0;
 	 pro_t.long_key_flag =0;
+	
 
 
     

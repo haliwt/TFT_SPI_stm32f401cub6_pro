@@ -36,7 +36,7 @@ typedef struct _bsp_ctl{
 	uint8_t ptc_flag;
 	uint8_t plasma_flag;
 	uint8_t ultrasonic_flag;
-	uint8_t mode_key_long_time_flag;
+	
    
 
 	uint8_t ptc_warning;
@@ -46,7 +46,7 @@ typedef struct _bsp_ctl{
    
     //time
    uint8_t disp_works_hours;
-   uint8_t timer_time_define_flag;
+  
 
  
    uint8_t local_set_temp_value;
@@ -79,6 +79,7 @@ typedef struct _bsp_ctl{
    uint8_t gTimer_ctl_usart2_error; 
    uint8_t gTimer_ctl_dma_state;
    uint8_t gTimer_ctl_publish_set_temperature_value;
+   uint8_t gTimer_ctl_set_timer_value;
 
 
 }bsp_ctl;

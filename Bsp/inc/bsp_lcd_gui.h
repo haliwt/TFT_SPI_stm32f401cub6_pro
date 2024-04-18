@@ -71,6 +71,7 @@ void TFT_Only_Disp_Set_Timer_Blink(void);
 
 void TFT_Display_WorksTime_Voice(void);
 
+void TFT_Display_PowerOn_WorksTime_Init(void);
 
 
 #endif
