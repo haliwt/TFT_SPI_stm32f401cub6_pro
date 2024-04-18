@@ -449,7 +449,7 @@ static void Power_Off_Fun(void)
    gctl_t.ptc_flag = 0;
    //timer timing flag
      pro_t.timer_mode_flag=works_time;
-	pro_t.timer_mode_flag=0;
+	
 	pro_t.wifi_led_fast_blink_flag=0;
 	gctl_t.gSet_timer_hours =0;
 

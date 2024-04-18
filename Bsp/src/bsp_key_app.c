@@ -196,6 +196,7 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 	   	
 	  	  pro_t.mode_key_run_item_step = mode_key_set_timer_value;
 		  pro_t.timer_mode_flag=timer_set_time; //set timer mode enable,
+		  gctl_t.gTimer_ctl_disp_works_time_second=0;
 	     
 		  pro_t.gTimer_pro_mode_long_key=0;
 		  TFT_Disp_Set_TimerTime_Init();
@@ -692,49 +693,10 @@ void Mode_Key_Confirm_Fun(void)
 static void mode_longkey_settimer(void)
 {
 
-	if(pro_t.gTimer_pro_mode_long_key > 3){
-		pro_t.gTimer_pro_mode_long_key =0;
-		 pro_t.buzzer_sound_flag = 1;
-		if(gctl_t.gSet_timer_hours >0 ){
-
-		pro_t.timer_mode_flag = timer_time;
-		pro_t.mode_key_run_item_step =0xff;
-		gctl_t.gTimer_ctl_set_timer_time_senconds =0;
-
-		gctl_t.gSet_timer_minutes =0;
-
-		TFT_Disp_Onley_Set_TimerTime_Value();
-
-		}
-		else{
-
-
-		pro_t.mode_key_run_item_step =0xff;
-		pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
-		if(pro_t.works_or_timer_disp_timing_flag == works_time)
-		TFT_Display_WorksTime();
-
-
-
-		}
 	
-		pro_t.mode_key_select_label =0;
-
-	}
-	else{
-		#if 0
-        if(gctl_t.gTimer_ctl_set_timer_value <1){
-	    	TFT_Only_Disp_Set_Timer_Blink();
-        }
-		else if(gctl_t.gTimer_ctl_set_timer_value > 0){
-			 gctl_t.gTimer_ctl_set_timer_value=0;
-		    TFT_Disp_Onley_Set_TimerTime_Value();
-
-		}
-		#endif 
 
 		TFT_Disp_Onley_Set_TimerTime_Value();
-	}
-
 }
+
+
 

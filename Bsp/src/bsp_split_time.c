@@ -9,7 +9,7 @@ void TimeTimer_Pro_Handler(void)
   switch(pro_t.timer_mode_flag){
 
 
-   case works_time://0
+   case works_time://1
 
 		if(gctl_t.gTimer_ctl_disp_works_time_second > 59 ){
 			TFT_Display_WorksTime();
@@ -52,10 +52,7 @@ void TimeTimer_Pro_Handler(void)
 
 	 case timer_set_time://02
 
-
-
-
-	 	if(pro_t.gTimer_pro_mode_long_key > 3 ){
+		if(pro_t.gTimer_pro_mode_long_key > 3 ){
             pro_t.gTimer_pro_mode_long_key =0;  
 		    pro_t.buzzer_sound_flag = 1;
 			if(gctl_t.gSet_timer_hours >0 ){

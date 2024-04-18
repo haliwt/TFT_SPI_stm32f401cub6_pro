@@ -365,7 +365,7 @@ void TFT_Disp_Onley_Set_TimerTime_Value(void)
 
 /***********************************************************************************************
 	*
-	*Function Name:void TFT_Display_WorksTime(void)
+	*Function Name:void TFT_DonnotDisp_Works_Time(void)
 	*Function : display of works time value 
 	*Input: NO
 	*Return: NO 
@@ -450,8 +450,8 @@ void TFT_Disp_Set_TimerTime(uint8_t bc)
 
     //display works of words of chinese 
   
-    if(timer_disp !=pro_t.works_or_timer_disp_timing_flag){
-		timer_disp =pro_t.works_or_timer_disp_timing_flag;
+    //if(timer_disp !=pro_t.works_or_timer_disp_timing_flag){
+		//timer_disp =pro_t.works_or_timer_disp_timing_flag;
 //	    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
 //		TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
 //		TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
@@ -459,7 +459,7 @@ void TFT_Disp_Set_TimerTime(uint8_t bc)
 		//TFT_DontDisp_Chinese_SencondWord_96_24(100, 150);
 
         TFT_Disp_Chinese_Timer_96_24(100,150);
-	 }
+	// }
 	
 	//works time value
 	///if(set_timer_hours != gctl_t.gSet_timer_hours){

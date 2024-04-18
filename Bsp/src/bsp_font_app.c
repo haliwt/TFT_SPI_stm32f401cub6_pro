@@ -230,7 +230,7 @@ void TFT_Disp_Chinese_Timer_96_24(uint16_t x,uint16_t y)
 
 			}
 			
-			if((x - x0) == 95){
+			if((x - x0) == 96){
 				x = x0;
 				y++;
 				
@@ -284,7 +284,7 @@ void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y)
 
 			}
 			
-			if((x - x0) == 95){
+			if((x - x0) == 96){
 				x = x0;
 				y++;
 				

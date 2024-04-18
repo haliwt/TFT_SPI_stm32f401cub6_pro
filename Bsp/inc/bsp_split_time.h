@@ -5,7 +5,7 @@
 
 typedef enum TIMING_T{
 
-   works_time,
+   works_time=0x01,
    timer_time,
    timer_set_time,
    timing_success ,
