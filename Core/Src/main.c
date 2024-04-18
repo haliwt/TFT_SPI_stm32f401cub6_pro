@@ -124,6 +124,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	bsp_Idle();
+
     Voice_Decoder_Handler();
 	TFT_Process_Handler();
 	 WIFI_Process_Handler();

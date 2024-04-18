@@ -52,7 +52,7 @@ void TimeTimer_Pro_Handler(void)
 
 	 case timer_set_time://02
 
-		if(pro_t.gTimer_pro_mode_long_key > 3 ){
+		if(pro_t.gTimer_pro_mode_long_key > 2 ){
             pro_t.gTimer_pro_mode_long_key =0;  
 			gctl_t.mode_longk_key_flag =0;  
 		    gctl_t.mode_key_set_timer_timing_flag=0;
@@ -92,10 +92,7 @@ void TimeTimer_Pro_Handler(void)
 			pro_t.mode_key_select_label =0;
                
 		}
-		else if(pro_t.gTimer_pro_mode_long_key >2 ){
-            gctl_t.mode_key_set_timer_timing_flag=0;
-            gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
-		}
+	
 
 
 	  break;

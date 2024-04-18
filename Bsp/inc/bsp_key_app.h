@@ -16,7 +16,7 @@ void Mode_Key_Select_Fun(void);
 void Mode_Key_Confirm_Fun(void);
 
 
-
+void Key_Speical_Mode_Fun_NoInt_Handler(uint8_t data);
 
 
 

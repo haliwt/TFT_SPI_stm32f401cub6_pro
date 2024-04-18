@@ -86,21 +86,20 @@ void Key_Speical_Mode_Fun_Handler(void)
  //modke _key_long_time
 	if(pro_t.mode_key_pressed_flag ==1){
 
-		//mode key be pressed long times
-		if(MODE_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_mode_key_adjust > 1 && gctl_t.mode_longk_key_flag ==0){
+      if(MODE_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_mode_key_adjust >= 1 && gctl_t.mode_longk_key_flag ==0){
 
-			pro_t.mode_key_pressed_flag =0;
+	        pro_t.mode_key_pressed_flag =0;
 			pro_t.mode_key_select_label =0;
             Buzzer_KeySound();
 			 gctl_t.mode_longk_key_flag =1;
+			gctl_t.mode_key_set_timer_timing_flag=2;
 		    pro_t.gTimer_pro_mode_long_key=0;
 		   
 			Mode_Long_Key_Fun();
 
-		   
-		}
-       //select mode key 
-       if(MODE_KEY_VALUE() ==KEY_UP && pro_t.mode_key_pressed_flag ==1 && gctl_t.mode_longk_key_flag ==0){
+	
+      }
+      else if(MODE_KEY_VALUE() ==KEY_UP){
 			HAL_Delay(10);
 	   	if(MODE_KEY_VALUE() ==KEY_UP ){
 		pro_t.mode_key_pressed_flag =0;
@@ -234,7 +233,7 @@ void ADD_Key_Fun(void)
 
 		case mode_key_temp: //set temperature value add number
 			//pro_t.buzzer_sound_flag = 1;
-			if(gctl_t.mode_key_set_timer_timing_flag==0){
+			if(gctl_t.mode_key_set_timer_timing_flag==0){ // gctl_t.mode_key_set_timer_timing_flag
 				Buzzer_KeySound();
 				gctl_t.gSet_temperature_value ++;
 				if( gctl_t.gSet_temperature_value < 20)gctl_t.gSet_temperature_value=20;
@@ -247,6 +246,7 @@ void ADD_Key_Fun(void)
 				disp_temp_value =1;
 
 			}
+
 			
 			
 		break;
@@ -266,7 +266,9 @@ void ADD_Key_Fun(void)
 			}
 
 		  // pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
-			gctl_t.mode_key_set_timer_timing_flag=1;
+		  
+			 gctl_t.mode_key_set_timer_timing_flag=1;
+			 pro_t.mode_key_run_item_step=mode_key_set_timer_value;
 		 
 			
 
@@ -382,6 +384,7 @@ void DEC_Key_Fun(void)
 		
 		
 		    gctl_t.mode_key_set_timer_timing_flag=1;
+				 pro_t.mode_key_run_item_step=mode_key_set_timer_value;
 			 	
 			//TFT_Disp_Set_TimerTime(0);
 			break;
