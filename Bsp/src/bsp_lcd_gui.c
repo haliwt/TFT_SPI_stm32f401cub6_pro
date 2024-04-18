@@ -8,9 +8,8 @@ uint16_t  POINT_COLOR=WHITE;
 
 static void lcd_draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
 
-static void TFT_Display_Chinese_WorksTime(void);
-static void TFT_Display_Chinese_TimerTiming(void);
-static void TFT_Disp_Only_Humidity_Value(uint8_t hum_value);
+
+
 
 
 
@@ -32,13 +31,15 @@ void TFT_Display_Handler(void)
 	if(pro_t.timer_mode_flag==works_time){
 
 
-	    TFT_Display_Chinese_WorksTime();
-		TFT_Display_WorksTime();
+	    TFT_Disp_Chinese_WorksTime_96_24(100,150);
+		TFT_Only_Disp_Timing();
     }
 	else{
 
-	   TFT_Display_Chinese_TimerTiming();
+	  
+	   TFT_Disp_Chinese_Timer_96_24(100,150);
 	   TFT_Only_Disp_Timing();
+	  
     }
 
 	#if 0
@@ -129,7 +130,7 @@ void TFT_Display_WorksTime(void)
 {
 
     static uint8_t temp_decade_hours,temp_unit_hours,temp_decade_minutes,temp_unit_minutes;
-	static uint8_t disp_work_time=0xff;
+	static uint8_t disp_works=0xff;
 
     if(gctl_t.gTimer_ctl_disp_works_time_second > 59){
         gctl_t.gTimer_ctl_disp_works_time_second =0;
@@ -142,25 +143,26 @@ void TFT_Display_WorksTime(void)
             }
         }
     }
+
+	if(pro_t.gPower_On == power_on){
 	temp_decade_hours = gctl_t.disp_works_hours /10;
 	temp_unit_hours = gctl_t.disp_works_hours % 10;
 
 	temp_decade_minutes = gctl_t.disp_works_minutes/10;
 	temp_unit_minutes = gctl_t.disp_works_minutes%10;
 
-	//gctl_t.timer_timing_words_changed_flag++ ; //表示要进入切换状态
+	
 
-    //display works of words of chines
-    if(pro_t.timer_mode_flag ==timer_time || pro_t.timer_mode_flag==timer_set_time ){
-                //do something 
-    }
-    else if(disp_work_time != gctl_t.timing_words_changed_flag){
-		disp_work_time = gctl_t.timing_words_changed_flag;
+   if(disp_works !=pro_t.works_or_timer_disp_timing_flag){
+
+        disp_works =pro_t.works_or_timer_disp_timing_flag;
+   	
 //	    TFT_Disp_WorksTime_24_24_onBlack(112,150,0,0);//works one "工"
 //		TFT_Disp_WorksTime_24_24_onBlack(136,150,0,1);//works tow "作"
 //		TFT_Disp_WorksTime_24_24_onBlack(160,150,0,2);//"时"
 //		TFT_Disp_WorksTime_24_24_onBlack(184,150,0,3);//“间”
         TFT_Disp_Chinese_WorksTime_96_24(100,150);
+	 
 
     }
 	
@@ -182,38 +184,83 @@ void TFT_Display_WorksTime(void)
 	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(166,188,0,temp_decade_minutes);
 	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(200,188,0,temp_unit_minutes);
 
-	if(gctl_t.gTimer_ctl_total_continue_time > 119 && gctl_t.gTimer_ctl_total_continue_time < 131){
+	
 
-	      gctl_t.time_out_flag =1;
+		if(gctl_t.gTimer_ctl_total_continue_time > 119 && gctl_t.gTimer_ctl_total_continue_time < 131){
 
-	}
-	else{
+		      gctl_t.time_out_flag =1;
 
-		gctl_t.time_out_flag =0;
+		}
+		else{
+
+			gctl_t.time_out_flag =0;
+
+		}
 
 	}
 
 }
 
-static void TFT_Display_Chinese_WorksTime(void)
+void TFT_Display_WorksTime_Voice(void)
 {
-  
-   TFT_Disp_Chinese_WorksTime_96_24(100,150);
 
+    static uint8_t temp_decade_hours,temp_unit_hours,temp_decade_minutes,temp_unit_minutes;
+	
 
- 
+    if(gctl_t.gTimer_ctl_disp_works_time_second > 59){
+        gctl_t.gTimer_ctl_disp_works_time_second =0;
+        gctl_t.disp_works_minutes++;
+        if(gctl_t.disp_works_minutes>59){
+            gctl_t.disp_works_minutes=0;
+            gctl_t.disp_works_hours++;
+            if(gctl_t.disp_works_hours > 99){
+                gctl_t.disp_works_hours=0;
+            }
+        }
+    }
 
-}
+	
+	temp_decade_hours = gctl_t.disp_works_hours /10;
+	temp_unit_hours = gctl_t.disp_works_hours % 10;
 
-static void TFT_Display_Chinese_TimerTiming(void)
-{
-//	TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
-//	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
-//	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
-//	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
-	TFT_Disp_Chinese_Timer_96_24(100,150);
+	temp_decade_minutes = gctl_t.disp_works_minutes/10;
+	temp_unit_minutes = gctl_t.disp_works_minutes%10;
 
+	TFT_Disp_Chinese_WorksTime_96_24(100,150);
+	 
 
+    
+	
+	//works time value
+	
+//   	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(100,188,0,temp_decade_hours);
+//	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(134,188,0,temp_unit_hours);
+
+		
+   	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(80,188,0,temp_decade_hours);
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(114,188,0,temp_unit_hours);
+
+	
+
+    //symbol colon
+	//TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(186,188,0,temp_decade_minutes);
+	//TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(220,188,0,temp_unit_minutes);
+
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(166,188,0,temp_decade_minutes);
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(200,188,0,temp_unit_minutes);
+
+	
+
+		if(gctl_t.gTimer_ctl_total_continue_time > 119 && gctl_t.gTimer_ctl_total_continue_time < 131){
+
+		      gctl_t.time_out_flag =1;
+
+		}
+		else{
+
+			gctl_t.time_out_flag =0;
+
+		}
 
 }
 /***********************************************************************************************
@@ -325,9 +372,9 @@ void TFT_DonnotDisp_Works_Time(void)
 
 /********************************************************************************
  * 
- * Function Name: static void TFT_Disp_Set_TimerTime(void)
- * Function: set timer time of TFT of numbers blink.
- * Input Ref: bc : 1-don't display numbers, 0-display numbers
+ * Function Name: void Power_Off_Retain_Beijing_Time(void)
+ * Function:  get beijing of timing 
+ * Input Ref: 
  * Return Ref:
  * 
 *********************************************************************************/
@@ -363,7 +410,7 @@ void TFT_Disp_Set_TimerTime(uint8_t bc)
 {
 
    static uint8_t timer_decade_hours,timer_unit_hours,timer_decade_minutes,timer_unit_minutes;
-   static uint8_t set_timer_hours=0xff,set_timer_minutes = 0xff,disp_timer_words=0xff,dis_hours=0xff,dis_minutes=0xff;
+   static uint8_t set_timer_hours=0xff,set_timer_minutes = 0xff,timer_disp=0xff;
 
     timer_decade_hours = gctl_t.gSet_timer_hours /10;
 	timer_unit_hours = gctl_t.gSet_timer_hours % 10;
@@ -372,22 +419,22 @@ void TFT_Disp_Set_TimerTime(uint8_t bc)
 	timer_unit_minutes = gctl_t.gSet_timer_minutes % 10;
 
     //display works of words of chinese 
-    if(disp_timer_words != gctl_t.timer_timing_words_changed_flag){
-		disp_timer_words = gctl_t.timer_timing_words_changed_flag;
+  
+    if(timer_disp !=pro_t.works_or_timer_disp_timing_flag){
+		timer_disp =pro_t.works_or_timer_disp_timing_flag;
 //	    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
 //		TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
 //		TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
 //		TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
-        TFT_Disp_Chinese_Timer_96_24(100,150);
-	    
-      
+		//TFT_DontDisp_Chinese_SencondWord_96_24(100, 150);
 
-    }
+        TFT_Disp_Chinese_Timer_96_24(100,150);
+	 }
 	
 	//works time value
-	if(set_timer_hours != gctl_t.gSet_timer_hours ||(dis_hours != gctl_t.timer_timing_words_changed_flag) ){
+	if(set_timer_hours != gctl_t.gSet_timer_hours){
 		set_timer_hours = gctl_t.gSet_timer_hours;
-		dis_hours = gctl_t.timer_timing_words_changed_flag;
+		
 	    
 	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(80,188,bc,timer_decade_hours);
 	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(114,188,bc,timer_unit_hours);
@@ -396,9 +443,9 @@ void TFT_Disp_Set_TimerTime(uint8_t bc)
 	
 	}
 
-	if((set_timer_minutes != gctl_t.gSet_timer_minutes)|| (dis_minutes != gctl_t.timer_timing_words_changed_flag)){
+	if((set_timer_minutes != gctl_t.gSet_timer_minutes)){
 		set_timer_minutes = gctl_t.gSet_timer_minutes;
-		dis_minutes = gctl_t.timer_timing_words_changed_flag;
+		
 
 	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(166,188,bc,timer_decade_minutes);
 	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(200,188,bc,timer_unit_minutes);
@@ -418,7 +465,7 @@ void TFT_Disp_Set_TimerTime_Init(void)
 {
 
    static uint8_t timer_decade_hours,timer_unit_hours,timer_decade_minutes,timer_unit_minutes;
-   static uint8_t set_timer_hours=0xff,disp_timer_words=0xff;
+   static uint8_t set_timer_hours=0xff;
    static uint8_t bc;
 
    bc = 0;
@@ -427,14 +474,17 @@ void TFT_Disp_Set_TimerTime_Init(void)
 	timer_unit_hours = gctl_t.gSet_timer_hours % 10;
 
 
-    if(disp_timer_words != gctl_t.timer_timing_words_changed_flag){
-		disp_timer_words = gctl_t.timer_timing_words_changed_flag;
+   if(pro_t.works_or_timer_disp_timing_flag == timer_time){
+		
     //display works of words of chinese 
 //    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
 //	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
 //	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
 //	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+	//TFT_DontDisp_Chinese_SencondWord_96_24(100, 150);
+
 	TFT_Disp_Chinese_Timer_96_24(100,150);
+	
 	
 
     }
@@ -467,7 +517,6 @@ void TFT_Disp_Voice_Set_TimerTime_Init(void)
 {
 
    static uint8_t timer_decade_hours,timer_unit_hours,timer_decade_minutes,timer_unit_minutes;
-   static uint8_t disp_timer_words=0xff;
    static uint8_t bc;
 
    bc = 0;
@@ -479,15 +528,18 @@ void TFT_Disp_Voice_Set_TimerTime_Init(void)
 	    timer_decade_minutes=0;
 	    timer_unit_minutes =0;
 
-
-    if(disp_timer_words != gctl_t.timer_timing_words_changed_flag){
-		disp_timer_words = gctl_t.timer_timing_words_changed_flag;
+    pro_t.timer_mode_flag=timer_time;
+    if(pro_t.works_or_timer_disp_timing_flag == timer_time){
+		
+	
     //display works of words of chinese 
 //    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
 //	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
 //	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
 //	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
-	TFT_Disp_Chinese_Timer_96_24(100,150);
+	//TFT_DontDisp_Chinese_SencondWord_96_24(100, 150);
+
+	    TFT_Disp_Chinese_Timer_96_24(100,150);
 	
 
     }
@@ -664,32 +716,6 @@ void TFT_Disp_Humidity_Value(uint8_t hum_value)
 
 }
 
-static void TFT_Disp_Only_Humidity_Value(uint8_t hum_value)
-{
-
-   static uint8_t hum_unit,hum_decade;
-
-
-   hum_decade = hum_value /10;
-
-   hum_unit = hum_value%10;
-
-   #if NORMAL_DISPLAY
-
-   TFT_Disp_Numbers_Pic_413(168,40,0,hum_decade); //间隔58
-   TFT_Disp_Numbers_Pic_413(226,40,0, hum_unit);
-
-   #else 
-
-   TFT_MainDisp_Numbers_Pic_354(160,40,0,hum_decade);
-   TFT_MainDisp_Numbers_Pic_354(214,40,0,hum_unit);
-
-
-   #endif 
-
-   
-
-}
 
 /**************************************************************************
 *

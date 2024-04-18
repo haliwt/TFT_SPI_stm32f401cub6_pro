@@ -247,8 +247,8 @@ void Temperature_Ptc_Pro_Handler(void)
 }
 /***********************************************************************************************
 	*
-	*Function Name:void TFT_Display_WorksTime(void)
-	*Function : display of works time value 
+	*Function Name:static void display_high_temp_words(uint8_t disp)
+	*Function : display 
 	*Input: NO
 	*Return: NO 
 	*

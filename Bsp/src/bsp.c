@@ -134,6 +134,8 @@ void TFT_Process_Handler(void)
 		gctl_t.fan_warning =0;
 		wifi_t.repeat_login_tencent_cloud_init_ref=0;
 		MqttData_Publish_PowerOff_Ref();
+		TFT_Display_WorksTime();
+	    
 
 		
 	}
@@ -202,6 +204,10 @@ static void TFT_Pocess_Command_Handler(void)
 	 case 0:
 	  
 		pro_t.gKey_value =0XFF;
+	    if(wifi_link_net_state() ==1){
+		    TFT_Display_WorksTime();
+	    }
+	    
 		Power_On_Fun();
 	    Fan_Run();
 		Device_Action_No_Wifi_Power_On_Handler();
@@ -214,7 +220,8 @@ static void TFT_Pocess_Command_Handler(void)
 		pro_t.gTimer_pro_display_dht11_value=30; //at once display dht11 value
 		pro_t.gTimer_pro_display_dht11_hum=40;
 		gctl_t.gTimer_ctl_dma_state =0;
-		pro_t.add_or_dec_is_cofirm_key_flag =0; //key set example "ptc,kill,driver rat" function. don't compart tempartur value
+		//if(wifi_t.smartphone_app_power_on_flag==0)
+		/// pro_t.add_or_dec_is_cofirm_key_flag =0; //key set example "ptc,kill,driver rat" function. don't compart tempartur value
 
        
 		

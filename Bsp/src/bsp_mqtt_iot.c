@@ -23,6 +23,8 @@ static void Mqtt_power_off_Value(void);
 
 static void property_report_SetOpen(uint8_t open);
 static void Mqtt_Value_update_data(void);
+static void mqtt_smart_phone_power_on_ref(void);
+
 
 
 
@@ -36,9 +38,10 @@ static void property_report_SetFan(uint8_t fan);
 static void property_report_SetTime(uint8_t time);
 static void property_report_SetState(uint8_t dat);
 static void property_report_power_off_state(void);
-static void app_power_on_property_report_state(uint8_t open_data,uint8_t plasma_data,uint8_t ptc_data,uint8_t ultra_data);
+
 
 static void property_report_update_data(void);
+static void property_report_smartphone_power_on_init(void);
 
 
 typedef struct {
@@ -108,6 +111,23 @@ static void Mqtt_power_off_Value(void)
 	
 }
 
+static void mqtt_smart_phone_power_on_ref(void)
+{
+		
+	   sg_info.open = 1;
+	   if(gctl_t.mode_flag==0)gctl_t.mode_flag =1;
+	   sg_info.state = gctl_t.mode_flag;
+	   sg_info.ptc	= gctl_t.ptc_flag;
+	   sg_info.anion =gctl_t.plasma_flag;
+	   sg_info.sonic = gctl_t.ultrasonic_flag ;
+	   sg_info.find =  100;//wifi_t.set_wind_speed_value;
+	   
+	   sg_info.set_temperature = gctl_t.gSet_temperature_value=40;//gctl_t.dht11_temp_value;
+
+
+
+
+}
 
 /********************************************************************************
 	*
@@ -170,6 +190,23 @@ static void property_report_update_data(void)
 
 }
 
+static void property_report_smartphone_power_on_init(void)
+{
+	char  message[256]    = {0};
+	int   message_len	   = 0;
+	
+	// Mqtt_Value_update_data();
+	  mqtt_smart_phone_power_on_ref();
+	 message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up02\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
+								 sg_info.open,sg_info.anion,sg_info.ptc,sg_info.sonic,sg_info.state,sg_info.find,sg_info.set_temperature);
+								   
+	 
+	at_send_data((uint8_t *)message, message_len);
+
+
+}
+
+
 //static void property_report_power_on_state(void)
 //{
 
@@ -211,20 +248,6 @@ static void property_report_power_off_state(void)
 	*Return Ref:
 	*
 ****************************************************************************************************************************************/
-static void app_power_on_property_report_state(uint8_t open_data,uint8_t plasma_data,uint8_t ptc_data,uint8_t ultra_data)
-{
-	char       message[256]    = {0};
-    int        message_len     = 0;
-
- 
-     message_len = snprintf(message, sizeof(message),"\"{\\\"method\\\":\\\"report\\\"\\,\\\"clientToken\\\":\\\"up01\\\"\\,\\\"params\\\":{\\\"open\\\":%d\\,\\\"Anion\\\":%d\\,\\\"ptc\\\":%d\\,\\\"sonic\\\":%d\\,\\\"state\\\":%d\\,\\\"find\\\":%d\\,\\\"temperature\\\":%d}}\"\r\n",
-                             open_data,plasma_data,ptc_data,ultra_data,0x01,0x64,0x28);
-                               
- 
-  at_send_data((uint8_t *)message, message_len);
-
-
-}
 
 
 
@@ -459,11 +482,11 @@ void MqttData_Publish_PowerOff_Ref(void) //
 
 }
 
-void MqttData_Publis_App_PowerOn_Ref(uint8_t open_data,uint8_t plasma_data,uint8_t ptc_data,uint8_t ultra_data)
+void MqttData_Publis_App_PowerOn_Ref(void)
 {
    property_topic_publish();
 
-   app_power_on_property_report_state(open_data,plasma_data,ptc_data,ultra_data);
+   property_report_smartphone_power_on_init();
 
 }
 

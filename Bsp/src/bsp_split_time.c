@@ -44,6 +44,7 @@ void TimeTimer_Pro_Handler(void)
 			}
 		
 		//TFT_Disp_Set_TimerTime(0);
+		TFT_Disp_Set_TimerTime(0);
 		TFT_DonnotDisp_Works_Time();
 
 		
@@ -56,9 +57,6 @@ void TimeTimer_Pro_Handler(void)
 		if(pro_t.gTimer_pro_mode_long_key > 4){
             	  pro_t.gTimer_pro_mode_long_key =0;
 		
-
-    
-
 			if(gctl_t.gSet_timer_hours >0 ){
 
 				pro_t.timer_mode_flag = timer_time;
@@ -77,7 +75,7 @@ void TimeTimer_Pro_Handler(void)
 				gctl_t.mode_key_long_time_flag=0;
 				gctl_t.timer_time_define_flag = 0;
 				pro_t.mode_key_run_item_step =0xff;
-				pro_t.timer_mode_flag = works_time;
+				pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
 				TFT_Display_WorksTime();
 
 

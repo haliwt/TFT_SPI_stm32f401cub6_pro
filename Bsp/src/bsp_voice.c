@@ -701,12 +701,8 @@ static void voice_set_timer_timing_value(uint8_t set_hours)
 		gctl_t.gSet_timer_hours = set_value ;
 
         gctl_t.gTimer_ctl_set_timer_time_senconds =0;
-		if(pro_t.timer_mode_flag!=timer_time){//set timer mode enable
-		 pro_t.timer_mode_flag=timer_time;
-		//to switch works or timer item flag  dis chines words
-		 gctl_t.timer_timing_words_changed_flag ++;
-		 gctl_t.timing_words_changed_flag++;
-		}
+		pro_t.timer_mode_flag=timer_time;
+		pro_t.works_or_timer_disp_timing_flag = timer_time;
 		TFT_Disp_Voice_Set_TimerTime_Init();
        }
 	   else{
@@ -719,7 +715,7 @@ static void voice_set_timer_timing_value(uint8_t set_hours)
 
 static void voice_cancel_timer_timing(void)
 {
-     uint8_t set_temp;
+    // uint8_t set_temp;
  
        if(pro_t.gPower_On == power_on){
 
@@ -727,14 +723,12 @@ static void voice_cancel_timer_timing(void)
 	  
       
 	
-	    
-	   if(pro_t.timer_mode_flag!=works_time){//set timer mode enable
-		 pro_t.timer_mode_flag=works_time;
-		//to switch works or timer item flag  dis chines words
-		 gctl_t.timer_timing_words_changed_flag ++;
-		 gctl_t.timing_words_changed_flag++;
-		}
-		TFT_Display_WorksTime();
+	    gctl_t.gTimer_ctl_disp_works_time_second =70; //at once display works times of timing value
+	 
+	    pro_t.works_or_timer_disp_timing_flag = works_time;
+		
+	    pro_t.timer_mode_flag= works_time;
+		TFT_Display_WorksTime_Voice();
        }
 	   else{
 

@@ -171,6 +171,7 @@ typedef struct{
   	uint8_t gTimer_pro_feed_dog;
 
 	uint8_t gTimer_pro_temp_delay ;
+	uint8_t works_or_timer_disp_timing_flag ;
 	
 	
 

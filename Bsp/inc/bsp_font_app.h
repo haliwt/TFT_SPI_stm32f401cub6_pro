@@ -52,6 +52,9 @@ void TFT_Disp_Chinese_WorksTime_96_24(uint16_t x,uint16_t y);
 
 void TFT_Disp_Fan_RunIcon(uint16_t x,uint16_t y);
 
+void TFT_DontDisp_Chinese_SencondWord_96_24(uint16_t x,uint16_t y);
+
+
 
 #endif 
 

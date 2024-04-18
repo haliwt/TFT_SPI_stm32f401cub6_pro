@@ -746,7 +746,7 @@ void Json_Parse_Command_Fun(void)
 			HAL_Delay(100);
             //do someting
 			if(pro_t.timer_mode_flag == timer_time){
-				gctl_t.timer_timing_words_changed_flag++;
+				
 				TFT_Disp_Set_TimerTime(0);
 			}
 			else{
@@ -770,8 +770,8 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetState(1); //beijing timing = 1
 			HAL_Delay(100);
 			//do something
-			 pro_t.timer_mode_flag=works_time;//0
-			 gctl_t.timing_words_changed_flag++;
+			 pro_t.timer_mode_flag=works_time;//pro_t.timer_mode_flag
+			 pro_t.works_or_timer_disp_timing_flag =works_time;
 			 TFT_Display_WorksTime();
           
         }
@@ -1062,7 +1062,7 @@ static void smartphone_app_timer_power_on_handler(void)
    
 
 	if(app_step==1){
-	
+	  
 		buzzer_sound();
 
 		//Device_Action_Publish_Handler();
@@ -1072,15 +1072,13 @@ static void smartphone_app_timer_power_on_handler(void)
 		wifi_t.smartphone_app_power_on_flag=1;
 		if(gctl_t.ptc_flag ==0)pro_t.add_or_dec_is_cofirm_key_flag =1;
 
-        MqttData_Publis_App_PowerOn_Ref(0x01,gctl_t.plasma_flag,gctl_t.ptc_flag,gctl_t.ultrasonic_flag);
+        MqttData_Publis_App_PowerOn_Ref();
+  
 		
 		HAL_Delay(200);//
-
-	
-	
-
-       
 		app_step=0;
+
+	
 
 	}
 

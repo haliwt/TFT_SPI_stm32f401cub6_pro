@@ -188,8 +188,7 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 	   if(gctl_t.fan_warning ==0 && ptc_error_state() ==0){
 	  	  pro_t.mode_key_run_item_step = mode_key_timer_time;
 		  pro_t.timer_mode_flag=timer_set_time; //set timer mode enable,
-		  gctl_t.timer_timing_words_changed_flag ++;
-		  gctl_t.timing_words_changed_flag++;
+	      pro_t.works_or_timer_disp_timing_flag = timer_time;
 		  pro_t.gTimer_pro_mode_long_key=0;
 		 
 

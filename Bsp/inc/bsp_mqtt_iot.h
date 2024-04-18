@@ -59,7 +59,7 @@ void MqttData_Publish_SetState(uint8_t sdat); //Ai model
 
 void MqttData_Publish_PowerOff_Ref(void) ; //power off 
 
-void MqttData_Publis_App_PowerOn_Ref(uint8_t open_data,uint8_t plasma_data,uint8_t ptc_data,uint8_t ultra_data);
+void MqttData_Publis_App_PowerOn_Ref(void);
 
 
 
