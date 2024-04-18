@@ -61,6 +61,7 @@ typedef struct _bsp_ctl{
    int8_t gSet_temperature_value;
    int8_t select_main_fun_numbers;
    uint8_t mode_longk_key_flag ;
+   uint8_t mode_key_set_timer_timing_flag;
    
 
    //command
@@ -81,6 +82,7 @@ typedef struct _bsp_ctl{
    uint8_t gTimer_ctl_dma_state;
    uint8_t gTimer_ctl_publish_set_temperature_value;
    uint8_t gTimer_ctl_set_timer_value;
+   
 
 
 }bsp_ctl;

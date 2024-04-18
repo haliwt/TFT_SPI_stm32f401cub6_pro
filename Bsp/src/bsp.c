@@ -134,7 +134,7 @@ void TFT_Process_Handler(void)
 		gctl_t.fan_warning =0;
 		wifi_t.repeat_login_tencent_cloud_init_ref=0;
 		MqttData_Publish_PowerOff_Ref();
-		TFT_Display_WorksTime();
+		//TFT_Display_WorksTime();
 	    
 
 		

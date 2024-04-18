@@ -20,7 +20,6 @@ extern const uint8_t font2424_temp_symbol[72];
 extern const uint8_t font2424_humidity_symbol[72];
 
 
-extern const uint8_t font9624_chinese_works_time[288];
 
 
 
@@ -49,7 +48,7 @@ extern const uint8_t font1616_humidity_symbol[32];
 
 extern const uint8_t font3918_chinese_temp[90];
 
-extern const uint8_t font9624_chinese_timer_time[288];
+
 extern const uint8_t font2323_chinese_timer_time[4][69];
 
 

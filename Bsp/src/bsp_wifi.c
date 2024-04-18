@@ -57,23 +57,26 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 	      if(wifi_t.power_off_step==0){
 			  wifi_t.power_off_step++;
-		     MqttData_Publish_PowerOff_Ref();
-			 wifi_t.gTimer_power_first_link_tencent =0;
+		    // MqttData_Publish_PowerOff_Ref();
+		     wifi_t.gTimer_main_pro_times=60;
+		  
+			 wifi_t.gTimer_wifi_power_on_detect =0;
 
 		    }
 
-		    if(wifi_t.power_off_step==1 && wifi_t.gTimer_power_first_link_tencent >0){
+		    if(wifi_t.power_off_step==1 && wifi_t.gTimer_wifi_power_on_detect >1){
 			  wifi_t.power_off_step++;
 
 			    Subscriber_Data_FromCloud_Handler();
-			    wifi_t.gTimer_power_first_link_tencent =0;
+			   
+			    wifi_t.gTimer_wifi_power_on_detect  =0;
 
 		    }
 
-			if(wifi_t.power_off_step==2 && wifi_t.gTimer_power_first_link_tencent >0){
+			if(wifi_t.power_off_step==2 && wifi_t.gTimer_wifi_power_on_detect  >0){
 
 				  wifi_t.power_off_step=3;
-				  wifi_t.gTimer_power_first_link_tencent=0;
+				  wifi_t.gTimer_wifi_power_on_detect =0;
             }
 
 	}

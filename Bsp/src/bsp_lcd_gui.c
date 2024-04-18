@@ -344,20 +344,11 @@ static uint8_t temp_decade_hours,temp_unit_hours,temp_decade_minutes,temp_unit_m
 void TFT_Only_Disp_Set_Timer_Blink(void)
 {
 
-static uint8_t temp_decade_hours,temp_unit_hours,temp_decade_minutes,temp_unit_minutes;
-	
-	    temp_decade_hours = gctl_t.disp_works_hours /10;
-		temp_unit_hours = gctl_t.disp_works_hours % 10;
-
-		temp_decade_minutes = gctl_t.disp_works_minutes/10;
-		temp_unit_minutes = gctl_t.disp_works_minutes%10;
-
-
-	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(80,190,1,temp_decade_hours);
-	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(114,190,1,temp_unit_hours);
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(80,190,1,0);
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(114,190,1,0);
     //symbol colon
-	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(166,190,1,temp_decade_minutes);
-	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(200,190,1,temp_unit_minutes);
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(166,190,1,0);
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(200,190,1,0);
 
 
 
@@ -460,7 +451,7 @@ void TFT_Disp_Set_TimerTime(uint8_t bc)
 {
 
    static uint8_t timer_decade_hours,timer_unit_hours,timer_decade_minutes,timer_unit_minutes;
-   static uint8_t set_timer_hours=0xff,set_timer_minutes = 0xff,timer_disp=0xff;
+   
 
     timer_decade_hours = gctl_t.gSet_timer_hours /10;
 	timer_unit_hours = gctl_t.gSet_timer_hours % 10;

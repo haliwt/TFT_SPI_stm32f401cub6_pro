@@ -204,7 +204,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	case KEY_MODE_Pin:
 
-      if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0){   
+      if(pro_t.gPower_On == power_on && MODE_KEY_VALUE() ==KEY_DOWN){   
 
   	  pro_t.mode_key_pressed_flag =1;
       pro_t.gTimer_pro_mode_key_adjust =0;

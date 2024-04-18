@@ -87,14 +87,14 @@ void Key_Speical_Mode_Fun_Handler(void)
 	if(pro_t.mode_key_pressed_flag ==1){
 
 		//mode key be pressed long times
-		if(MODE_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_mode_key_adjust > 1){
+		if(MODE_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_mode_key_adjust > 1 && gctl_t.mode_longk_key_flag ==0){
 
-		    
 			pro_t.mode_key_pressed_flag =0;
 			pro_t.mode_key_select_label =0;
             Buzzer_KeySound();
+			 gctl_t.mode_longk_key_flag =1;
 		    pro_t.gTimer_pro_mode_long_key=0;
-		 
+		   
 			Mode_Long_Key_Fun();
 
 		   
@@ -198,10 +198,10 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 		  pro_t.timer_mode_flag=timer_set_time; //set timer mode enable,
 		  gctl_t.gTimer_ctl_disp_works_time_second=0;
 	     
-		  pro_t.gTimer_pro_mode_long_key=0;
+		  pro_t.gTimer_pro_mode_long_key=0; //this current time counter.
 		  TFT_Disp_Set_TimerTime_Init();
-		  gctl_t.mode_longk_key_flag =1;
-		  Buzzer_KeySound();
+		  
+		 
 
 	   }
 	  	 
@@ -220,7 +220,7 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 void ADD_Key_Fun(void)
 {
 
- static uint8_t disp_temp_value,timer_timing_flag;
+ static uint8_t disp_temp_value;
  if(power_on_state()==power_on){
 
 	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0){
@@ -234,17 +234,19 @@ void ADD_Key_Fun(void)
 
 		case mode_key_temp: //set temperature value add number
 			//pro_t.buzzer_sound_flag = 1;
-			
-			Buzzer_KeySound();
-			gctl_t.gSet_temperature_value ++;
-			if( gctl_t.gSet_temperature_value < 20)gctl_t.gSet_temperature_value=20;
-			
-            if(gctl_t.gSet_temperature_value > 40) gctl_t.gSet_temperature_value= 20;
+			if(gctl_t.mode_key_set_timer_timing_flag==0){
+				Buzzer_KeySound();
+				gctl_t.gSet_temperature_value ++;
+				if( gctl_t.gSet_temperature_value < 20)gctl_t.gSet_temperature_value=20;
+				
+	            if(gctl_t.gSet_temperature_value > 40) gctl_t.gSet_temperature_value= 20;
 
-             pro_t.gTimer_pro_set_tem_value_blink =0;
-			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
-        
-			disp_temp_value =1;
+	             pro_t.gTimer_pro_set_tem_value_blink =0;
+				 gctl_t.gSet_temperature_value_item = set_temp_value_item;
+	        
+				disp_temp_value =1;
+
+			}
 			
 			
 		break;
@@ -264,7 +266,7 @@ void ADD_Key_Fun(void)
 			}
 
 		  // pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
-			set_timer_timing_flag=1;
+			gctl_t.mode_key_set_timer_timing_flag=1;
 		 
 			
 
@@ -322,23 +324,11 @@ void ADD_Key_Fun(void)
 		}
 
     }
-    if(set_timer_timing_flag ==1){
-		
-	
-		set_timer_timing_flag=0;
-
-	   
-		mode_longkey_settimer();
-
-    }
-
-
+     mode_longkey_settimer();
 	
 
- }
+ 	}
    
-	 
-
 }
 /************************************************************************
 	*
@@ -350,7 +340,7 @@ void ADD_Key_Fun(void)
 ************************************************************************/
 void DEC_Key_Fun(void)
 {
-    static uint8_t disp_temp_value,timer_timing_flag;
+    static uint8_t disp_temp_value;
 	if(power_on_state() ==power_on){
 	   	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0 ){
 	   	
@@ -360,7 +350,7 @@ void DEC_Key_Fun(void)
            
 
 		   case mode_key_temp:  //default tempearture value 
-	        // pro_t.buzzer_sound_flag = 1;
+	        if(gctl_t.mode_key_set_timer_timing_flag==0){
 	  
 	        Buzzer_KeySound();
 			 gctl_t.gSet_temperature_value--;
@@ -371,7 +361,7 @@ void DEC_Key_Fun(void)
 			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
              disp_temp_value =1;
 	        
-			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+	        }
 	        
 			break;
 
@@ -391,7 +381,7 @@ void DEC_Key_Fun(void)
 				}
 		
 		
-		    set_timer_timing_flag=1;
+		    gctl_t.mode_key_set_timer_timing_flag=1;
 			 	
 			//TFT_Disp_Set_TimerTime(0);
 			break;
@@ -441,17 +431,14 @@ void DEC_Key_Fun(void)
 			}
 			
     	}
-	    if(set_timer_timing_flag==1){
-		  set_timer_timing_flag=0;
+	   
 	      mode_longkey_settimer();
           
   
        }
 	   
-	}
-       
 }
-
+       
 /*****************************************************************************
  * 
  * Function Name: void Mode_Key_Select_Fun(void)
@@ -693,9 +680,26 @@ void Mode_Key_Confirm_Fun(void)
 static void mode_longkey_settimer(void)
 {
 
-	
 
-		TFT_Disp_Onley_Set_TimerTime_Value();
+
+       if(gctl_t.mode_key_set_timer_timing_flag==1){
+		  gctl_t.mode_key_set_timer_timing_flag++;
+		  TFT_Disp_Onley_Set_TimerTime_Value();
+       }
+//	   if(pro_t.gTimer_pro_mode_long_key <4  && pro_t.timer_mode_flag==timer_set_time){
+//			
+//                if(gctl_t.gTimer_ctl_set_timer_value < 1){
+//				    TFT_Only_Disp_Set_Timer_Blink();
+//
+//                }
+//				else if(gctl_t.gTimer_ctl_set_timer_value  > 0){
+//				    TFT_Disp_Onley_Set_TimerTime_Value();
+//                }
+//				else{
+//					gctl_t.gTimer_ctl_set_timer_value=0;
+//
+//
+//	  }
 }
 
 

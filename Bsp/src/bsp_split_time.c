@@ -54,7 +54,8 @@ void TimeTimer_Pro_Handler(void)
 
 		if(pro_t.gTimer_pro_mode_long_key > 3 ){
             pro_t.gTimer_pro_mode_long_key =0;  
-		    pro_t.buzzer_sound_flag = 1;
+			gctl_t.mode_longk_key_flag =0;  
+		    gctl_t.mode_key_set_timer_timing_flag=0;
 			if(gctl_t.gSet_timer_hours >0 ){
            
 				pro_t.timer_mode_flag = timer_time;
@@ -67,8 +68,10 @@ void TimeTimer_Pro_Handler(void)
 				   TFT_Disp_Chinese_Timer_23_23(TIMER_X1,TIMER_Y,1);
 				   TFT_Disp_Chinese_Timer_23_23(TIMER_X2,TIMER_Y,2);
 				   TFT_Disp_Chinese_Timer_23_23(TIMER_X3,TIMER_Y,3);
-				TFT_Disp_Onley_Set_TimerTime_Value();
-				
+				    TFT_Only_Disp_Set_Timer_Blink();
+					HAL_Delay(100);
+					TFT_Disp_Onley_Set_TimerTime_Value();
+					
 			}
 			else{
 				
@@ -89,11 +92,10 @@ void TimeTimer_Pro_Handler(void)
 			pro_t.mode_key_select_label =0;
                
 		}
-		else if(pro_t.gTimer_pro_mode_long_key > 1){
-
+		else if(pro_t.gTimer_pro_mode_long_key >2 ){
+            gctl_t.mode_key_set_timer_timing_flag=0;
             gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
 		}
-
 
 
 	  break;
