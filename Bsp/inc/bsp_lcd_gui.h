@@ -9,12 +9,20 @@
 #define TIMER_Y     150
 
 #define TIMER_X1    125
-
-
 #define TIMER_X2    150
-
-
 #define TIMER_X3  	175
+
+#define DIS_TIME_X0   80
+#define DIS_TIME_Y    190
+
+#define DIS_TIME_X1    114
+
+#define DIS_TIME_X2    166
+
+#define DIS_TIME_X3    200
+
+
+
 
 
 
