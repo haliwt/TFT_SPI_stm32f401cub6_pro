@@ -1,8 +1,9 @@
 #include "bsp.h"
 
-uint8_t set_timer_timing_up_flag ;
+uint8_t set_timer_timing_flag ;
 
-uint8_t set_timer_timing_down_flag ;
+
+
 
 static void mode_longkey_settimer(void);
 
@@ -87,7 +88,8 @@ void Key_Speical_Mode_Fun_Handler(void)
 
 		//mode key be pressed long times
 		if(MODE_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_mode_key_adjust > 1){
-			
+
+		    
 			pro_t.mode_key_pressed_flag =0;
 			pro_t.mode_key_select_label =0;
             Buzzer_KeySound();
@@ -98,9 +100,9 @@ void Key_Speical_Mode_Fun_Handler(void)
 		   
 		}
        //select mode key 
-       if(MODE_KEY_VALUE() ==KEY_UP && pro_t.mode_key_pressed_flag ==1){
+       if(MODE_KEY_VALUE() ==KEY_UP && pro_t.mode_key_pressed_flag ==1 && gctl_t.mode_longk_key_flag ==0){
 			HAL_Delay(10);
-	   	if(MODE_KEY_VALUE() ==KEY_UP){
+	   	if(MODE_KEY_VALUE() ==KEY_UP ){
 		pro_t.mode_key_pressed_flag =0;
 	   
 		pro_t.gTimer_pro_mode_key_be_select=0;
@@ -197,6 +199,8 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 	     
 		  pro_t.gTimer_pro_mode_long_key=0;
 		  TFT_Disp_Set_TimerTime_Init();
+		  gctl_t.mode_longk_key_flag =1;
+		  Buzzer_KeySound();
 
 	   }
 	  	 
@@ -247,7 +251,7 @@ void ADD_Key_Fun(void)
 		case mode_key_set_timer_value:
             pro_t.buzzer_sound_flag = 1;
 		    pro_t.gTimer_pro_mode_long_key=0;
-		
+		    gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
 			
 			gctl_t.gSet_timer_minutes=0;
 			gctl_t.gSet_timer_hours ++ ;//disp_t.disp_timer_time_hours++ ;//pro_t.dispTime_minutes = pro_t.dispTime_minutes + 60;
@@ -259,7 +263,7 @@ void ADD_Key_Fun(void)
 			}
 
 		  // pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
-			set_timer_timing_up_flag=1;
+			set_timer_timing_flag=1;
 		 
 			
 
@@ -317,9 +321,10 @@ void ADD_Key_Fun(void)
 		}
 
     }
-    if(set_timer_timing_up_flag ==1){
+    if(set_timer_timing_flag ==1){
 		
-	 // TFT_Disp_Set_TimerTime(0);
+	
+		set_timer_timing_flag=0;
 
 	   
 		mode_longkey_settimer();
@@ -372,7 +377,7 @@ void DEC_Key_Fun(void)
 			case mode_key_set_timer_value: //timer timing set "decrease -down"
 			   
 			    pro_t.buzzer_sound_flag = 1;
-	     
+	            gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
 			    pro_t.gTimer_pro_mode_long_key=0;
 			
 				gctl_t.gSet_timer_minutes=0;
@@ -385,7 +390,7 @@ void DEC_Key_Fun(void)
 				}
 		
 		
-		    set_timer_timing_down_flag=1;
+		    set_timer_timing_flag=1;
 			 	
 			//TFT_Disp_Set_TimerTime(0);
 			break;
@@ -435,9 +440,9 @@ void DEC_Key_Fun(void)
 			}
 			
     	}
-	    if(set_timer_timing_down_flag==1){
-		  
-	     mode_longkey_settimer();
+	    if(set_timer_timing_flag==1){
+		  set_timer_timing_flag=0;
+	      mode_longkey_settimer();
           
   
        }
@@ -689,8 +694,7 @@ static void mode_longkey_settimer(void)
 
 	if(pro_t.gTimer_pro_mode_long_key > 3){
 		pro_t.gTimer_pro_mode_long_key =0;
-		set_timer_timing_up_flag=0;
-	    set_timer_timing_down_flag =0;
+		 pro_t.buzzer_sound_flag = 1;
 		if(gctl_t.gSet_timer_hours >0 ){
 
 		pro_t.timer_mode_flag = timer_time;
@@ -718,6 +722,7 @@ static void mode_longkey_settimer(void)
 
 	}
 	else{
+		#if 0
         if(gctl_t.gTimer_ctl_set_timer_value <1){
 	    	TFT_Only_Disp_Set_Timer_Blink();
         }
@@ -726,6 +731,9 @@ static void mode_longkey_settimer(void)
 		    TFT_Disp_Onley_Set_TimerTime_Value();
 
 		}
+		#endif 
+
+		TFT_Disp_Onley_Set_TimerTime_Value();
 	}
 
 }

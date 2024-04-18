@@ -60,6 +60,7 @@ typedef struct _bsp_ctl{
    
    int8_t gSet_temperature_value;
    int8_t select_main_fun_numbers;
+   uint8_t mode_longk_key_flag ;
    
 
    //command

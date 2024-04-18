@@ -52,16 +52,20 @@ void TimeTimer_Pro_Handler(void)
 
 	 case timer_set_time://02
 
+
+
+
 	 	if(pro_t.gTimer_pro_mode_long_key > 3 ){
-            	  
-		
+            pro_t.gTimer_pro_mode_long_key =0;  
+		    pro_t.buzzer_sound_flag = 1;
 			if(gctl_t.gSet_timer_hours >0 ){
-       
+           
 				pro_t.timer_mode_flag = timer_time;
 				pro_t.mode_key_run_item_step =0xff;
 				gctl_t.gTimer_ctl_set_timer_time_senconds =0;
 			
 				gctl_t.gSet_timer_minutes =0;
+				TFT_Disp_Chinese_Timer_96_24(100,150);
 				TFT_Disp_Onley_Set_TimerTime_Value();
 				
 			}
@@ -70,6 +74,7 @@ void TimeTimer_Pro_Handler(void)
 		
 				pro_t.mode_key_run_item_step =0xff;
 				pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
+				TFT_Disp_Chinese_WorksTime_96_24(100,150);
 				TFT_Display_WorksTime();
 
 
@@ -78,6 +83,10 @@ void TimeTimer_Pro_Handler(void)
 		
 			pro_t.mode_key_select_label =0;
                
+		}
+		else if(pro_t.gTimer_pro_mode_long_key > 1){
+
+            gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
 		}
 
 
