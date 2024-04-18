@@ -5,6 +5,22 @@
 #define TFT_DISP_TEMP_24   0
 
 
+#define TIMER_X0    100
+#define TIMER_Y     150
+
+#define TIMER_X1    125
+
+
+#define TIMER_X2    150
+
+
+#define TIMER_X3  	175
+
+
+
+
+
+
 void TFT_DrawPoint(uint16_t x,uint16_t y,uint16_t color);
 
 void TFT_SetWindow(uint16_t xstart,uint16_t ystart,uint16_t xend,uint16_t yend);

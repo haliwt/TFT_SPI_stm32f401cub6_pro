@@ -62,7 +62,11 @@ void TimeTimer_Pro_Handler(void)
 				gctl_t.gTimer_ctl_set_timer_time_senconds =0;
 			
 				gctl_t.gSet_timer_minutes =0;
-				TFT_Disp_Chinese_Timer_96_24(100,150);
+				//TFT_Disp_Chinese_Timer_96_24(100,150);
+				 TFT_Disp_Chinese_Timer_23_23(TIMER_X0,TIMER_Y,0);
+				   TFT_Disp_Chinese_Timer_23_23(TIMER_X1,TIMER_Y,1);
+				   TFT_Disp_Chinese_Timer_23_23(TIMER_X2,TIMER_Y,2);
+				   TFT_Disp_Chinese_Timer_23_23(TIMER_X3,TIMER_Y,3);
 				TFT_Disp_Onley_Set_TimerTime_Value();
 				
 			}
@@ -71,7 +75,11 @@ void TimeTimer_Pro_Handler(void)
 		
 				pro_t.mode_key_run_item_step =0xff;
 				pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
-				TFT_Disp_Chinese_WorksTime_96_24(100,150);
+				//TFT_Disp_Chinese_WorksTime_96_24(100,150);
+				 TFT_Disp_Chinese_WorkTime_23_23(TIMER_X0,TIMER_Y,0);
+				TFT_Disp_Chinese_WorkTime_23_23(TIMER_X1,TIMER_Y,1);
+				TFT_Disp_Chinese_WorkTime_23_23(TIMER_X2,TIMER_Y,2);
+				TFT_Disp_Chinese_WorkTime_23_23(TIMER_X3,TIMER_Y,3);
 				TFT_Display_WorksTime();
 
 
