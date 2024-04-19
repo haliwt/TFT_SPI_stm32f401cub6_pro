@@ -83,25 +83,33 @@ void Key_Speical_Power_Fun_Handler(void)
 ******************************************************************************/
 void Key_Speical_Mode_Fun_Handler(void)
 {
- //modke _key_long_time
+
 	if(pro_t.mode_key_pressed_flag ==1){
 
-      if(MODE_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_mode_key_adjust >= 1 && gctl_t.mode_longk_key_flag ==0){
+      if(MODE_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_mode_key_adjust >= 1 ){
 
-	        pro_t.mode_key_pressed_flag =0;
-			pro_t.mode_key_select_label =0;
-            Buzzer_KeySound();
-			 gctl_t.mode_longk_key_flag =1;
-			gctl_t.mode_key_set_timer_timing_flag=2;
-		    pro_t.gTimer_pro_mode_long_key=0;
-		   
-			Mode_Long_Key_Fun();
+            HAL_Delay(1000);
+			if(MODE_KEY_VALUE() ==KEY_DOWN){
+				pro_t.mode_key_pressed_flag =0;
+				pro_t.mode_key_select_label =0;
+			   pro_t.gTimer_pro_mode_long_key=0;
+			   gctl_t.mode_longk_key_flag=1;
+	            Buzzer_KeySound();
+				 gctl_t.mode_longk_key_flag =1;
+			    pro_t.gTimer_pro_mode_long_key=0;
+			    pro_t.mode_key_run_item_step=mode_key_set_timer_value;
+				Mode_Long_Key_Fun();
+				pro_t.gTimer_pro_mode_long_key=0;
+
+			}
 
 	
       }
-      else if(MODE_KEY_VALUE() ==KEY_UP){
+      else if(MODE_KEY_VALUE() ==KEY_UP && gctl_t.mode_longk_key_flag==0){
 			HAL_Delay(10);
 	   	if(MODE_KEY_VALUE() ==KEY_UP ){
+
+		
 		pro_t.mode_key_pressed_flag =0;
 	   
 		pro_t.gTimer_pro_mode_key_be_select=0;
@@ -124,7 +132,13 @@ void Key_Speical_Mode_Fun_Handler(void)
 		
 	}
 
+	
 	Mode_Key_Config_Fun_Handler();
+
+
+
+
+    
 }
 
 /******************************************************************************
@@ -137,10 +151,17 @@ void Key_Speical_Mode_Fun_Handler(void)
 ******************************************************************************/
 void Mode_Key_Config_Fun_Handler(void)
 {
-   
+
+ if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
+
+	 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+
+
+ }
+ else{
   switch(pro_t.mode_key_run_item_step){
 
-
+            
              case mode_key_select: //02
 
 
@@ -176,7 +197,7 @@ void Mode_Key_Config_Fun_Handler(void)
 	    }
 
 
-       
+ }
      
 }
 
@@ -190,8 +211,8 @@ void Mode_Key_Config_Fun_Handler(void)
 ************************************************************************/
 void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 {
-	  if(power_on_state() ==power_on){
-	   if(gctl_t.fan_warning ==0 && ptc_error_state() ==0){
+	  
+	  
 	   	
 	  	  pro_t.mode_key_run_item_step = mode_key_set_timer_value;
 		  pro_t.timer_mode_flag=timer_set_time; //set timer mode enable,
@@ -202,10 +223,10 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 		  
 		 
 
-	   }
+	   
 	  	 
-      }
-}
+ }
+
 
 
 /************************************************************************
@@ -219,8 +240,15 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 void ADD_Key_Fun(void)
 {
 
- static uint8_t disp_temp_value;
- if(power_on_state()==power_on){
+ static uint8_t disp_temp_value,add_timer;
+
+ if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
+ 
+	  pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+ 
+ 
+  }
+  if(power_on_state()==power_on){
 
 	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0){
 
@@ -233,7 +261,14 @@ void ADD_Key_Fun(void)
 
 		case mode_key_temp: //set temperature value add number
 			//pro_t.buzzer_sound_flag = 1;
-			if(gctl_t.mode_key_set_timer_timing_flag==0){ // gctl_t.mode_key_set_timer_timing_flag
+				if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
+ 
+	 			 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+ 
+ 
+  				}
+			    else{
+			
 				Buzzer_KeySound();
 				gctl_t.gSet_temperature_value ++;
 				if( gctl_t.gSet_temperature_value < 20)gctl_t.gSet_temperature_value=20;
@@ -245,13 +280,15 @@ void ADD_Key_Fun(void)
 	        
 				disp_temp_value =1;
 
-			}
+			  
+
+			    }
 
 			
 			
 		break;
 
-		case mode_key_set_timer_value:
+		case mode_key_set_timer_value://3
             pro_t.buzzer_sound_flag = 1;
 		    pro_t.gTimer_pro_mode_long_key=0;
 		    gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
@@ -267,9 +304,10 @@ void ADD_Key_Fun(void)
 
 		  // pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
 		  
-			 gctl_t.mode_key_set_timer_timing_flag=1;
-			 pro_t.mode_key_run_item_step=mode_key_set_timer_value;
-		 
+		
+			add_timer =1;
+
+		   pro_t.mode_key_run_item_step = mode_key_set_timer_value;
 			
 
 		break;
@@ -326,7 +364,12 @@ void ADD_Key_Fun(void)
 		}
 
     }
-     mode_longkey_settimer();
+	if(add_timer==1){
+		add_timer =0;
+		pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+        mode_longkey_settimer();
+
+	}
 	
 
  	}
@@ -342,7 +385,17 @@ void ADD_Key_Fun(void)
 ************************************************************************/
 void DEC_Key_Fun(void)
 {
-    static uint8_t disp_temp_value;
+    static uint8_t disp_temp_value,dec_timer;
+    
+	if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
+	
+		 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+	
+	
+	 }
+
+
+	
 	if(power_on_state() ==power_on){
 	   	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0 ){
 	   	
@@ -352,19 +405,26 @@ void DEC_Key_Fun(void)
            
 
 		   case mode_key_temp:  //default tempearture value 
-	        if(gctl_t.mode_key_set_timer_timing_flag==0){
 	  
-	        Buzzer_KeySound();
-			 gctl_t.gSet_temperature_value--;
-			if( gctl_t.gSet_temperature_value<20)  gctl_t.gSet_temperature_value=40;
-	        if( gctl_t.gSet_temperature_value >40) gctl_t.gSet_temperature_value=40;
-   
-			 pro_t.gTimer_pro_set_tem_value_blink =0;
-			 gctl_t.gSet_temperature_value_item = set_temp_value_item;
-             disp_temp_value =1;
-	        
-	        }
-	        
+	         
+			if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
+			
+				 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+			
+			
+			 }
+			 else{
+		        Buzzer_KeySound();
+				 gctl_t.gSet_temperature_value--;
+				if( gctl_t.gSet_temperature_value<20)  gctl_t.gSet_temperature_value=40;
+		        if( gctl_t.gSet_temperature_value >40) gctl_t.gSet_temperature_value=40;
+	   
+				 pro_t.gTimer_pro_set_tem_value_blink =0;
+				 gctl_t.gSet_temperature_value_item = set_temp_value_item;
+	             disp_temp_value =1;
+			        
+			 }
+			        
 			break;
 
 			case mode_key_set_timer_value: //timer timing set "decrease -down"
@@ -383,8 +443,9 @@ void DEC_Key_Fun(void)
 				}
 		
 		
-		    gctl_t.mode_key_set_timer_timing_flag=1;
-				 pro_t.mode_key_run_item_step=mode_key_set_timer_value;
+		       dec_timer =1;
+				pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+				
 			 	
 			//TFT_Disp_Set_TimerTime(0);
 			break;
@@ -434,8 +495,12 @@ void DEC_Key_Fun(void)
 			}
 			
     	}
-	   
+
+		 if(dec_timer ==1){
+		 	dec_timer=0;
+		   pro_t.mode_key_run_item_step = mode_key_set_timer_value;
 	      mode_longkey_settimer();
+		 }
           
   
        }
@@ -685,10 +750,9 @@ static void mode_longkey_settimer(void)
 
 
 
-       if(gctl_t.mode_key_set_timer_timing_flag==1){
-		  gctl_t.mode_key_set_timer_timing_flag++;
+     
 		  TFT_Disp_Onley_Set_TimerTime_Value();
-       }
+       
 //	   if(pro_t.gTimer_pro_mode_long_key <4  && pro_t.timer_mode_flag==timer_set_time){
 //			
 //                if(gctl_t.gTimer_ctl_set_timer_value < 1){

@@ -89,7 +89,7 @@ void bsp_Idle(void)
 void TFT_Process_Handler(void)
 {
    
-   static uint8_t fan_continuce_flag;
+   static uint8_t fan_continuce_flag,wifi_update;
 	if(pro_t.buzzer_sound_flag ==1 && pro_t.power_on_first==1){
 		pro_t.buzzer_sound_flag=0;
 		Buzzer_KeySound();
@@ -114,6 +114,7 @@ void TFT_Process_Handler(void)
 		pro_t.power_off_flag =0;
 	    wifi_t.power_off_step=0; 
 	    fan_continuce_flag =1;
+		wifi_update=0;
 		pro_t.gTimer_pro_fan =0;
 		wifi_t.gTimer_main_pro_times=0;	
 		gctl_t.gTimer_ctl_disp_works_time_second=0;
@@ -130,13 +131,22 @@ void TFT_Process_Handler(void)
 		
 		
 	}
-	if(wifi_link_net_state() ==1  && wifi_t.gTimer_main_pro_times > 50){
+	if(wifi_link_net_state() ==1  && wifi_t.gTimer_main_pro_times > 60 ){
+		wifi_update ++;
 		wifi_t.gTimer_main_pro_times=0;	
 		gctl_t.ptc_warning=0;
 		gctl_t.fan_warning =0;
 		wifi_t.repeat_login_tencent_cloud_init_ref=0;
-		MqttData_Publish_PowerOff_Ref();
-		//TFT_Display_WorksTime();
+		if(wifi_update ==1 || wifi_update %3==0){
+		   MqttData_Publish_PowerOff_Ref(); 
+		  
+		}
+		else if(wifi_update % 2==0){
+        
+		 Subscriber_Data_FromCloud_Handler();
+		}
+		else wifi_update=0;
+
 	    
 
 		

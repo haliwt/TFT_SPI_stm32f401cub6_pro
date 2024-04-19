@@ -724,6 +724,7 @@ static void voice_cancel_timer_timing(void)
         pro_t.works_or_timer_disp_timing_flag = works_time;
 		
 	    pro_t.timer_mode_flag= works_time;
+	
 		TFT_Display_WorksTime_Voice();
        }
 	   else{

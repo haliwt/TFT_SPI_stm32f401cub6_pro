@@ -15,7 +15,7 @@ void TimeTimer_Pro_Handler(void)
 			TFT_Display_WorksTime();
 		}
 
-		TFT_Donnot_Set_Timer_Time();
+		//TFT_Donnot_Set_Timer_Time();
 
 	break;
 
@@ -52,10 +52,10 @@ void TimeTimer_Pro_Handler(void)
 
 	 case timer_set_time://02
 
-		if(pro_t.gTimer_pro_mode_long_key > 2 ){
+		if(pro_t.gTimer_pro_mode_long_key > 2){
             pro_t.gTimer_pro_mode_long_key =0;  
 			gctl_t.mode_longk_key_flag =0;  
-		    gctl_t.mode_key_set_timer_timing_flag=0;
+		
 			if(gctl_t.gSet_timer_hours >0 ){
            
 				pro_t.timer_mode_flag = timer_time;

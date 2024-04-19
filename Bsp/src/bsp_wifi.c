@@ -58,7 +58,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	      if(wifi_t.power_off_step==0){
 			  wifi_t.power_off_step++;
 		    // MqttData_Publish_PowerOff_Ref();
-		     wifi_t.gTimer_main_pro_times=60;
+		     wifi_t.gTimer_main_pro_times=70;
 		  
 			 wifi_t.gTimer_wifi_power_on_detect =0;
 
