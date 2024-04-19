@@ -704,6 +704,7 @@ static void voice_set_timer_timing_value(uint8_t set_hours)
 		pro_t.timer_mode_flag=timer_time;
 		pro_t.works_or_timer_disp_timing_flag = timer_time;
 		TFT_Disp_Voice_Set_TimerTime_Init();
+		
        }
 	   else{
 

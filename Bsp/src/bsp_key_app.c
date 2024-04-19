@@ -259,7 +259,7 @@ void ADD_Key_Fun(void)
 		case 0xff:
             
 
-		case mode_key_temp: //set temperature value add number
+		case mode_key_set_temp: //set temperature value add number
 			//pro_t.buzzer_sound_flag = 1;
 				if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
  
@@ -279,13 +279,8 @@ void ADD_Key_Fun(void)
 				 gctl_t.gSet_temperature_value_item = set_temp_value_item;
 	        
 				disp_temp_value =1;
+				}
 
-			  
-
-			    }
-
-			
-			
 		break;
 
 		case mode_key_set_timer_value://3
@@ -301,10 +296,6 @@ void ADD_Key_Fun(void)
 
 
 			}
-
-		  // pro_t.gTimer_pro_mode_long_key=0 ; //long key for mode timing
-		  
-		
 			add_timer =1;
 
 		   pro_t.mode_key_run_item_step = mode_key_set_timer_value;
@@ -324,7 +315,7 @@ void ADD_Key_Fun(void)
 
 		
 			  pro_t.mode_key_select_label=0;
-			  pro_t.mode_key_run_item_step = mode_key_temp;
+			  pro_t.mode_key_run_item_step = mode_key_set_temp;
 			  pro_t.add_or_dec_is_cofirm_key_flag =1;
            
 				
@@ -404,7 +395,7 @@ void DEC_Key_Fun(void)
 		   case 0xff:
            
 
-		   case mode_key_temp:  //default tempearture value 
+		   case mode_key_set_temp:  //default tempearture value 
 	  
 	         
 			if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
@@ -460,7 +451,7 @@ void DEC_Key_Fun(void)
 		    
 
 			  pro_t.mode_key_select_label=0;
-			  pro_t.mode_key_run_item_step = mode_key_temp;
+			  pro_t.mode_key_run_item_step = mode_key_set_temp;
 			  pro_t.add_or_dec_is_cofirm_key_flag =1;
 				
 

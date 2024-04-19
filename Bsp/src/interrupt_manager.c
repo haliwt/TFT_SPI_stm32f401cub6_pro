@@ -334,7 +334,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	 pro_t.gTimer_pro_feed_dog++;
 	
-     pro_t.gTimer_pro_display_dht11_value++;
+     pro_t.gTimer_pro_display_dht11_temp++;
 	
 	 pro_t.gTimer_pro_fan++;  //fan continuce counter 60s
 	 /*******************************************/
@@ -354,6 +354,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  pro_t.gTimer_pro_mode_long_key++;
 	  pro_t.gTimer_pro_action_publis++;
 	  pro_t.gTimer_pro_display_dht11_hum++;
+	  pro_t.gTimer_pro_update_dht11_data++;
 	 
 
 	  //gctl_t 

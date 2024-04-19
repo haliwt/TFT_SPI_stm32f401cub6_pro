@@ -73,7 +73,7 @@ typedef enum set_temp{
 }set_temp_item;
 
 typedef enum{
-  mode_key_temp,
+  mode_key_set_temp,
   mode_key_select ,
   mode_key_confirm,
   mode_key_set_timer_value,
@@ -198,7 +198,9 @@ typedef struct{
 
   uint8_t gTimer_pro_action_publis;
   uint8_t gTimer_pro_mode_long_key;
+  uint8_t gTimer_pro_display_dht11_temp ;
   uint8_t gTimer_pro_display_dht11_hum;
+  uint8_t gTimer_pro_update_dht11_data;
   
 	
 
