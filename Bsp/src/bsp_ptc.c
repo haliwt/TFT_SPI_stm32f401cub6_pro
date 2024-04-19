@@ -187,7 +187,7 @@ void Temperature_Ptc_Pro_Handler(void)
 		break;
 
 
-		   case disp_set_temp_value_item:
+		   case disp_set_temp_value_item: //0x01
 
 		   if(pro_t.gTimer_pro_temp_delay> 61 && ptc_error_state()==0 && pro_t.add_or_dec_is_cofirm_key_flag ==0){
                pro_t.gTimer_pro_temp_delay =0;
