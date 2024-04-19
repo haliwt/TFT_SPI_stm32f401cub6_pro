@@ -4,6 +4,7 @@ uint8_t set_timer_timing_flag ;
 
 uint16_t mode_key_counter;
 
+uint8_t mode_longkey_counter;
 
 
 static void mode_longkey_settimer(void);
@@ -85,7 +86,8 @@ void Key_Speical_Power_Fun_Handler(void)
 void Key_Speical_Mode_Fun_Handler(void)
 {
 
-
+   static uint8_t mode_longkey ;
+   
    if(MODE_KEY_VALUE() ==KEY_DOWN){
 
                mode_key_counter++;
@@ -95,12 +97,15 @@ void Key_Speical_Mode_Fun_Handler(void)
 
    if(mode_key_counter> 40000){
 		mode_key_counter=0;
+		gctl_t.mode_longk_key_flag=1;
+        mode_longkey =1;
+		mode_longkey_counter=0;
 		pro_t.mode_key_pressed_flag =0;
 		pro_t.mode_key_select_label =0;
 		pro_t.gTimer_pro_mode_long_key=0;
 
 		Buzzer_KeySound();
-		gctl_t.mode_longk_key_flag=1;
+		
 		pro_t.gTimer_pro_mode_long_key=0;
 		pro_t.mode_key_run_item_step=mode_key_set_timer_value;
 		Mode_Long_Key_Fun();
@@ -115,11 +120,13 @@ void Key_Speical_Mode_Fun_Handler(void)
 			HAL_Delay(20);
 	   	if(MODE_KEY_VALUE() ==KEY_UP ){
 
-		mode_key_counter=0;
 		pro_t.mode_key_pressed_flag =0;
-		 gctl_t.mode_longk_key_flag=0;
-	   
-		pro_t.gTimer_pro_mode_key_be_select=0;
+        if(mode_longkey ==0){
+		mode_key_counter=0;
+	    mode_longkey_counter=0;
+		gctl_t.mode_longk_key_flag=0;
+		
+        pro_t.gTimer_pro_mode_key_be_select=0;
 		pro_t.mode_key_run_item_step = mode_key_select;
 	    pro_t.mode_key_select_label =mode_key_select;
 	     gctl_t.select_main_fun_numbers++; // 0,1,2
@@ -134,10 +141,22 @@ void Key_Speical_Mode_Fun_Handler(void)
 		pro_t.gTimer_pro_mode_key_be_select = 0; //counter starts after 4 seconds ,cancel this function
 		gctl_t.gTimer_ctl_select_led =0;
 	   	 }
+	   	}
 	   }
 	}
 		
 	Mode_Key_Config_Fun_Handler();
+    if(mode_longkey==1){
+      mode_longkey_counter++;
+
+	  if(mode_longkey_counter> 80){
+	  	mode_longkey=0;
+
+	  }
+
+
+	}
+		
 
 }
 
@@ -152,7 +171,7 @@ void Key_Speical_Mode_Fun_Handler(void)
 void Mode_Key_Config_Fun_Handler(void)
 {
 
- if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
+ if(gctl_t.mode_longk_key_flag ==1 ){
 
 	 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
 
@@ -232,7 +251,7 @@ void ADD_Key_Fun(void)
 
  static uint8_t disp_temp_value,add_timer;
 
- if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
+ if(gctl_t.mode_longk_key_flag ==1){
  
 	  pro_t.mode_key_run_item_step = mode_key_set_timer_value;
  
