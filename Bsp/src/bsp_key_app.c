@@ -250,7 +250,7 @@ void ADD_Key_Fun(void)
             
 
 		case mode_key_set_temp: //set temperature value add number
-			//pro_t.buzzer_sound_flag = 1;
+			     
 				if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
  
 	 			 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
@@ -258,8 +258,8 @@ void ADD_Key_Fun(void)
  
   				}
 			    else{
-			
-				Buzzer_KeySound();
+			      mode_key_counter=0;
+				 pro_t.buzzer_sound_flag = 1;//Buzzer_KeySound();
 				gctl_t.gSet_temperature_value ++;
 				if( gctl_t.gSet_temperature_value < 20)gctl_t.gSet_temperature_value=20;
 				
@@ -274,6 +274,7 @@ void ADD_Key_Fun(void)
 		break;
 
 		case mode_key_set_timer_value://3
+		    mode_key_counter=0;
             pro_t.buzzer_sound_flag = 1;
 		    pro_t.gTimer_pro_mode_long_key=0;
 		    gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
@@ -393,7 +394,8 @@ void DEC_Key_Fun(void)
 			
 			 }
 			 else{
-		        Buzzer_KeySound();
+			 	 mode_key_counter=0;
+		        pro_t.buzzer_sound_flag = 1;// Buzzer_KeySound();
 				 gctl_t.gSet_temperature_value--;
 				if( gctl_t.gSet_temperature_value<20)  gctl_t.gSet_temperature_value=40;
 		        if( gctl_t.gSet_temperature_value >40) gctl_t.gSet_temperature_value=40;
@@ -407,7 +409,7 @@ void DEC_Key_Fun(void)
 			break;
 
 			case mode_key_set_timer_value: //timer timing set "decrease -down"
-			   
+			       mode_key_counter=0;
 			    pro_t.buzzer_sound_flag = 1;
 	            gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
 			    pro_t.gTimer_pro_mode_long_key=0;
