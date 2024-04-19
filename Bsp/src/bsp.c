@@ -512,7 +512,7 @@ static void Key_Interrup_Handler(void)
         case add_key_id:
 		 	
 		 	if(ADD_KEY_VALUE()==KEY_DOWN){
-			    HAL_Delay(10);
+			    HAL_Delay(20);
 			if(ADD_KEY_VALUE()==KEY_DOWN)
 			      ADD_Key_Fun();//DEC_Key_Fun();
 			  
@@ -524,7 +524,7 @@ static void Key_Interrup_Handler(void)
 
 		case dec_key_id:
            if(DEC_KEY_VALUE()==KEY_DOWN){
-			 HAL_Delay(10);
+			 HAL_Delay(20);
 			if(DEC_KEY_VALUE()==KEY_DOWN)
 			    DEC_Key_Fun();//ADD_Key_Fun();
 			 }

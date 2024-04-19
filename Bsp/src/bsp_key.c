@@ -20,6 +20,9 @@ uint8_t value2 = 0;
 uint8_t value3 = 0;
 uint8_t value4 = 0;
 
+
+
+
 /**
  * @brief       读取GPIO某个引脚的状态
  * @param       p_gpiox: GPIOA~GPIOG, GPIO指针
@@ -191,9 +194,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	case KEY_MODE_Pin:
 
       if(pro_t.gPower_On == power_on && MODE_KEY_VALUE() ==KEY_DOWN){   
-
+       
   	  pro_t.mode_key_pressed_flag =1;
-      pro_t.gTimer_pro_mode_key_adjust =0;
+	  pro_t.gTimer_pro_mode_key_adjust =0;
 
 	//counter starts after 4 seconds ,cancel this function
      }
