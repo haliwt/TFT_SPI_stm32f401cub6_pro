@@ -146,6 +146,8 @@ typedef struct _WIFI_FUN{
 	
     uint16_t gTimer_get_beijing_time;
 	uint16_t gTimer_auto_detected_net_state_times;
+
+	uint32_t randomName[1];
 	
 	
 		
