@@ -174,7 +174,7 @@ uint8_t KEY_Scan(void)
 #if INTERRUPT_KEY
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    static uint8_t power_on_off_flag;
+    
     
    if(!pro_t.gTimer_pro_detect_key_ms) return ;
 

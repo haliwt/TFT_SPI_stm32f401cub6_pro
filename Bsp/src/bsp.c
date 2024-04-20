@@ -101,10 +101,9 @@ void TFT_Process_Handler(void)
 	
 	case power_on:
 
-	   
-	    Key_Speical_Mode_Fun_Handler();
-    	Key_Interrup_Handler();
-	    TFT_Pocess_Command_Handler();
+	  Key_Speical_Mode_Fun_Handler();
+      Key_Interrup_Handler();
+	  TFT_Pocess_Command_Handler();
 		
 	break;
 
@@ -371,7 +370,7 @@ static void TFT_Pocess_Command_Handler(void)
                 if(set_timer_value != gctl_t.gSet_temperature_value){
 					set_timer_value = gctl_t.gSet_temperature_value;
 				MqttData_Publis_SetTemp(set_timer_value);
-				HAL_Delay(30);
+				HAL_Delay(100);
                 }
 		       
 		   }
@@ -390,7 +389,7 @@ static void TFT_Pocess_Command_Handler(void)
 		
 		    MqttData_Publish_Update_Data();
 
-			HAL_Delay(200);
+			HAL_Delay(350);
 
 		    
 		}
@@ -400,7 +399,7 @@ static void TFT_Pocess_Command_Handler(void)
 		 power_on_thefirst_times++;
 
 	     Subscriber_Data_FromCloud_Handler();
-	     HAL_Delay(200);
+	     HAL_Delay(350);
 
 	   }
 			

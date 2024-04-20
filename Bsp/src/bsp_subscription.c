@@ -454,12 +454,12 @@ void Tencent_Cloud_Rx_Handler(void)
   if(wifi_t.rx_data_success==1){
          wifi_t.rx_data_success=0;
          wifi_t.set_beijing_time_flag =0; //WT.EDIT 2023.06.12
-		 // wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
+		 //wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 		 wifi_t.gTimer_auto_detected_net_state_times=0;
 	
      if(wifi_t.received_data_from_tencent_cloud ==0x25){ //36
 	    wifi_t.received_data_from_tencent_cloud=0;
-		wifi_t.get_rx_beijing_time_enable=0;
+		
 		wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 		wifi_t.response_wifi_signal_label = APP_TIMER_POWER_ON_REF;
 	    __HAL_UART_CLEAR_OREFLAG(&huart1);
@@ -629,8 +629,9 @@ void Json_Parse_Command_Fun(void)
 	    if(ptc_error_state() ==0){
 			
 		 buzzer_sound()	;
-		// Ptc_On();
+		 Ptc_On();
 	     LED_PTC_ICON_ON();
+		 pro_t.gTimer_pro_temp_delay= 70;
          MqttData_Publish_SetPtc(0x01);
 	  	 HAL_Delay(300);//350ms
 	     gctl_t.ptc_flag=1;

@@ -377,18 +377,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  wifi_t.gTimer_auto_detected_net_state_times++;
 	  wifi_t.gTimer_get_beijing_time++;
 	  wifi_t.gTimer_read_beijing_time++;
-	  wifi_t.gTimer_wifi_power_on_detect ++;
+	  wifi_t.gTimer_wifi_power_on_detect++;
+	  wifi_t.gTimer_wifi_counter_link_beijing_times++;
 	
 	
 	  
 	 
 	  wifi_t.gTimer_linking_tencent_duration++;
-	  wifi_t.gTimer_power_first_link_tencent ++;
+	  wifi_t.gTimer_power_first_link_tencent++;
 	  wifi_t.gTimer_main_pro_times++;
 
 	  //voice sound 
 	
-	   v_t.gTimer_voice_time_counter_start ++;
+	   v_t.gTimer_voice_time_counter_start++;
 	  	
 
 	  

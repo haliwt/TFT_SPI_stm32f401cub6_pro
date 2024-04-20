@@ -142,6 +142,7 @@ typedef struct _WIFI_FUN{
 	uint8_t gTimer_power_first_link_tencent ;
 	uint8_t gTimer_main_pro_times;
 	uint8_t gTimer_wifi_power_on_detect ;
+	uint8_t gTimer_wifi_counter_link_beijing_times ;
 	
     uint16_t gTimer_get_beijing_time;
 	uint16_t gTimer_auto_detected_net_state_times;
