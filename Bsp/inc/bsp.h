@@ -201,6 +201,7 @@ typedef struct{
   uint8_t gTimer_pro_display_dht11_temp ;
   uint8_t gTimer_pro_display_dht11_hum;
   uint8_t gTimer_pro_update_dht11_data;
+  uint8_t gTimer_pro_wifi_dht11_temp_hum ;
   
 	
 

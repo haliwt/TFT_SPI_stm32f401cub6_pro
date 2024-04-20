@@ -355,6 +355,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  pro_t.gTimer_pro_action_publis++;
 	  pro_t.gTimer_pro_display_dht11_hum++;
 	  pro_t.gTimer_pro_update_dht11_data++;
+	  pro_t.gTimer_pro_wifi_dht11_temp_hum ++;
 	 
 
 	  //gctl_t 

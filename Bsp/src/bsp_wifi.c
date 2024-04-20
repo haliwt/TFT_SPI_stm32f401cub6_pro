@@ -48,6 +48,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
         SmartPhone_TryToLink_TencentCloud();
 		if(wifi_link_net_state()==1){
 			
+			wifi_t.gTimer_auto_detected_net_state_times=0;
 			wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;//04
 	    }
        
@@ -69,6 +70,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 			    Subscriber_Data_FromCloud_Handler();
 			   
+			   
 			    wifi_t.gTimer_wifi_power_on_detect  =0;
 
 		    }
@@ -76,6 +78,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 			if(wifi_t.power_off_step==2 && wifi_t.gTimer_wifi_power_on_detect  >0){
 
 				  wifi_t.power_off_step=3;
+				  wifi_t.gTimer_auto_detected_net_state_times=0;
 				  wifi_t.gTimer_wifi_power_on_detect =0;
             }
 
@@ -199,8 +202,6 @@ static void RunWifi_Command_Handler(void)
 		
 		wifi_t.runCommand_order_lable= wifi_get_beijing_time;
 		wifi_t.set_beijing_time_flag =1;
-		Update_DHT11_Value();
-		TFT_Display_Handler();
 		
 
 
@@ -231,7 +232,7 @@ static void RunWifi_Command_Handler(void)
 		}
 	}
 	
-	if(wifi_t.gTimer_auto_detected_net_state_times > 90){
+	if(wifi_t.gTimer_auto_detected_net_state_times > 180){
 
 		wifi_t.gTimer_auto_detected_net_state_times=0;
 
@@ -297,23 +298,25 @@ static void RunWifi_Command_Handler(void)
 
 	case wifi_tencent_publish_dht11_data://07
 
-	if(power_on_state() == power_on && wifi_link_net_state()==1){
-
-	if(update_data_to_tencent_cloud_flag==0){
-		update_data_to_tencent_cloud_flag++;
-		Update_Dht11_Totencent_Value();
-		wifi_t.gTimer_publish_dht11 = 0;
-
-	}
-
-	}
-
+//	if(power_on_state() == power_on && wifi_link_net_state()==1 && ){
+//
+//	if(update_data_to_tencent_cloud_flag==0){
+//		update_data_to_tencent_cloud_flag++;
+//		Update_Dht11_Totencent_Value();
+//		wifi_t.gTimer_publish_dht11 = 0;
+//
+//	}
+//
+//	}
+    wifi_t.gTimer_publish_dht11 =0;
 	if(update_data_to_tencent_cloud_flag==1 && wifi_t.gTimer_publish_dht11 > 0){
 		update_data_to_tencent_cloud_flag++;
 
 		wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 
 	}
+
+	wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;
 	break;
 
 	case wifi_get_beijing_time://6

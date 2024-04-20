@@ -89,7 +89,7 @@ void bsp_Idle(void)
 void TFT_Process_Handler(void)
 {
    
-   static uint8_t fan_continuce_flag,wifi_update;
+   static uint8_t fan_continuce_flag,power_off_wifi;
 	if(pro_t.buzzer_sound_flag ==1 && pro_t.power_on_first==1){
 		pro_t.buzzer_sound_flag=0;
 		Buzzer_KeySound();
@@ -113,44 +113,38 @@ void TFT_Process_Handler(void)
 	if(pro_t.power_off_flag == 1){
 		pro_t.power_off_flag =0;
 	    wifi_t.power_off_step=0; 
+	    wifi_t.gTimer_main_pro_times=0;	
+		gctl_t.ptc_warning=0;
+		gctl_t.fan_warning =0;
+		wifi_t.repeat_login_tencent_cloud_init_ref=0;
 	    fan_continuce_flag =1;
-		wifi_update=0;
+		power_off_wifi=0;
+		power_on_thefirst_times=0;
 		pro_t.gTimer_pro_fan =0;
 		wifi_t.gTimer_main_pro_times=0;	
 		gctl_t.gTimer_ctl_disp_works_time_second=0;
 		pro_t.run_process_step=0;
         TFT_BACKLIGHT_OFF();
-		
+	
 		Power_Off_Fun();
 		Device_NoAction_Power_Off();
 		LED_Mode_Key_Off();
 		if(wifi_link_net_state() ==1){
 		  MqttData_Publish_PowerOff_Ref();
+		  wifi_t.gTimer_main_pro_times=0;
+		  
 		}
 		//TFT_Disp_Fan_RunIcon(0,0);
 		
 		
 	}
-	if(wifi_link_net_state() ==1  && wifi_t.gTimer_main_pro_times > 60 ){
-		wifi_update ++;
-		wifi_t.gTimer_main_pro_times=0;	
-		gctl_t.ptc_warning=0;
-		gctl_t.fan_warning =0;
-		wifi_t.repeat_login_tencent_cloud_init_ref=0;
-		if(wifi_update ==1 || wifi_update %3==0){
-		   MqttData_Publish_PowerOff_Ref(); 
-		  
-		}
-		else if(wifi_update % 2==0){
-        
-		 Subscriber_Data_FromCloud_Handler();
-		}
-		else wifi_update=0;
-
-	    
-
+	if(wifi_link_net_state() ==1  && wifi_t.gTimer_main_pro_times > 2 && power_off_wifi==0 ){
+		power_off_wifi++;
 		
-	}
+	
+        Subscriber_Data_FromCloud_Handler();
+	
+    }
 
 	if(fan_continuce_flag ==1){
 
@@ -180,12 +174,8 @@ void TFT_Process_Handler(void)
 
   	wifi_t.smartphone_app_power_on_flag=0; //手机定时关机和开机，设置参数的标志位
 	
-	
-	
 	Breath_Led();
 	
-
-
 	break;
 
 
@@ -233,6 +223,7 @@ static void TFT_Pocess_Command_Handler(void)
 
 		pro_t.run_process_step=pro_disp_dht11_value;
 		pro_t.gTimer_pro_ptc_delay_time=0;
+		pro_t.gTimer_pro_update_dht11_data=30;
 		pro_t.gTimer_pro_display_dht11_temp=30; //at once display dht11 value
 		pro_t.gTimer_pro_display_dht11_hum=40;
 		gctl_t.gTimer_ctl_dma_state =0;
@@ -252,13 +243,15 @@ static void TFT_Pocess_Command_Handler(void)
 
 		   pro_t.gTimer_pro_update_dht11_data= 0;
 
-		   Update_DHT11_Value();
+		    Update_DHT11_Value();
 
 
 	   }
 
 	   if(pro_t.gTimer_pro_display_dht11_temp > 28 &&  pro_t.wifi_led_fast_blink_flag==0){
 	   	   pro_t.gTimer_pro_display_dht11_temp=0;
+
+	        
          
 		    if( gctl_t.gSet_temperature_value_item != set_temp_value_item){
 			   TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
@@ -282,6 +275,16 @@ static void TFT_Pocess_Command_Handler(void)
 
 		   TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
 		}
+
+	 
+
+
+	   if(pro_t.gTimer_pro_wifi_dht11_temp_hum > 38 && wifi_link_net_state() ==1){
+		   pro_t.gTimer_pro_wifi_dht11_temp_hum=0;
+
+			Update_Dht11_Totencent_Value();
+
+	   }
 
 	 pro_t.run_process_step=pro_run_main_fun;
 	   
@@ -391,10 +394,21 @@ static void TFT_Pocess_Command_Handler(void)
 
 		    
 		}
+
+	   if(wifi_link_net_state()==1 && power_on_thefirst_times==1){
+	   	
+		 power_on_thefirst_times++;
+
+	     Subscriber_Data_FromCloud_Handler();
+	     HAL_Delay(200);
+
+	   }
 			
 		pro_t.run_process_step=pro_disp_dht11_value;
 
 	  break;
+
+	  
 
 
     default:
