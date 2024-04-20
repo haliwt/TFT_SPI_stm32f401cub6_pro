@@ -207,6 +207,8 @@ static void RunWifi_Command_Handler(void)
         
 			wifi_t.gTimer_get_beijing_time=0;
 		    link_beijing_times_flag =1;
+			
+		     TFT_Display_Handler();
 		
 		//wifi_t.set_beijing_time_flag =1;
 	 }
@@ -410,7 +412,7 @@ static void RunWifi_Command_Handler(void)
 	 
   }
 
-  if(wifi_t.gTimer_wifi_counter_link_beijing_times > 10 && wifi_t.get_rx_beijing_time_enable==1){
+  if(wifi_t.gTimer_wifi_counter_link_beijing_times > 20 && wifi_t.get_rx_beijing_time_enable==1){
 
       wifi_t.gTimer_wifi_counter_link_beijing_times=0;
 	  wifi_t.get_rx_beijing_time_enable=0;

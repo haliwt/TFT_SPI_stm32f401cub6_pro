@@ -331,6 +331,7 @@ static void voice_cmd_fun(uint8_t cmd)
 	    //pro_t.add_or_dec_is_cofirm_key_flag=1;//logic is open compare temperature value WT.EDIT.2024.04.20
 	    LED_PTC_ICON_ON();
 		 pro_t.gTimer_pro_temp_delay= 70;
+		 pro_t.add_or_dec_is_cofirm_key_flag =0;
 
 	 }
 	 }
@@ -357,6 +358,7 @@ static void voice_cmd_fun(uint8_t cmd)
 		   //pro_t.add_or_dec_is_cofirm_key_flag=1;//logic is open compare temperature value WT.EDIT.2024.04.20
 		   LED_PTC_ICON_ON();
 		    pro_t.gTimer_pro_temp_delay= 70;
+			pro_t.add_or_dec_is_cofirm_key_flag =0;
 	
 		}
 		}
