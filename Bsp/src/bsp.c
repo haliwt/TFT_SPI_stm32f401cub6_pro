@@ -14,7 +14,7 @@ static void Power_Off_Fun(void);
 static void Key_Interrup_Handler(void);
 void bsp_Init(void);
 
-uint8_t power_on_thefirst_times;
+
 
 
 
@@ -119,7 +119,7 @@ void TFT_Process_Handler(void)
 	    fan_continuce_flag =1;
 		power_off_wifi_login=0;
 	
-		power_on_thefirst_times=0;
+		wifi_t.power_on_thefirst_times=0;
 		pro_t.gTimer_pro_fan =0;
 		wifi_t.gTimer_wifi_pub_power_off=0;	
 		wifi_t.gTimer_wifi_sub_power_off=0;
@@ -185,8 +185,8 @@ void TFT_Process_Handler(void)
 
 
 	Power_Off_Retain_Beijing_Time();
-	if(power_on_thefirst_times>0)
-		power_on_thefirst_times=0;
+	if(wifi_t.power_on_thefirst_times>0)
+		wifi_t.power_on_thefirst_times=0;
 	if(wifi_t.wifi_config_net_lable >0)
 		wifi_t.wifi_config_net_lable =0;
 	if(wifi_t.smartphone_app_power_on_flag==1)
@@ -410,9 +410,8 @@ static void TFT_Pocess_Command_Handler(void)
       // handler of wifi 
 	  case pro_wifi_init: //7
 	   
-         if((wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && power_on_thefirst_times==0 &&  pro_t.gTimer_pro_action_publis >8)\
-		 	|| (wifi_t.rx_error_codes_flag==1 &&  pro_t.gTimer_pro_action_publis> 3)){
-             power_on_thefirst_times++;
+         if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && wifi_t.power_on_thefirst_times==0 &&  pro_t.gTimer_pro_action_publis >8){
+             wifi_t.power_on_thefirst_times++;
 		     pro_t.gTimer_pro_action_publis=0;
 		    MqttData_Publish_Update_Data();
 		   
@@ -422,18 +421,17 @@ static void TFT_Pocess_Command_Handler(void)
 		    
 		}
 
-	   if((wifi_link_net_state()==1 && power_on_thefirst_times==1 && pro_t.gTimer_pro_pub_set_timer > 6) \
-	   	|| (wifi_t.rx_error_codes_flag==1 && pro_t.gTimer_pro_pub_set_timer > 6)){
+	   if(wifi_link_net_state()==1 && wifi_t.power_on_thefirst_times==1 && pro_t.gTimer_pro_pub_set_timer > 4){
 	   	 
 	   	 pro_t.gTimer_pro_pub_set_timer=0;
-		 power_on_thefirst_times++;
+		 wifi_t.power_on_thefirst_times++;
 
 	     Subscriber_Data_FromCloud_Handler();
 	     HAL_Delay(350);
 
 	   }
-	   if(power_on_thefirst_times==2){
-	     	power_on_thefirst_times++;
+	   if(wifi_t.power_on_thefirst_times==2){
+	     	wifi_t.power_on_thefirst_times++;
 		  	wifi_t.linking_tencent_cloud_doing=0;
 			wifi_t.has_been_login_flag = 1;
 			

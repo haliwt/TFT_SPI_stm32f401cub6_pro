@@ -129,6 +129,7 @@ typedef struct _WIFI_FUN{
 
 	//auto link net
 	uint8_t rx_error_codes_flag;
+	uint8_t power_on_thefirst_times;
 
     //wifi gtimer
 	uint8_t gTimer_read_beijing_time;

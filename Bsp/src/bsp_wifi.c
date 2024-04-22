@@ -130,16 +130,25 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 		if(wifi_link_net_state()==1){
 			wifi_t.runCommand_order_lable= wifi_publish_update_tencent_cloud_data;//04
+			wifi_t.power_on_thefirst_times =0;
 	    }
 
 	}
 	 
 		error_counter=1;
-		if(wifi_link_net_state()==1){
+		
 
+	}
+
+
+	if(wifi_link_net_state()==1 && error_counter==1 ){
+
+            error_counter++;
 			wifi_t.rx_error_codes_flag=0;
-
-		}
+			wifi_t.power_on_thefirst_times =0;
+			pro_t.gTimer_pro_action_publis=4;
+			pro_t.gTimer_pro_pub_set_timer = 3;
+	   	 
 
 	}
 
