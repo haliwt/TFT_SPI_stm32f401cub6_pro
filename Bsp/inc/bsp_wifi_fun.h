@@ -20,6 +20,7 @@ typedef enum _wifi_state_t{
 	wifi_publish_dht11_delay,//5
 	wifi_subscriber_form_tencent_cloud_cmd,//6
 	wifi_publish_update_tencent_cloud_data,//7
+	wifi_auto_to_link_cloud,
 	wifi_atuo_link_cloud_ref,//8
 	wifi_auto_repeat_link_cloud,//9
 	wifi_tencent_publish_dht11_data,//10

@@ -4,7 +4,7 @@
 
 
 
-static uint32_t ic_id;
+
 
  uint8_t *sub_buf;
 
@@ -210,7 +210,7 @@ void Wifi_SoftAP_Config_Handler(void)
 			if(wifi_t.gTimer_login_tencent_times > 2){
 				wifi_t.gTimer_login_tencent_times=0;
 				wifi_t.wifi_config_net_lable =wifi_set_softap;
-				ic_id = HAL_GetUIDw0();
+				wifi_t.randomName[0] = HAL_GetUIDw0();
 
 
 			}
@@ -365,7 +365,7 @@ void PowerOn_Self_Auto_Link_Tencent_Cloud(void)
      
             HAL_Delay(1000);
 	
-			 ic_id=HAL_GetUIDw0();
+			 wifi_t.randomName[0]=HAL_GetUIDw0();
 		
 
 	 break;

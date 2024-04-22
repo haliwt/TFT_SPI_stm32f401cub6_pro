@@ -117,10 +117,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      }
 	  HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
 	  
-//	__HAL_UART_CLEAR_NEFLAG(&huart2);
-//	__HAL_UART_CLEAR_FEFLAG(&huart2);
-//	__HAL_UART_CLEAR_OREFLAG(&huart2);
-//	__HAL_UART_CLEAR_TXFECF(&huart2);
+	__HAL_UART_CLEAR_NEFLAG(&huart2);
+	__HAL_UART_CLEAR_FEFLAG(&huart2);
+	__HAL_UART_CLEAR_OREFLAG(&huart2);
+	__HAL_UART_CLEAR_IDLEFLAG(&huart2);
+	//__HAL_UART_CLEAR_TXFECF(&huart2);
      
 	}
 
@@ -356,6 +357,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  pro_t.gTimer_pro_display_dht11_hum++;
 	  pro_t.gTimer_pro_update_dht11_data++;
 	  pro_t.gTimer_pro_wifi_dht11_temp_hum ++;
+	  pro_t.gTimer_pro_pub_set_timer ++;
 	 
 
 	  //gctl_t 
