@@ -24,24 +24,29 @@ void USART_Cmd_Error_Handler(void)
 			gctl_t.gTimer_ctl_usart1_error=0;
 			  __HAL_UART_CLEAR_OREFLAG(&huart1);
 	        
-	          temp = USART1->DR;
+	          temp = USART2->DR;
 	     
 	         HAL_UART_Receive_IT(&huart2,voice_inputBuf,1);//UART receive data interrupt 1 byte
 			 // UART_Start_Receive_IT(&huart1,inputBuf,1);
 			
 	  }
 
-	 if(gctl_t.gTimer_ctl_usart2_error >8){
-	  	gctl_t.gTimer_ctl_usart2_error=0;
-
-           __HAL_UART_CLEAR_OREFLAG(&huart1);
-        
-
-          temp = USART2->DR;
-		 
-		    HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
-		
-     }
+//	 if(gctl_t.gTimer_ctl_usart2_error >8){
+//	  	gctl_t.gTimer_ctl_usart2_error=0;
+//
+//           __HAL_UART_CLEAR_OREFLAG(&huart1);
+//
+//		   __HAL_UART_CLEAR_NEFLAG(&huart1);
+//	__HAL_UART_CLEAR_FEFLAG(&huart1);
+//	//__HAL_UART_CLEAR_OREFLAG(&huart1);
+//	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
+//        
+//
+//          temp = USART1->DR;
+//		 
+//		    HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
+//		
+//     }
 
 	 if(gctl_t.gTimer_ctl_dma_state >34){
            gctl_t.gTimer_ctl_dma_state =0;
@@ -117,10 +122,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      }
 	  HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
 	  
-	__HAL_UART_CLEAR_NEFLAG(&huart2);
-	__HAL_UART_CLEAR_FEFLAG(&huart2);
-	__HAL_UART_CLEAR_OREFLAG(&huart2);
-	__HAL_UART_CLEAR_IDLEFLAG(&huart2);
+	__HAL_UART_CLEAR_NEFLAG(&huart1);
+	__HAL_UART_CLEAR_FEFLAG(&huart1);
+	__HAL_UART_CLEAR_OREFLAG(&huart1);
+	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
 	//__HAL_UART_CLEAR_TXFECF(&huart2);
      
 	}

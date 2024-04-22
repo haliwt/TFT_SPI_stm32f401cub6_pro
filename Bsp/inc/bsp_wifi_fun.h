@@ -128,6 +128,7 @@ typedef struct _WIFI_FUN{
 	uint8_t beijing_time_flag ;
 
 	//auto link net
+	uint8_t rx_error_codes_flag;
 
     //wifi gtimer
 	uint8_t gTimer_read_beijing_time;

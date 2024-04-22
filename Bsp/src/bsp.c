@@ -381,23 +381,23 @@ static void TFT_Pocess_Command_Handler(void)
 	  if(wifi_link_net_state()==1){
 
 		  if(pro_t.gTimer_pro_action_publis > 3 ){
-		   	  pro_t.gTimer_pro_action_publis=0;
+		   	//  pro_t.gTimer_pro_action_publis=0;
 		
-		      	Device_Action_Publish_Handler();
+		      	//Device_Action_Publish_Handler();
 		  }
 
 
-		  if(pro_t.gTimer_pro_pub_set_timer > 4 && pro_t.timer_mode_flag==timer_time){
-		  	   pro_t.gTimer_pro_pub_set_timer=0;
-
-                if(set_timer_value != gctl_t.gSet_temperature_value){
-					set_timer_value = gctl_t.gSet_temperature_value;
-					MqttData_Publis_SetTemp(set_timer_value);
-				//HAL_Delay(100);
-
-                }
+		//  if(pro_t.gTimer_pro_pub_set_timer > 4 && pro_t.timer_mode_flag==timer_time){
+		  	 //  pro_t.gTimer_pro_pub_set_timer=0;
+////
+//                if(set_timer_value != gctl_t.gSet_temperature_value){
+//					set_timer_value = gctl_t.gSet_temperature_value;
+//					MqttData_Publis_SetTemp(set_timer_value);
+//				//HAL_Delay(100);
+//
+//                }
 		       
-		   }
+		  // }
 
 
        }
@@ -408,24 +408,26 @@ static void TFT_Pocess_Command_Handler(void)
       // handler of wifi 
 	  case pro_wifi_init: //7
 	   
-         if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && power_on_thefirst_times==0 && pro_t.gTimer_pro_action_publis > 3 ){
+         if((wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && power_on_thefirst_times==0 &&  pro_t.gTimer_pro_action_publis >8)\
+		 	|| (wifi_t.rx_error_codes_flag==1 &&  pro_t.gTimer_pro_action_publis> 3)){
              power_on_thefirst_times++;
 		     pro_t.gTimer_pro_action_publis=0;
 		    MqttData_Publish_Update_Data();
 		   
 
-			//HAL_Delay(350);
+			HAL_Delay(350);
 
 		    
 		}
 
-	   if(wifi_link_net_state()==1 && power_on_thefirst_times==1 &&   pro_t.gTimer_pro_action_publis> 6){
+	   if((wifi_link_net_state()==1 && power_on_thefirst_times==1 && pro_t.gTimer_pro_pub_set_timer > 6) \
+	   	|| (wifi_t.rx_error_codes_flag==1 && pro_t.gTimer_pro_pub_set_timer > 6)){
 	   	 
-	   	 pro_t.gTimer_pro_action_publis=0;
+	   	 pro_t.gTimer_pro_pub_set_timer=0;
 		 power_on_thefirst_times++;
 
 	     Subscriber_Data_FromCloud_Handler();
-	    // HAL_Delay(350);
+	     HAL_Delay(350);
 
 	   }
 	   if(power_on_thefirst_times==2){
