@@ -16,7 +16,7 @@ typedef enum _wifi_state_t{
     wifi_has_been_connected =0x01,
 	wifi_link_tencent_cloud, //2
 	wifi_tencent_publish_init_data, //3
-	wifi_publis_data_delay,//4
+	wifi_subscriber_form_tencent_data,//4
 	wifi_publish_dht11_delay,//5
 	wifi_subscriber_form_tencent_cloud_cmd,//6
 	wifi_publish_update_tencent_cloud_data,//7
@@ -105,7 +105,7 @@ typedef struct _WIFI_FUN{
 	
     //smart phone 
     uint8_t smartphone_app_power_on_flag;
-    uint8_t first_power_on_link_net;
+    uint8_t power_on_linkwifi;
 	uint8_t power_on_login_tencent_cloud_flag;
 	uint8_t repeat_login_tencent_cloud_init_ref;
     
@@ -140,12 +140,15 @@ typedef struct _WIFI_FUN{
 	
 	uint8_t gTimer_login_tencent_times;
 	uint8_t gTimer_power_first_link_tencent ;
-	uint8_t gTimer_main_pro_times;
+	uint8_t gTimer_wifi_pub_power_off;
 	uint8_t gTimer_wifi_power_on_detect ;
 	uint8_t gTimer_wifi_counter_link_beijing_times ;
+	uint8_t gTimer_main_pro_times;
+	uint8_t gTimer_wifi_sub_power_off;
 	
     uint16_t gTimer_get_beijing_time;
 	uint16_t gTimer_auto_detected_net_state_times;
+	
 
 	uint32_t randomName[1];
 	

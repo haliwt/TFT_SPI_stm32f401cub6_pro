@@ -48,7 +48,7 @@ typedef struct{
 	uint8_t voice_to_buzzer_flag ;
 
 	uint8_t voice_wakeword_enable;
-	uint8_t voice_cmd_power_off_flag;
+
 	uint8_t rx_enable_voice_output ;
 	uint8_t transOngoingFlag;
 

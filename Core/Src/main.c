@@ -127,7 +127,7 @@ int main(void)
 
     Voice_Decoder_Handler();
 	TFT_Process_Handler();
-	 WIFI_Process_Handler();
+	WIFI_Process_Handler();
 	USART_Cmd_Error_Handler();
   }
   /* USER CODE END 3 */
