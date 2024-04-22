@@ -41,13 +41,34 @@ void WIFI_Process_Handler(void)
 **********************************************************************/
 static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
-   
-    
-	if(wifi_t.power_on_linkwifi==0){
+    static uint8_t counter;
+	if(wifi_t.power_on_linkwifi==0 && wifi_link_net_state()==0){
 		
 		InitWifiModule_Hardware();//InitWifiModule();
         SmartPhone_TryToLink_TencentCloud();
-		if(wifi_link_net_state()==1){
+		
+
+		if(counter ==0){
+			counter++;
+
+			wifi_t.gTimer_wifi_pub_power_off =0;
+
+
+		}
+       
+    }
+
+	if(wifi_t.gTimer_wifi_pub_power_off > 20  && wifi_link_net_state()==0 && counter==1){
+		counter++;
+		wifi_t.power_on_linkwifi++;
+
+
+
+	}
+
+
+	if(wifi_link_net_state()==1 && counter==1){
+		counter++;
 			
 			wifi_t.gTimer_auto_detected_net_state_times=0;
 			wifi_t.get_rx_beijing_time_enable=0;
@@ -73,8 +94,6 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 			}
 	    }
-       
-    }
 
 	#if 0
 
@@ -200,7 +219,7 @@ static void RunWifi_Command_Handler(void)
 			
      case wifi_subscriber_form_tencent_data:
 
-	   if( wifi_t.gTimer_publish_dht11 >3){
+	   if( wifi_t.gTimer_publish_dht11 >4){
 
 	      Subscriber_Data_FromCloud_Handler();
 		 wifi_t.gTimer_publish_dht11=0;

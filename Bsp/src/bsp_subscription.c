@@ -87,10 +87,7 @@ void Subscriber_Data_FromCloud_Handler(void)
 void Subscribe_Rx_Interrupt_Handler(void)
 {
     static uint8_t  rx_counter=0;
-	if(wifi_t.rx_counter ==0){
-   		wifi_t.wifi_data[rx_counter] = wifi_t.usart1_dataBuf[0];
-		 rx_counter ++;
-     }
+
 
     switch(wifi_t.rx_data_state)
       {
@@ -371,7 +368,10 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	default:
     break;
     }
-    
+    if(wifi_t.rx_counter ==0 ){
+   		wifi_t.wifi_data[rx_counter] = wifi_t.usart1_dataBuf[0];
+		 rx_counter ++;
+     }
 
 }
  
