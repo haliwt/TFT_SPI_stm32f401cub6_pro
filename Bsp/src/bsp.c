@@ -122,6 +122,7 @@ void TFT_Process_Handler(void)
 		power_on_thefirst_times=0;
 		pro_t.gTimer_pro_fan =0;
 		wifi_t.gTimer_wifi_pub_power_off=0;	
+		wifi_t.gTimer_wifi_sub_power_off=0;
 		gctl_t.gTimer_ctl_disp_works_time_second=0;
 		pro_t.run_process_step=0;
 		wifi_t.power_on_linkwifi=0;
@@ -136,7 +137,7 @@ void TFT_Process_Handler(void)
 		
 		
 	}
-	if(wifi_link_net_state() ==1 && wifi_t.gTimer_wifi_pub_power_off >3 ){
+	if(wifi_link_net_state() ==1 && wifi_t.gTimer_wifi_pub_power_off >3  && power_off_wifi_login==0 ){
 		wifi_t.gTimer_wifi_pub_power_off=0;
 		power_off_wifi_login++;
 		MqttData_Publish_PowerOff_Ref();
@@ -144,22 +145,23 @@ void TFT_Process_Handler(void)
 		 
 		  
 	}
-	if(wifi_link_net_state() ==1  && wifi_t.gTimer_wifi_sub_power_off > 8){
+	if(wifi_link_net_state() ==1  && wifi_t.gTimer_wifi_sub_power_off > 8 && power_off_wifi_login==1){
 		
+        power_off_wifi_login++;
 		wifi_t.gTimer_wifi_sub_power_off=0;
         Subscriber_Data_FromCloud_Handler();
-	   // wifi_t.power_on_linkwifi=0;
+	  
 	
     }
 
-	if(wifi_t.gTimer_main_pro_times > 24 ){
-		 
-		wifi_t.gTimer_main_pro_times=0;
-
-		wifi_t.power_on_linkwifi=0;
-
-
-	}
+//	if(wifi_t.gTimer_main_pro_times > 24 ){
+//		 
+//		wifi_t.gTimer_main_pro_times=0;
+//
+//		wifi_t.power_on_linkwifi=0;
+//
+//
+//	}
 
 	
 
