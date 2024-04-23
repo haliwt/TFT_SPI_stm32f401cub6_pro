@@ -368,11 +368,13 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	default:
     break;
     }
+
+	
    if(wifi_t.rx_counter ==0 && wifi_t.rx_error_codes_flag == 0){
-   		wifi_t.wifi_data[rx_counter] = wifi_t.usart1_dataBuf[0];
+   		wifi_t.wifi_temp_data[rx_counter] = wifi_t.usart1_dataBuf[0];
 
 		 rx_counter ++;
-		 if(strstr((const char*)wifi_t.wifi_data,"+CME ERROR:208")){
+		 if(strstr((const char*)wifi_t.wifi_temp_data,"+CME ERROR:208")){
 			rx_counter =0;
 			wifi_t.esp8266_login_cloud_success =0;
 			wifi_t.rx_error_codes_flag= 1;
@@ -618,7 +620,7 @@ void Json_Parse_Command_Fun(void)
 		 
 		   	buzzer_sound();
 		 	MqttData_Publish_SetOpen(0);  
-			HAL_Delay(200);//350
+			HAL_Delay(350);//350
 
             wifi_t.esp8266_login_cloud_success=1;
 			
