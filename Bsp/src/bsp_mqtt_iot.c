@@ -239,17 +239,6 @@ static void property_report_power_off_state(void)
 
 
 }
-/***************************************************************************************************************************************
-	*
-	*Function Name:static void property_report_Temp_Humidity(void)
-	*Function :send data to tencent cloud only read temperature and humidity of data
-	*Input Ref: only read temperature value and humidiy value
-	*           
-	*Return Ref:
-	*
-****************************************************************************************************************************************/
-
-
 
 /********************************************************************************
 	*
