@@ -7,6 +7,11 @@ uint16_t mode_key_counter;
 uint8_t mode_longkey_counter;
 
 
+
+
+
+
+
 static void mode_longkey_settimer(void);
 
 /******************************************************************************
@@ -23,9 +28,18 @@ void Key_Speical_Power_Fun_Handler(void)
 	//be pressed long time key of function that link tencent cloud funtion 
    
 	 if(ptc_error_state()==0 && fan_error_state()==0){
-	 if(pro_t.key_power_be_pressed_flag==1){
-         if(POWER_KEY_VALUE() ==KEY_DOWN && pro_t.gTimer_pro_power_key_adjust > 2 &&  pro_t.gPower_On == power_on){
-            pro_t.key_power_be_pressed_flag =0;
+	 while(pro_t.key_power_be_pressed_flag==1){
+
+	 
+         if(POWER_KEY_VALUE() ==KEY_DOWN &&  pro_t.gPower_On == power_on){
+                
+         
+
+
+		 if(pro_t.gTimer_pro_power_key_adjust >2){
+			//power_key_counter=0;
+
+			pro_t.key_power_be_pressed_flag =0;
 			pro_t.gTimer_pro_wifi_led =0;
             pro_t.wifi_led_fast_blink_flag=1;
 			
@@ -36,17 +50,16 @@ void Key_Speical_Power_Fun_Handler(void)
 			wifi_t.link_tencent_step_counter=0;
 			wifi_t.gTimer_linking_tencent_duration=0; //166s -2分7秒
 			buzzer_sound();
+
+		 }
 			
 			 
         }
-
-	 }
-	 }
-	//sort time key of fun
-		if(POWER_KEY_VALUE() ==KEY_UP && pro_t.key_power_be_pressed_flag ==1){
-            HAL_Delay(5);
-		  if(POWER_KEY_VALUE() ==KEY_UP){
+        else if(POWER_KEY_VALUE() ==KEY_UP  && pro_t.key_power_be_pressed_flag==1){
+			HAL_Delay(10);
+           if(POWER_KEY_VALUE() ==KEY_UP){
            pro_t.key_power_be_pressed_flag=0;
+		  
             power_on_off = power_on_off ^ 0x01;
 
 		  if(power_on_off==1){
@@ -55,7 +68,15 @@ void Key_Speical_Power_Fun_Handler(void)
             pro_t.long_key_flag =0;
             pro_t.run_process_step=0;
 			//pro_t.buzzer_sound_flag = 1;
+
+			LED_Mode_Key_On();
+			  LED_Power_Key_On();
+			  Power_On_Led_Init();
+			  
+		     TFT_BACKLIGHT_ON();
+			
 			buzzer_sound();
+			
 			// __enable_fiq();
 		   
 
@@ -70,13 +91,21 @@ void Key_Speical_Power_Fun_Handler(void)
 			pro_t.run_process_step=0xff;
 			pro_t.gPower_On = power_off;   
 			// pro_t.buzzer_sound_flag = 1;
+			    TFT_BACKLIGHT_OFF();
+				Device_NoAction_Power_Off();
+				LED_Mode_Key_Off();
+				
 			buzzer_sound();
 			
-		
-			  
-			 }
 		  }
-	}
+			  
+			}
+		 }
+	 }
+		
+     }
+
+	
 }
 /******************************************************************************
 	*
@@ -152,7 +181,7 @@ void Key_Speical_Mode_Fun_Handler(void)
     if(mode_longkey==1){
       mode_longkey_counter++;
 
-	  if(mode_longkey_counter> 80){
+	  if(mode_longkey_counter> 50){
 	  	mode_longkey=0;
 
 	  }
