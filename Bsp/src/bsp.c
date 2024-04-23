@@ -7,11 +7,11 @@ uint8_t update_step;
 uint8_t fan_continuce_run_flag;
 
 
-static void TFT_Pocess_Command_Handler(void);
+//static void TFT_Pocess_Command_Handler(void);
 
 static void Power_On_Fun(void);
 static void Power_Off_Fun(void);
-static void Key_Interrup_Handler(void);
+//static void Key_Interrup_Handler(void);
 void bsp_Init(void);
 
 
@@ -154,7 +154,7 @@ void TFT_Process_Handler(void)
 	
     }
 
-
+    wifi_t.gTimer_get_beijing_time=0;
 	if(fan_continuce_flag ==1){
 
 	    if(pro_t.gTimer_pro_fan <61){
@@ -202,7 +202,7 @@ void TFT_Process_Handler(void)
 	*Return Ref:NO
 	*
 ******************************************************************************/
-static void TFT_Pocess_Command_Handler(void)
+void TFT_Pocess_Command_Handler(void)
 {
   
    static uint8_t set_timer_value=0xff ;
@@ -236,6 +236,8 @@ static void TFT_Pocess_Command_Handler(void)
 		pro_t.gTimer_pro_display_dht11_hum=40;
 		gctl_t.gTimer_ctl_dma_state =0;
 		pro_t.gTimer_pro_action_publis=0;
+		wifi_t.gTimer_get_beijing_time=0;
+		wifi_t.get_rx_beijing_time_enable=0;
 		//if(wifi_t.smartphone_app_power_on_flag==0)
 		/// pro_t.add_or_dec_is_cofirm_key_flag =0; //key set example "ptc,kill,driver rat" function. don't compart tempartur value
 
@@ -392,10 +394,7 @@ static void TFT_Pocess_Command_Handler(void)
 		     HAL_Delay(350);
 
 		}
-
-	     
-	   
-         if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && wifi_t.power_on_thefirst_times==1 &&  pro_t.gTimer_pro_action_publis >2){
+		if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && wifi_t.power_on_thefirst_times==1 &&  pro_t.gTimer_pro_action_publis >2){
              wifi_t.power_on_thefirst_times++;
 		     pro_t.gTimer_pro_action_publis=0;
 		    MqttData_Publish_Update_Data();
@@ -543,7 +542,7 @@ void power_off_fan_run(void)
 	*Return Ref:NO
 	*
 ******************************************************************************/
-static void Key_Interrup_Handler(void)
+void Key_Interrup_Handler(void)
 {
      switch(pro_t.gKey_value){
 

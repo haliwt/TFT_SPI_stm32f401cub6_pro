@@ -88,6 +88,29 @@ void Subscribe_Rx_Interrupt_Handler(void)
 {
     static uint8_t  rx_counter=0;
 
+	if(wifi_t.rx_error_codes_flag == 1){
+
+	      wifi_t.wifi_temp_data[rx_counter] = wifi_t.usart1_dataBuf[0];
+
+		rx_counter ++;
+		
+		if(strstr((char*)wifi_t.wifi_temp_data,"+TCMQTTCONN:OK")){
+					rx_counter =0;
+					wifi_t.esp8266_login_cloud_success =1;
+					wifi_t.rx_error_codes_flag= 0;
+					wifi_t.rx_setup_hardware_counter=0;
+					wifi_t.gTimer_auto_detected_net_state_times=0;
+					wifi_t.get_rx_beijing_time_enable=0;
+					
+		
+		}
+
+	    if(rx_counter >149)rx_counter =0;
+			
+		
+   }
+   else{
+
 
     switch(wifi_t.rx_data_state)
       {
@@ -368,30 +391,29 @@ void Subscribe_Rx_Interrupt_Handler(void)
 	default:
     break;
     }
+   }
 
 	
    if(wifi_t.rx_counter ==0 && wifi_t.rx_error_codes_flag == 0){
    		wifi_t.wifi_temp_data[rx_counter] = wifi_t.usart1_dataBuf[0];
 
 		 rx_counter ++;
-		 if(strstr((const char*)wifi_t.wifi_temp_data,"+CME ERROR:208")){
+		 if(strstr((char*)wifi_t.wifi_temp_data,"+CME ERROR:208")){
 			rx_counter =0;
+			wifi_t.gTimer_wifi_rx_error >30;
 			wifi_t.esp8266_login_cloud_success =0;
 			wifi_t.rx_error_codes_flag= 1;
+			wifi_t.rx_setup_hardware_counter=0;
 			wifi_t.gTimer_auto_detected_net_state_times=0;
+			wifi_t.gTimer_wifi_rx_error = 0;
+			wifi_t.get_rx_beijing_time_enable=0;
+			
 
 		}
 
 		 if(rx_counter >149)rx_counter =0;
 	}
-    else if(wifi_t.rx_counter ==0 && wifi_t.rx_error_codes_flag == 1){
-
-		rx_counter ++;
-
-	    if(rx_counter >149)rx_counter =0;
-			
-		
-   }
+   
 
   
 
@@ -457,6 +479,8 @@ void Wifi_Rx_InputInfo_Handler(void)
 				  wifi_t.soft_ap_config_flag=0;
 				  wifi_t.gTimer_auto_detected_net_state_times=0;
 			  }
+
+			
 
 
 

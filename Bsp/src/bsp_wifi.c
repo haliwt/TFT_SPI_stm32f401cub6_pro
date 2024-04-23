@@ -41,7 +41,7 @@ void WIFI_Process_Handler(void)
 **********************************************************************/
 static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 {
-    static uint8_t counter,error_counter;
+    static uint8_t counter;
 	if(wifi_t.power_on_linkwifi==0 && wifi_link_net_state()==0 && wifi_t.rx_error_codes_flag==0){
 		
 		InitWifiModule_Hardware();//InitWifiModule();
@@ -59,9 +59,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		counter++;
 		wifi_t.power_on_linkwifi++;
 
-
-
-	}
+   }
 
 
 	if((wifi_link_net_state()==1 && counter==1)){
@@ -96,44 +94,48 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	    }
 
 
-	if(wifi_t.rx_error_codes_flag==1){
+	if(wifi_t.rx_error_codes_flag==1 && wifi_t.rx_setup_hardware_counter< 6 && wifi_link_net_state()==0 && wifi_t.gTimer_wifi_rx_error >12){
 		wifi_t.gTimer_auto_detected_net_state_times=0;
+		wifi_t.gTimer_get_beijing_time =0;
+		wifi_t.gTimer_wifi_rx_error =0;
         WIFI_IC_DISABLE();
 		HAL_Delay(1000);
+		Key_Speical_Power_Fun_Handler();
 	    HAL_Delay(1000);
+		Key_Speical_Power_Fun_Handler();
 		WIFI_IC_ENABLE();
+        HAL_Delay(1000);
+		Key_Speical_Power_Fun_Handler();
 
-		HAL_Delay(1000);
-       
-		//InitWifiModule_Hardware();//InitWifiModule();
-		//SmartPhone_TryToLink_TencentCloud();
-		// if(wifi_t.power_on_login_tencent_cloud_flag==2){
-		wifi_t.power_on_login_tencent_cloud_flag++;
 		wifi_t.linking_tencent_cloud_doing =1; //enable usart2 receive wifi  data
 		wifi_t.wifi_uart_counter=0;
 		wifi_t.soft_ap_config_flag =0;
- 
 		
+ 
+	
 		
        HAL_UART_Transmit(&huart1, "AT+TCMQTTCONN=1,5000,240,0,1\r\n", strlen("AT+TCMQTTCONN=1,5000,240,0,1\r\n"), 0xffff);//开始连接
-	   wifi_t.gTimer_power_first_link_tencent=0;
+	  
 	   
 
 	   HAL_Delay(1000);
+	   Key_Speical_Power_Fun_Handler();
+	  
 	   HAL_Delay(1000);
-	   HAL_Delay(1000);
-	
+	   Key_Speical_Power_Fun_Handler();
+	 
+	  
 	   
 	 
-		error_counter=1;
+		wifi_t.rx_setup_hardware_counter++;
 		
 
 	}
 
 
-	if(wifi_link_net_state()==1 && error_counter==1 ){
+	if(wifi_link_net_state()==1 && wifi_t.rx_setup_hardware_counter < 8 ){
 
-            error_counter++;
+            wifi_t.rx_setup_hardware_counter=9;
 			wifi_t.rx_error_codes_flag=0;
 			wifi_t.power_on_thefirst_times =0;
 			pro_t.gTimer_pro_action_publis=0;
@@ -179,11 +181,11 @@ static void RunWifi_Command_Handler(void)
 	if(wifi_link_net_state()==0){
 		if(wifi_t.gTimer_linking_tencent_duration < 166){
 		wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
-	}
-	else{
+		}
+		else{
 		wifi_t.runCommand_order_lable = wifi_null;
 
-	}
+		}
 
 	}
 

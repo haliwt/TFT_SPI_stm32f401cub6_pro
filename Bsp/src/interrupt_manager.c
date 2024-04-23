@@ -31,22 +31,18 @@ void USART_Cmd_Error_Handler(void)
 			
 	  }
 
-//	 if(gctl_t.gTimer_ctl_usart2_error >8){
-//	  	gctl_t.gTimer_ctl_usart2_error=0;
-//
-//           __HAL_UART_CLEAR_OREFLAG(&huart1);
-//
-//		   __HAL_UART_CLEAR_NEFLAG(&huart1);
-//	__HAL_UART_CLEAR_FEFLAG(&huart1);
-//	//__HAL_UART_CLEAR_OREFLAG(&huart1);
-//	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
-//        
-//
-//          temp = USART1->DR;
-//		 
-//		    HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
-//		
-//     }
+	 if(gctl_t.gTimer_ctl_usart2_error >5){
+	  	gctl_t.gTimer_ctl_usart2_error=0;
+
+           __HAL_UART_CLEAR_OREFLAG(&huart1);
+
+        
+
+          temp = USART1->DR;
+		 
+		    HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
+		
+     }
 
 	 if(gctl_t.gTimer_ctl_dma_state >34){
            gctl_t.gTimer_ctl_dma_state =0;
@@ -120,10 +116,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	      }
 	 
 	  
-	__HAL_UART_CLEAR_NEFLAG(&huart1);
-	__HAL_UART_CLEAR_FEFLAG(&huart1);
-	__HAL_UART_CLEAR_OREFLAG(&huart1);
-	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
+//	__HAL_UART_CLEAR_NEFLAG(&huart1);
+//	__HAL_UART_CLEAR_FEFLAG(&huart1);
+//	__HAL_UART_CLEAR_OREFLAG(&huart1);
+//	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
 	//__HAL_UART_CLEAR_TXFECF(&huart2);
 	 HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
      
@@ -386,10 +382,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  wifi_t.gTimer_read_beijing_time++;
 	  wifi_t.gTimer_wifi_power_on_detect++;
 	  wifi_t.gTimer_wifi_counter_link_beijing_times++;
+	  wifi_t.gTimer_wifi_rx_error++;
 	
-	
-	  
-	 
 	  wifi_t.gTimer_linking_tencent_duration++;
 	  wifi_t.gTimer_power_first_link_tencent++;
 	  wifi_t.gTimer_wifi_pub_power_off++;
