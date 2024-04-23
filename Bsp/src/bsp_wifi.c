@@ -50,11 +50,8 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 
 		if(counter ==0){
 			counter++;
-
-			wifi_t.gTimer_wifi_pub_power_off =0;
-
-
-		}
+          wifi_t.gTimer_wifi_pub_power_off =0;
+       }
        
     }
 
@@ -111,10 +108,10 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 		//InitWifiModule_Hardware();//InitWifiModule();
 		//SmartPhone_TryToLink_TencentCloud();
 		// if(wifi_t.power_on_login_tencent_cloud_flag==2){
-   	wifi_t.power_on_login_tencent_cloud_flag++;
-	wifi_t.linking_tencent_cloud_doing =1; //enable usart2 receive wifi  data
-    wifi_t.wifi_uart_counter=0;
-	wifi_t.soft_ap_config_flag =0;
+		wifi_t.power_on_login_tencent_cloud_flag++;
+		wifi_t.linking_tencent_cloud_doing =1; //enable usart2 receive wifi  data
+		wifi_t.wifi_uart_counter=0;
+		wifi_t.soft_ap_config_flag =0;
  
 		
 		

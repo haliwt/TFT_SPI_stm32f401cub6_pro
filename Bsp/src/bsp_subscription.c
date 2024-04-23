@@ -823,14 +823,16 @@ void Json_Parse_Command_Fun(void)
             gctl_t.gSet_temperature_value = temp_decade*10 +  temp_unit;
             if(gctl_t.gSet_temperature_value > 40)   gctl_t.gSet_temperature_value=40;
             if(gctl_t.gSet_temperature_value <20 )   gctl_t.gSet_temperature_value=20;
-            MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
-			HAL_Delay(350);//350
-			buzzer_sound();
+           // MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
+			//HAL_Delay(350);//350
+		
 			gctl_t.gSet_temperature_value_item =1;
 			pro_t.gTimer_pro_temp_delay= 100;
 			pro_t.gTimer_pro_mode_key_be_select = 0;
 			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
 			TFT_Disp_Voice_Temp_Value(0,gctl_t.gSet_temperature_value);
+			gctl_t.gSet_temperature_value_item=set_temp_value_item;
+			pro_t.gTimer_pro_set_tem_value_blink=0;
 			
 			if(gctl_t.gSet_temperature_value > gctl_t.dht11_temp_value){
 
@@ -848,11 +850,12 @@ void Json_Parse_Command_Fun(void)
 			   		LED_PTC_ICON_OFF();
 				}
 			}
+		    buzzer_sound();
 		}
       wifi_t.response_wifi_signal_label = 0xff;
 	  wifi_t.gTimer_auto_detected_net_state_times=0;
 			
-			 wifi_t.linking_tencent_cloud_doing =0;
+	  wifi_t.linking_tencent_cloud_doing =0;
 	  break;
 
 	  case FAN_ITEM:
