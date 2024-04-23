@@ -51,7 +51,7 @@ void Ptc_OnOff_Handler(void)
 void Temperature_Ptc_Pro_Handler(void)
 {
   
-   static uint8_t error_flag,error_ptc,error_fan;
+   static uint8_t error_flag,error_ptc,error_fan,disp_dht11_temp_value;
    switch(gctl_t.ptc_warning){
 
 		  case ptc_no_warning:
@@ -189,6 +189,14 @@ void Temperature_Ptc_Pro_Handler(void)
 
 		   case disp_set_temp_value_item: //0x01
 
+		   if(disp_dht11_temp_value==1){
+
+		      disp_dht11_temp_value=0;
+
+              TFT_Disp_Voice_Temp_Value(0,dht11_temp_value());
+
+		   }
+
 		   if(pro_t.gTimer_pro_temp_delay> 61 && ptc_error_state()==0 && pro_t.add_or_dec_is_cofirm_key_flag ==0){
                pro_t.gTimer_pro_temp_delay =0;
 				if(set_temp_value() <= dht11_temp_value()|| dht11_temp_value() >39){//envirment temperature
@@ -238,6 +246,7 @@ void Temperature_Ptc_Pro_Handler(void)
 					  MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
 					  HAL_Delay(100);
 				}
+			disp_dht11_temp_value=1;
 			gctl_t.gSet_temperature_value_item= disp_set_temp_value_item;
 		   }
 		   break;
