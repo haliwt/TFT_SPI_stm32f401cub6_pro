@@ -94,7 +94,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	    }
 
 
-	if(wifi_t.rx_error_codes_flag==1 && wifi_t.rx_setup_hardware_counter< 6 && wifi_link_net_state()==0 && wifi_t.gTimer_wifi_rx_error >12){
+	if(wifi_t.rx_error_codes_flag==1 && wifi_t.rx_setup_hardware_counter< 6 && wifi_link_net_state()==0 && wifi_t.gTimer_wifi_rx_error >6){
 		wifi_t.gTimer_auto_detected_net_state_times=0;
 		wifi_t.gTimer_get_beijing_time =0;
 		wifi_t.gTimer_wifi_rx_error =0;
@@ -125,9 +125,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 	   Key_Speical_Power_Fun_Handler();
 	 
 	  
-	   
-	 
-		wifi_t.rx_setup_hardware_counter++;
+	  wifi_t.rx_setup_hardware_counter++;
 		
 
 	}
