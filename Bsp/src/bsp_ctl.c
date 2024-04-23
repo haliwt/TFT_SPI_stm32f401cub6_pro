@@ -340,7 +340,7 @@ void Device_Action_Publish_Handler(void)
 			 LED_PTC_ICON_ON();
 		    
 			 MqttData_Publish_SetPtc(0x01);  
-			 HAL_Delay(50);//350
+			 HAL_Delay(350);//350
 		     
 
 		  }
@@ -350,7 +350,7 @@ void Device_Action_Publish_Handler(void)
 			LED_PTC_ICON_OFF();
 		  
 		    MqttData_Publish_SetPtc(0); 
-			HAL_Delay(50);//350
+			HAL_Delay(350);//350
 		   
 
 
@@ -365,7 +365,7 @@ void Device_Action_Publish_Handler(void)
 		   LED_KILL_ICON_ON();
 	  
 	       MqttData_Publish_SetPlasma(0x01);
-		   HAL_Delay(50);
+		   HAL_Delay(350);
 	    
 	   }
 	   else{
@@ -373,7 +373,7 @@ void Device_Action_Publish_Handler(void)
 		  LED_KILL_ICON_OFF();
 	   
 	      MqttData_Publish_SetPlasma(0);
-		  HAL_Delay(50);
+		  HAL_Delay(350);
 	    
 
 	   }
@@ -389,7 +389,7 @@ void Device_Action_Publish_Handler(void)
 	  LED_RAT_ICON_ON();
   
       MqttData_Publish_SetUltrasonic(1);
-	  HAL_Delay(50);
+	  HAL_Delay(350);
     
 	  
    }
@@ -399,7 +399,7 @@ void Device_Action_Publish_Handler(void)
 	  LED_RAT_ICON_OFF();
   
       MqttData_Publish_SetUltrasonic(0);
-	  HAL_Delay(50);
+	  HAL_Delay(350);
     
 
    }

@@ -244,7 +244,7 @@ void Temperature_Ptc_Pro_Handler(void)
 
 			    if(wifi_link_net_state()==1){
 					  MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
-					  HAL_Delay(100);
+					  HAL_Delay(350);
 				}
 			disp_dht11_temp_value=1;
 			gctl_t.gSet_temperature_value_item= disp_set_temp_value_item;
