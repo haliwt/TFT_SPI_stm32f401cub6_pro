@@ -265,9 +265,11 @@ void TFT_Pocess_Command_Handler(void)
 	        
          
 		    if( gctl_t.gSet_temperature_value_item != set_temp_value_item){
-			   TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
+			  // TFT_Disp_Temp_Value(0,gctl_t.dht11_temp_value);
+			   TFT_Disp_Only_Temp_Numbers(0,gctl_t.dht11_temp_value);
 			  
             }
+			
 	        if(v_t.voice_set_temperature_value_flag==2){
 				v_t.voice_set_temperature_value_flag++;
 
@@ -283,8 +285,9 @@ void TFT_Pocess_Command_Handler(void)
 
 		   pro_t.gTimer_pro_display_dht11_hum=0;
 
-
-		   TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
+           TFT_Disp_Only_Humidity_Numbers(gctl_t.dht11_hum_value);
+	   
+		  // TFT_Disp_Humidity_Value(gctl_t.dht11_hum_value);
 		}
 
 	 

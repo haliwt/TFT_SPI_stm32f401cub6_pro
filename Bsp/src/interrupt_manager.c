@@ -19,7 +19,7 @@ void USART_Cmd_Error_Handler(void)
 	   DMA_HandleTypeDef hdma_spi1_tx;
 	   DMA_HandleTypeDef hdma_spi1_rx;
 	  
-       if(gctl_t.gTimer_ctl_usart1_error > 6 ){ //9
+       if(gctl_t.gTimer_ctl_usart1_error > 15 ){ //9
 			
 			gctl_t.gTimer_ctl_usart1_error=0;
 			  __HAL_UART_CLEAR_OREFLAG(&huart1);
@@ -31,10 +31,11 @@ void USART_Cmd_Error_Handler(void)
 			
 	  }
 
-	 if(gctl_t.gTimer_ctl_usart2_error >5){
+	 if(gctl_t.gTimer_ctl_usart2_error >4){
 	  	gctl_t.gTimer_ctl_usart2_error=0;
 
            __HAL_UART_CLEAR_OREFLAG(&huart1);
+	 
 
         
 
@@ -75,8 +76,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     if(huart->Instance==USART1)
     {
            
-	     
-	      if(wifi_t.linking_tencent_cloud_doing  ==1){ //link tencent netware of URL
+	  if(wifi_t.linking_tencent_cloud_doing  ==1){ //link tencent netware of URL
 
 			wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart1_dataBuf[0];
 			wifi_t.wifi_uart_counter++;
@@ -118,7 +118,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	  
 //	__HAL_UART_CLEAR_NEFLAG(&huart1);
 //	__HAL_UART_CLEAR_FEFLAG(&huart1);
-//	__HAL_UART_CLEAR_OREFLAG(&huart1);
+	__HAL_UART_CLEAR_OREFLAG(&huart1);
 //	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
 	//__HAL_UART_CLEAR_TXFECF(&huart2);
 	 HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
