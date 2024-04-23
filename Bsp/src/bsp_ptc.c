@@ -232,6 +232,12 @@ void Temperature_Ptc_Pro_Handler(void)
 				 
 			     TFT_Disp_Voice_Temp_Value(0,gctl_t.gSet_temperature_value);
                }
+
+
+			    if(wifi_link_net_state()==1){
+					  MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
+					  HAL_Delay(100);
+				}
 			gctl_t.gSet_temperature_value_item= disp_set_temp_value_item;
 		   }
 		   break;

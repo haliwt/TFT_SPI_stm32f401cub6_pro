@@ -13,8 +13,8 @@ typedef enum{
 
 typedef enum _wifi_state_t{  
 	
-    wifi_has_been_connected =0x01,
-	wifi_link_tencent_cloud, //2
+    
+	wifi_link_tencent_cloud=0x01, //2
 	wifi_tencent_publish_init_data, //3
 	wifi_subscriber_form_tencent_data,//4
 	wifi_publish_dht11_delay,//5

@@ -137,7 +137,7 @@ void TFT_Process_Handler(void)
 		
 		
 	}
-	if(wifi_link_net_state() ==1 && wifi_t.gTimer_wifi_pub_power_off >3  && power_off_wifi_login==0 ){
+	if(wifi_link_net_state() ==1 && wifi_t.gTimer_wifi_pub_power_off >2  && power_off_wifi_login==0 ){
 		wifi_t.gTimer_wifi_pub_power_off=0;
 		power_off_wifi_login++;
 		MqttData_Publish_PowerOff_Ref();
@@ -145,7 +145,7 @@ void TFT_Process_Handler(void)
 		 
 		  
 	}
-	if(wifi_link_net_state() ==1  && wifi_t.gTimer_wifi_sub_power_off > 8 && power_off_wifi_login==1){
+	if(wifi_link_net_state() ==1  && wifi_t.gTimer_wifi_sub_power_off > 4 && power_off_wifi_login==1){
 		
         power_off_wifi_login++;
 		wifi_t.gTimer_wifi_sub_power_off=0;
@@ -154,16 +154,6 @@ void TFT_Process_Handler(void)
 	
     }
 
-//	if(wifi_t.gTimer_main_pro_times > 24 ){
-//		 
-//		wifi_t.gTimer_main_pro_times=0;
-//
-//		wifi_t.power_on_linkwifi=0;
-//
-//
-//	}
-
-	
 
 	if(fan_continuce_flag ==1){
 
@@ -382,44 +372,31 @@ static void TFT_Pocess_Command_Handler(void)
 
 	  if(wifi_link_net_state()==1){
 
-		  if(pro_t.gTimer_pro_action_publis > 3 ){
-		   	//  pro_t.gTimer_pro_action_publis=0;
+		  if(pro_t.gTimer_pro_action_publis_main_fun > 3 ){
+		    	pro_t.gTimer_pro_action_publis_main_fun=0;
 		
-		      	//Device_Action_Publish_Handler();
+		      	Device_Action_Publish_Handler();
 		  }
-
-
-		//  if(pro_t.gTimer_pro_pub_set_timer > 4 && pro_t.timer_mode_flag==timer_time){
-		  	 //  pro_t.gTimer_pro_pub_set_timer=0;
-////
-//                if(set_timer_value != gctl_t.gSet_temperature_value){
-//					set_timer_value = gctl_t.gSet_temperature_value;
-//					MqttData_Publis_SetTemp(set_timer_value);
-//				//HAL_Delay(100);
-//
-//                }
-		       
-		  // }
-
-
-       }
+        }
 		  
-	  pro_t.run_process_step=pro_wifi_init;
+	  pro_t.run_process_step=pro_wifi_publish_init;
 	 break; 
 		  
       // handler of wifi 
-	  case pro_wifi_init: //7
+	  case pro_wifi_publish_init: //7
 	   
-         if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && wifi_t.power_on_thefirst_times==0 &&  pro_t.gTimer_pro_action_publis >8){
+         if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && wifi_t.power_on_thefirst_times==0 &&  pro_t.gTimer_pro_action_publis >2){
              wifi_t.power_on_thefirst_times++;
 		     pro_t.gTimer_pro_action_publis=0;
 		    MqttData_Publish_Update_Data();
-		   
+		     HAL_Delay(350);
 
-			HAL_Delay(350);
-
-		    
 		}
+	     pro_t.run_process_step=pro_wifi_subscriber_init;
+
+	 break;
+
+	  case pro_wifi_subscriber_init:
 
 	   if(wifi_link_net_state()==1 && wifi_t.power_on_thefirst_times==1 && pro_t.gTimer_pro_pub_set_timer > 4){
 	   	 

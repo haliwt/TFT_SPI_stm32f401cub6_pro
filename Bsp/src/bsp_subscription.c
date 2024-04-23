@@ -376,6 +376,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 			rx_counter =0;
 			wifi_t.esp8266_login_cloud_success =0;
 			wifi_t.rx_error_codes_flag= 1;
+			wifi_t.gTimer_auto_detected_net_state_times=0;
 
 		}
 
@@ -655,7 +656,7 @@ void Json_Parse_Command_Fun(void)
 		
 		
          MqttData_Publish_SetPtc(0x01);
-	  	 HAL_Delay(300);//350ms
+	  	 HAL_Delay(200);//350ms
 	  	 buzzer_sound()	;
 		 Ptc_On();
 	     LED_PTC_ICON_ON();
@@ -680,7 +681,7 @@ void Json_Parse_Command_Fun(void)
 		
 		 
          MqttData_Publish_SetPtc(0);
-		 HAL_Delay(300);
+		 HAL_Delay(200);
 
 		  buzzer_sound()	;
 		 Ptc_Off();
@@ -816,18 +817,21 @@ void Json_Parse_Command_Fun(void)
 	  case TEMPERATURE_ITEM:
 	   if(power_on_state() ==power_on && ptc_error_state()==0 && fan_error_state()==0){
 		
-			buzzer_sound();
+			
             temp_decade=wifi_t.wifi_data[14]-0x30;
             temp_unit=wifi_t.wifi_data[15]-0x30;
             gctl_t.gSet_temperature_value = temp_decade*10 +  temp_unit;
             if(gctl_t.gSet_temperature_value > 40)   gctl_t.gSet_temperature_value=40;
             if(gctl_t.gSet_temperature_value <20 )   gctl_t.gSet_temperature_value=20;
             MqttData_Publis_SetTemp(gctl_t.gSet_temperature_value);
-			HAL_Delay(200);//350
+			HAL_Delay(350);//350
+			buzzer_sound();
 			gctl_t.gSet_temperature_value_item =1;
 			pro_t.gTimer_pro_temp_delay= 100;
 			pro_t.gTimer_pro_mode_key_be_select = 0;
-			TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+			//TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+			TFT_Disp_Voice_Temp_Value(0,gctl_t.gSet_temperature_value);
+			
 			if(gctl_t.gSet_temperature_value > gctl_t.dht11_temp_value){
 
 		    	if(ptc_state()==0){

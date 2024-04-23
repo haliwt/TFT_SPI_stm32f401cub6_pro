@@ -687,7 +687,7 @@ void Mode_Key_Confirm_Fun(void)
 				LED_PTC_ICON_ON(); 
 			    Ptc_On();
 				gctl_t.ptc_flag = 1;
-				 pro_t.add_or_dec_is_cofirm_key_flag =0;
+				pro_t.add_or_dec_is_cofirm_key_flag =0;
 				
 		    }
 			else{

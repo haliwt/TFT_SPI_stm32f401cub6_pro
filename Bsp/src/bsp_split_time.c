@@ -72,6 +72,7 @@ void TimeTimer_Pro_Handler(void)
 					HAL_Delay(100);
 					TFT_Disp_Onley_Set_TimerTime_Value();
 					
+					
 			}
 			else{
 				
@@ -88,6 +89,7 @@ void TimeTimer_Pro_Handler(void)
 
 
 			}
+			
 		
 			pro_t.mode_key_select_label =0;
                
