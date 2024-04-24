@@ -213,7 +213,6 @@ void TFT_Pocess_Command_Handler(void)
 
 	 case 0:
 	  
-		pro_t.gKey_value =0XFF;
 	    if(wifi_link_net_state() ==1){
 		    
 		    TFT_Display_WorksTime_Voice();
@@ -547,7 +546,8 @@ void power_off_fan_run(void)
 ******************************************************************************/
 void Key_Interrup_Handler(void)
 {
-     switch(pro_t.gKey_value){
+   #if 0
+	 switch(pro_t.gKey_value){
 
         case add_key_id:
 		 	
@@ -574,6 +574,38 @@ void Key_Interrup_Handler(void)
 
 
 	 }
+	 #endif 
+
+	 while( pro_t.gKey_value_add ==1){
+
+		 if(ADD_KEY_VALUE()==KEY_UP){
+
+		    HAL_Delay(5);
+			Buzzer_KeySound();
+			ADD_Key_Fun();
+		    pro_t.gKey_value_add=0;
+			
+        }
+	 }
+
+	 while(pro_t.gKey_value_dec ==1){
+
+       if(DEC_KEY_VALUE()==KEY_UP){
+            HAL_Delay(5);
+		   Buzzer_KeySound();
+			DEC_Key_Fun();
+		    pro_t.gKey_value_dec=0;
+		 //  Buzzer_KeySound();
+
+
+
+	   }
+
+
+
+	 }
+
+	 
 
 }
 

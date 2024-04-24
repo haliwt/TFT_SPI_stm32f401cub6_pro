@@ -123,7 +123,8 @@ typedef enum{
 typedef struct{
 
   //key
-   uint8_t gKey_value;
+   uint8_t gKey_value_dec;
+   uint8_t gKey_value_add; 
    uint8_t gPower_On;
    uint8_t power_on_first ;
    uint8_t long_key_flag;

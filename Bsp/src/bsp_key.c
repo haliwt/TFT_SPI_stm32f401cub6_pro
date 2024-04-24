@@ -208,7 +208,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	case KEY_DEC_Pin:
 	if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0 && DEC_KEY_VALUE()==KEY_DOWN){  
 	//pro_t.buzzer_sound_flag = 1;
-     pro_t.gKey_value = dec_key_id;
+     pro_t.gKey_value_dec = 1; // = dec_key_id;
 	//DEC_Key_Fun();
 	}
 
@@ -218,7 +218,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	case KEY_ADD_Pin:
 	if(pro_t.gPower_On == power_on && ptc_error_state()==0 && fan_error_state()==0 && ADD_KEY_VALUE()==KEY_DOWN){  
 	 // pro_t.buzzer_sound_flag = 1;
-      pro_t.gKey_value = add_key_id;
+      pro_t.gKey_value_add = 1;//add_key_id;
 	//ADD_Key_Fun();
 	 }
 
