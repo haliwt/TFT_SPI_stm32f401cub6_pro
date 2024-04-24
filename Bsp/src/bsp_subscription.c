@@ -650,6 +650,9 @@ void Json_Parse_Command_Fun(void)
 			
 			pro_t.power_off_flag=1;
 			pro_t.gPower_On = power_off; //WT.EDIT 2024.02.20
+			 TFT_BACKLIGHT_OFF();
+			LED_Mode_Key_Off();
+			LED_Power_Key_Off();
             
 		
 	    wifi_t.gTimer_auto_detected_net_state_times=0; //don't need check wifi if has or not
@@ -670,6 +673,10 @@ void Json_Parse_Command_Fun(void)
 
 		gctl_t.ptc_warning =0;
 		gctl_t.fan_warning =0;
+			LED_Mode_Key_On();
+			  LED_Power_Key_On();
+			  Power_On_Led_Init();
+			  TFT_BACKLIGHT_ON();
 		wifi_t.gTimer_auto_detected_net_state_times=0;//don't need check wifi if has or not
 		wifi_t.response_wifi_signal_label = 0xff;
 
