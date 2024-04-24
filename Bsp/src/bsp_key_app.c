@@ -84,8 +84,9 @@ void Key_Speical_Power_Fun_Handler(void)
 			pro_t.gPower_On = power_off;   
 			// pro_t.buzzer_sound_flag = 1;
 			    TFT_BACKLIGHT_OFF();
-				Device_NoAction_Power_Off();
 				LED_Mode_Key_Off();
+			    LED_Power_Key_Off();
+               
 				
 			buzzer_sound();
 			

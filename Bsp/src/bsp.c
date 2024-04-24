@@ -127,11 +127,12 @@ void TFT_Process_Handler(void)
 		pro_t.run_process_step=0;
 		wifi_t.power_on_linkwifi=0;
 		wifi_t.runCommand_order_lable= 0xff;
-        TFT_BACKLIGHT_OFF();
+       // TFT_BACKLIGHT_OFF();
 	
 		Power_Off_Fun();
 		Device_NoAction_Power_Off();
-		LED_Mode_Key_Off();
+		Power_Off_Led();
+		//LED_Mode_Key_Off();
 		
 		//TFT_Disp_Fan_RunIcon(0,0);
 		
