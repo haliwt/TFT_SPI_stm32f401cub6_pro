@@ -27,12 +27,12 @@ void Key_Speical_Power_Fun_Handler(void)
 	static uint8_t  power_on_off ;
 	//be pressed long time key of function that link tencent cloud funtion 
    
-	 if(ptc_error_state()==0 && fan_error_state()==0){
+	
 	 while(pro_t.key_power_be_pressed_flag==1){
 
-	 
+	   
          if(POWER_KEY_VALUE() ==KEY_DOWN &&  pro_t.gPower_On == power_on){
-                
+                 if(ptc_error_state()==0 && fan_error_state()==0){
          
 
 
@@ -55,7 +55,8 @@ void Key_Speical_Power_Fun_Handler(void)
 			
 			 
         }
-        else if(POWER_KEY_VALUE() ==KEY_UP  && pro_t.key_power_be_pressed_flag==1){
+	    }
+        else if(POWER_KEY_VALUE() ==KEY_UP){
 			HAL_Delay(10);
            if(POWER_KEY_VALUE() ==KEY_UP){
            pro_t.key_power_be_pressed_flag=0;
@@ -103,10 +104,7 @@ void Key_Speical_Power_Fun_Handler(void)
 		 }
 	 }
 		
-     }
-
-	
-}
+ }
 /******************************************************************************
 	*
 	*Function Name:static void Key_Speical_Mode_Fun_Handler(void)
@@ -118,45 +116,39 @@ void Key_Speical_Power_Fun_Handler(void)
 void Key_Speical_Mode_Fun_Handler(void)
 {
 
-   static uint8_t mode_longkey ;
-   
+ 
+   while(pro_t.mode_key_pressed_flag==1){
    if(MODE_KEY_VALUE() ==KEY_DOWN){
 
-               mode_key_counter++;
-   }
-
-
-
-   if(mode_key_counter> 40000){
+              // mode_key_counter++;
+   	if(pro_t.gTimer_pro_mode_key_adjust>2){//if(mode_key_counter> 40000){
 		mode_key_counter=0;
 		gctl_t.mode_longk_key_flag=1;
-        mode_longkey =1;
+    
 		mode_longkey_counter=0;
 		pro_t.mode_key_pressed_flag =0;
 		pro_t.mode_key_select_label =0;
 		pro_t.gTimer_pro_mode_long_key=0;
 
-		Buzzer_KeySound();
+		
 		
 		pro_t.gTimer_pro_mode_long_key=0;
 		pro_t.mode_key_run_item_step=mode_key_set_timer_value;
 		Mode_Long_Key_Fun();
 		pro_t.gTimer_pro_mode_long_key=0;
+		Buzzer_KeySound();
+       }
 			
 
-	}
-   
-   if(pro_t.mode_key_pressed_flag ==1){
-
-        if(MODE_KEY_VALUE() ==KEY_UP){
-			HAL_Delay(20);
+   }
+   else if(MODE_KEY_VALUE() ==KEY_UP){
+          HAL_Delay(5);
 	   	if(MODE_KEY_VALUE() ==KEY_UP ){
+			
 
 		pro_t.mode_key_pressed_flag =0;
-		mode_key_counter=0;
-        if(mode_longkey ==0){
-	    mode_longkey_counter=0;
 		gctl_t.mode_longk_key_flag=0;
+		mode_key_counter=0;
 		
         pro_t.gTimer_pro_mode_key_be_select=0;
 		pro_t.mode_key_run_item_step = mode_key_select;
@@ -168,26 +160,19 @@ void Key_Speical_Mode_Fun_Handler(void)
 		
 		gctl_t.memory_confimr_key_done = 1;
         
-		pro_t.buzzer_sound_flag =1;
+		
 
 		pro_t.gTimer_pro_mode_key_be_select = 0; //counter starts after 4 seconds ,cancel this function
 		gctl_t.gTimer_ctl_select_led =0;
-	   	 }
+		//pro_t.buzzer_sound_flag =1;
+		Buzzer_KeySound();
+	   	
 	   	}
 	   }
 	}
-		
+ 
 	Mode_Key_Config_Fun_Handler();
-    if(mode_longkey==1){
-      mode_longkey_counter++;
-
-	  if(mode_longkey_counter> 50){
-	  	mode_longkey=0;
-
-	  }
-
-
-	}
+   
 		
 
 }
@@ -203,7 +188,7 @@ void Key_Speical_Mode_Fun_Handler(void)
 void Mode_Key_Config_Fun_Handler(void)
 {
 
- if(gctl_t.mode_longk_key_flag ==1 ){
+ if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
 
 	 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
 
@@ -283,12 +268,13 @@ void ADD_Key_Fun(void)
 
  static uint8_t disp_temp_value,add_timer;
 
- if(gctl_t.mode_longk_key_flag ==1){
+ if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
  
 	  pro_t.mode_key_run_item_step = mode_key_set_timer_value;
  
  
   }
+ 
   if(power_on_state()==power_on){
 
 	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0){
@@ -302,13 +288,7 @@ void ADD_Key_Fun(void)
 
 		case mode_key_set_temp: //set temperature value add number
 			     
-				if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
- 
-	 			 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
- 
- 
-  				}
-			    else{
+			
 			      mode_key_counter=0;
 				 pro_t.buzzer_sound_flag = 1;//Buzzer_KeySound();
 				gctl_t.gSet_temperature_value ++;
@@ -320,7 +300,7 @@ void ADD_Key_Fun(void)
 				 gctl_t.gSet_temperature_value_item = set_temp_value_item;
 	        
 				disp_temp_value =1;
-				}
+				
 
 		break;
 
@@ -349,18 +329,16 @@ void ADD_Key_Fun(void)
 
 		case mode_key_select:
 			
-			pro_t.buzzer_sound_flag = 1;
-		//	pro_t.mode_key_run_item_step = mode_key_confirm;
+			//pro_t.buzzer_sound_flag = 1;
+	
 		    Device_Action_Led_OnOff_Handler();
             Mode_Key_Confirm_Fun();
-
-
-		
-			  pro_t.mode_key_select_label=0;
-			  pro_t.mode_key_run_item_step = mode_key_set_temp;
-			  pro_t.add_or_dec_is_cofirm_key_flag =1;
+			pro_t.mode_key_select_label=0;
+			 pro_t.mode_key_run_item_step = mode_key_set_temp;
+			 pro_t.add_or_dec_is_cofirm_key_flag =1;
+			 pro_t.gTimer_pro_mode_long_key=6;
            
-				
+			 Buzzer_KeySound();
 			
 			
 		
@@ -437,14 +415,7 @@ void DEC_Key_Fun(void)
 
 		   case mode_key_set_temp:  //default tempearture value 
 	  
-	         
-			if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
-			
-				 pro_t.mode_key_run_item_step = mode_key_set_timer_value;
-			
-			
-			 }
-			 else{
+	  
 			 	 mode_key_counter=0;
 		        pro_t.buzzer_sound_flag = 1;// Buzzer_KeySound();
 				 gctl_t.gSet_temperature_value--;
@@ -455,7 +426,7 @@ void DEC_Key_Fun(void)
 				 gctl_t.gSet_temperature_value_item = set_temp_value_item;
 	             disp_temp_value =1;
 			        
-			 }
+			 
 			        
 			break;
 
@@ -484,15 +455,20 @@ void DEC_Key_Fun(void)
 
 			 case mode_key_select:
 			 
-			 	pro_t.buzzer_sound_flag = 1;
+			 //	pro_t.buzzer_sound_flag = 1;
 	
 				//pro_t.mode_key_run_item_step = mode_key_confirm;
-				 Device_Action_Led_OnOff_Handler();
+				Device_Action_Led_OnOff_Handler();
                  Mode_Key_Confirm_Fun();
 		    
+			         pro_t.mode_key_select_label=0;
+					  pro_t.mode_key_run_item_step = mode_key_set_temp;
+					  pro_t.add_or_dec_is_cofirm_key_flag =1;
+					  pro_t.gTimer_pro_mode_long_key=6;
+			 
 
-			  pro_t.mode_key_select_label=0;
-			  pro_t.mode_key_run_item_step = mode_key_set_temp;
+           
+			 Buzzer_KeySound();
 			 
 				
 

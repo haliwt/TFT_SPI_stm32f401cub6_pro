@@ -179,13 +179,21 @@ void Wifi_SoftAP_Config_Handler(void)
 
     case wifi_set_restor:
            Wifi_Fast_Led_Blink();
-           ReConnect_Wifi_Net_ATReset_Hardware();//InitWifiModule_Hardware()
-		   //HAL_Delay(1000);
+           //ReConnect_Wifi_Net_ATReset_Hardware();//InitWifiModule_Hardware()
+	       WIFI_IC_DISABLE();
+		HAL_Delay(1000);
+		//HAL_Delay(1000);
+		//HAL_Delay(1000);
+		WIFI_IC_ENABLE();
+		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
+		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
+		HAL_Delay(1000);
+
 		   wifi_t.gTimer_login_tencent_times=0;
 	       if(wifi_t.link_tencent_step_counter==0xff){
 			    wifi_t.wifi_config_net_lable =wifi_set_cwmode;
 		   }
-		  
+		   wifi_t.wifi_config_net_lable =wifi_set_cwmode;
 		      Wifi_Fast_Led_Blink();
 	break;
 
@@ -193,13 +201,15 @@ void Wifi_SoftAP_Config_Handler(void)
 	 case wifi_set_cwmode:
     	    WIFI_IC_ENABLE();
 		
-	        if(wifi_t.gTimer_login_tencent_times> 0){
+	       
 				wifi_t.gTimer_login_tencent_times=0;
 				//wifi_t.wifi_config_net_lable =wifi_set_cwmode;
          	   HAL_UART_Transmit(&huart1, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+					HAL_Delay(1000);
+	             HAL_Delay(1000);
 			   wifi_t.wifi_config_net_lable =wifi_set_read_ic_uid;
 			   wifi_t.randomName[0]=HAL_GetUIDw0();
-	        }
+	        
 
 	    Wifi_Fast_Led_Blink();
 
@@ -222,15 +232,22 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	  case wifi_set_softap:
             WIFI_IC_ENABLE();
-			if(wifi_t.gTimer_login_tencent_times > 2){
+		
 				wifi_t.gTimer_login_tencent_times=0;
 			
 				
             sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,wifi_t.randomName[0]);
 			 usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
+	  
+	  		HAL_Delay(1000);
+         //   Decode_Function();
+            HAL_Delay(1000);
+         //   Decode_Function();
+			HAL_Delay(1000);
+        //    Decode_Function();
 		     wifi_t.wifi_config_net_lable=wifi_set_tcdevreg;
 
-			}
+			
 			
 		
 		
@@ -239,7 +256,7 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	 case wifi_set_tcdevreg://dynamic register
 
-	     if(wifi_t.gTimer_login_tencent_times > 4){
+	     if(wifi_t.gTimer_login_tencent_times > 6){
 		 
 				wifi_t.gTimer_login_tencent_times=0;
 		     HAL_UART_Transmit(&huart1, "AT+TCDEVREG\r\n", strlen("AT+TCDEVREG\r\n"), 0xffff); //动态注册
@@ -256,7 +273,7 @@ void Wifi_SoftAP_Config_Handler(void)
 
 	 case wifi_set_tcsap: //5
 	 
-         if(wifi_t.gTimer_login_tencent_times > 8){
+         if(wifi_t.gTimer_login_tencent_times > 10){
 		
 			  wifi_t.gTimer_login_tencent_times=0;
 
