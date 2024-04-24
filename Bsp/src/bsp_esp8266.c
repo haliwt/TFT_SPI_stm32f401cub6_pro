@@ -178,16 +178,22 @@ void Wifi_SoftAP_Config_Handler(void)
   {
 
     case wifi_set_restor:
+
            Wifi_Fast_Led_Blink();
            //ReConnect_Wifi_Net_ATReset_Hardware();//InitWifiModule_Hardware()
 	       WIFI_IC_DISABLE();
+		   Wifi_Fast_Led_Blink();
 		HAL_Delay(1000);
 		//HAL_Delay(1000);
 		//HAL_Delay(1000);
+		Wifi_Fast_Led_Blink();
+
 		WIFI_IC_ENABLE();
+		Wifi_Fast_Led_Blink();
 		//at_send_data("AT+RESTORE\r\n", strlen("AT+RESTORE\r\n"));
 		at_send_data("AT+RST\r\n", strlen("AT+RST\r\n"));
 		HAL_Delay(1000);
+		Wifi_Fast_Led_Blink();
 
 		   wifi_t.gTimer_login_tencent_times=0;
 	       if(wifi_t.link_tencent_step_counter==0xff){
@@ -199,13 +205,16 @@ void Wifi_SoftAP_Config_Handler(void)
 
 
 	 case wifi_set_cwmode:
+
     	    WIFI_IC_ENABLE();
 		
 	       
 				wifi_t.gTimer_login_tencent_times=0;
 				//wifi_t.wifi_config_net_lable =wifi_set_cwmode;
          	   HAL_UART_Transmit(&huart1, "AT+CWMODE=3\r\n", strlen("AT+CWMODE=3\r\n"), 5000);
+					Wifi_Fast_Led_Blink();
 					HAL_Delay(1000);
+					Wifi_Fast_Led_Blink();
 	             HAL_Delay(1000);
 			   wifi_t.wifi_config_net_lable =wifi_set_read_ic_uid;
 			   wifi_t.randomName[0]=HAL_GetUIDw0();
@@ -233,18 +242,19 @@ void Wifi_SoftAP_Config_Handler(void)
 	  case wifi_set_softap:
             WIFI_IC_ENABLE();
 		
-				wifi_t.gTimer_login_tencent_times=0;
-			
+				
+			wifi_t.linking_tencent_cloud_doing =1;
 				
             sprintf((char *)device_massage, "AT+TCPRDINFOSET=1,\"%s\",\"%s\",\"UYIJIA01-%d\"\r\n", PRODUCT_ID, DEVICE_SECRET,wifi_t.randomName[0]);
 			 usart2_flag = at_send_data(device_massage, strlen((const char *)device_massage));
 	  
 	  		HAL_Delay(1000);
-         //   Decode_Function();
+            Wifi_Fast_Led_Blink();
             HAL_Delay(1000);
-         //   Decode_Function();
+           Wifi_Fast_Led_Blink();
 			HAL_Delay(1000);
-        //    Decode_Function();
+           Wifi_Fast_Led_Blink();
+		     wifi_t.gTimer_login_tencent_times=0;
 		     wifi_t.wifi_config_net_lable=wifi_set_tcdevreg;
 
 			
