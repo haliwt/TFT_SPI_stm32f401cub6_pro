@@ -229,7 +229,7 @@ void Wifi_Fast_Led_Blink(void);
 
 void Mode_Long_Key_Fun(void);;
 
-void Key_Interrup_Handler(void);
+
 
 void TFT_Pocess_Command_Handler(void);
 

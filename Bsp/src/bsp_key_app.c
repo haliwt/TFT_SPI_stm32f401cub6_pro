@@ -384,6 +384,77 @@ void ADD_Key_Fun(void)
 	}
    
 }
+/******************************************************************************
+	*
+	*Function Name:void TFT_Pocess_Command_Handler(void)
+	*Funcion: display of TFT lcd 
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+******************************************************************************/
+void Key_Interrup_Handler(void)
+{
+   #if 0
+	 switch(pro_t.gKey_value){
+
+        case add_key_id:
+		 	
+		 	if(ADD_KEY_VALUE()==KEY_DOWN){
+			    HAL_Delay(20);
+			if(ADD_KEY_VALUE()==KEY_DOWN)
+			     ADD_Key_Fun();//DEC_Key_Fun();
+			  
+
+		 	}
+			pro_t.gKey_value =0XFF;
+
+		break;
+
+		case dec_key_id:
+          if(DEC_KEY_VALUE()==KEY_DOWN){
+			 HAL_Delay(20);
+			if(DEC_KEY_VALUE()==KEY_DOWN)
+			    DEC_Key_Fun();//ADD_Key_Fun();
+			 }
+
+			 pro_t.gKey_value =0XFF;
+        break;
+
+
+	 }
+	 #endif 
+
+	 while( pro_t.gKey_value_add ==1){
+
+
+       if(ADD_KEY_VALUE()==KEY_UP){
+			pro_t.gKey_value_add=0;
+
+		    Buzzer_KeySound();
+			ADD_Key_Fun();
+
+       }
+		   
+			
+        
+	 }
+
+	 while(pro_t.gKey_value_dec ==1){
+
+       if(DEC_KEY_VALUE()==KEY_UP){
+           pro_t.gKey_value_dec=0;
+		   Buzzer_KeySound();
+			DEC_Key_Fun();
+		    
+		 //  Buzzer_KeySound();
+
+       }
+     }
+
+	 
+
+}
+
 /************************************************************************
 	*
 	*Function Name: static void DEC_Key_Fun(void)
