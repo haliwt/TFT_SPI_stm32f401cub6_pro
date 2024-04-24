@@ -1,16 +1,5 @@
 #include "bsp.h"
 
-uint8_t set_timer_timing_flag ;
-
-uint16_t mode_key_counter;
-
-uint8_t mode_longkey_counter;
-
-
-
-
-
-
 
 static void mode_longkey_settimer(void);
 
@@ -57,11 +46,13 @@ void Key_Speical_Power_Fun_Handler(void)
         }
 	    }
         else if(POWER_KEY_VALUE() ==KEY_UP){
-			HAL_Delay(10);
-           if(POWER_KEY_VALUE() ==KEY_UP){
+			
            pro_t.key_power_be_pressed_flag=0;
 		  
             power_on_off = power_on_off ^ 0x01;
+
+			if(pro_t.gPower_On == power_on) power_on_off =0;
+			else power_on_off =1;
 
 		  if(power_on_off==1){
 		   // __disable_irq();
@@ -102,9 +93,8 @@ void Key_Speical_Power_Fun_Handler(void)
 			  
 			}
 		 }
-	 }
+}
 		
- }
 /******************************************************************************
 	*
 	*Function Name:static void Key_Speical_Mode_Fun_Handler(void)
@@ -122,10 +112,10 @@ void Key_Speical_Mode_Fun_Handler(void)
 
               // mode_key_counter++;
    	if(pro_t.gTimer_pro_mode_key_adjust>2){//if(mode_key_counter> 40000){
-		mode_key_counter=0;
+		
 		gctl_t.mode_longk_key_flag=1;
     
-		mode_longkey_counter=0;
+	
 		pro_t.mode_key_pressed_flag =0;
 		pro_t.mode_key_select_label =0;
 		pro_t.gTimer_pro_mode_long_key=0;
@@ -142,13 +132,10 @@ void Key_Speical_Mode_Fun_Handler(void)
 
    }
    else if(MODE_KEY_VALUE() ==KEY_UP){
-          HAL_Delay(5);
-	   	if(MODE_KEY_VALUE() ==KEY_UP ){
-			
 
 		pro_t.mode_key_pressed_flag =0;
 		gctl_t.mode_longk_key_flag=0;
-		mode_key_counter=0;
+	
 		
         pro_t.gTimer_pro_mode_key_be_select=0;
 		pro_t.mode_key_run_item_step = mode_key_select;
@@ -156,7 +143,7 @@ void Key_Speical_Mode_Fun_Handler(void)
 	     gctl_t.select_main_fun_numbers++; // 0,1,2
 		 if(gctl_t.select_main_fun_numbers > 3){
 			  gctl_t.select_main_fun_numbers = 1;
-			}
+		 }
 		
 		gctl_t.memory_confimr_key_done = 1;
         
@@ -168,7 +155,7 @@ void Key_Speical_Mode_Fun_Handler(void)
 		Buzzer_KeySound();
 	   	
 	   	}
-	   }
+	 
 	}
  
 	Mode_Key_Config_Fun_Handler();
@@ -255,135 +242,6 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 	pro_t.gTimer_pro_mode_long_key=0; //this current time counter.
 	TFT_Disp_Set_TimerTime_Init();
 }
-/************************************************************************
-	*
-	*Function Name: static void Power_On_Fun(void)
-	*Function : power on
-	*Input Ref:NO
-	*Return Ref:No
-	*
-************************************************************************/
-void ADD_Key_Fun(void)
-{
-
- static uint8_t disp_temp_value,add_timer;
-
- if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
- 
-	  pro_t.mode_key_run_item_step = mode_key_set_timer_value;
- 
- 
-  }
- 
-  if(power_on_state()==power_on){
-
-	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0){
-
-
-
-		switch(pro_t.mode_key_run_item_step){
-
-		case 0xff:
-            
-
-		case mode_key_set_temp: //set temperature value add number
-			     
-			
-			      mode_key_counter=0;
-				// pro_t.buzzer_sound_flag = 1;//Buzzer_KeySound();
-				gctl_t.gSet_temperature_value ++;
-				if( gctl_t.gSet_temperature_value < 20)gctl_t.gSet_temperature_value=20;
-				
-	            if(gctl_t.gSet_temperature_value > 40) gctl_t.gSet_temperature_value= 20;
-
-	             pro_t.gTimer_pro_set_tem_value_blink =0;
-				 gctl_t.gSet_temperature_value_item = set_temp_value_item;
-	        
-				disp_temp_value =1;
-				
-
-		break;
-
-		case mode_key_set_timer_value://3
-		    mode_key_counter=0;
-           // pro_t.buzzer_sound_flag = 1;
-		    pro_t.gTimer_pro_mode_long_key=0;
-		    gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
-			
-			gctl_t.gSet_timer_minutes=0;
-			gctl_t.gSet_timer_hours ++ ;//disp_t.disp_timer_time_hours++ ;//pro_t.dispTime_minutes = pro_t.dispTime_minutes + 60;
-			if(gctl_t.gSet_timer_hours  > 24){ //if(pro_t.dispTime_minutes > 59){
-
-			gctl_t.gSet_timer_hours =0;//pro_t.dispTime_hours =0;
-
-
-			}
-			add_timer =1;
-
-		   pro_t.mode_key_run_item_step = mode_key_set_timer_value;
-			
-
-		break;
-
-		
-
-		case mode_key_select:
-			
-			//pro_t.buzzer_sound_flag = 1;
-	
-		    Device_Action_Led_OnOff_Handler();
-            Mode_Key_Confirm_Fun();
-			pro_t.mode_key_select_label=0;
-			 pro_t.mode_key_run_item_step = mode_key_set_temp;
-			 pro_t.add_or_dec_is_cofirm_key_flag =1;
-			 pro_t.gTimer_pro_mode_long_key=6;
-           
-			// Buzzer_KeySound();
-			
-			
-		
-        break; 
-		
-
-		}	
-	}
-	
-    if(disp_temp_value ==1){
-		disp_temp_value =2;
-		gctl_t.local_set_temp_value = 1;
-    	TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
-	    gctl_t.gTimer_ctl_publish_set_temperature_value = 0;
-		pro_t.add_or_dec_is_cofirm_key_flag =0;
-		if(gctl_t.gSet_temperature_value > gctl_t.dht11_temp_value){
-
-		    if(ptc_state()==0){
-				gctl_t.ptc_flag =1;
-				Ptc_On();
-				LED_PTC_ICON_ON();
-		    }
-
-		}
-		else{
-		   if(ptc_state()==1){
-			   gctl_t.ptc_flag =0;
-			   Ptc_Off();
-			   LED_PTC_ICON_OFF();
-
-		   }
-
-
-		}
-
-    }
-	if(add_timer==1){
-		add_timer =0;
-		pro_t.mode_key_run_item_step = mode_key_set_timer_value;
-        mode_longkey_settimer();
-
-	}
-	}
-   
-}
 /******************************************************************************
 	*
 	*Function Name:void TFT_Pocess_Command_Handler(void)
@@ -457,6 +315,137 @@ void Key_Interrup_Handler(void)
 
 /************************************************************************
 	*
+	*Function Name: static void Power_On_Fun(void)
+	*Function : power on
+	*Input Ref:NO
+	*Return Ref:No
+	*
+************************************************************************/
+void ADD_Key_Fun(void)
+{
+
+ static uint8_t disp_temp_value,add_timer;
+
+ if(gctl_t.mode_longk_key_flag ==1 && pro_t.gTimer_pro_mode_long_key< 3){
+ 
+	  pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+ 
+ 
+  }
+ 
+  if(power_on_state()==power_on){
+
+	if(gctl_t.ptc_warning ==0 && ptc_error_state() ==0){
+
+
+
+		switch(pro_t.mode_key_run_item_step){
+
+		case 0xff:
+            
+
+		case mode_key_set_temp: //set temperature value add number
+			     
+			
+			 
+				// pro_t.buzzer_sound_flag = 1;//Buzzer_KeySound();
+				gctl_t.gSet_temperature_value ++;
+				if( gctl_t.gSet_temperature_value < 20)gctl_t.gSet_temperature_value=20;
+				
+	            if(gctl_t.gSet_temperature_value > 40) gctl_t.gSet_temperature_value= 20;
+
+	             pro_t.gTimer_pro_set_tem_value_blink =0;
+				 gctl_t.gSet_temperature_value_item = set_temp_value_item;
+	        
+				disp_temp_value =1;
+				
+
+		break;
+
+		case mode_key_set_timer_value://3
+		  
+           // pro_t.buzzer_sound_flag = 1;
+		    pro_t.gTimer_pro_mode_long_key=0;
+		    gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
+			
+			gctl_t.gSet_timer_minutes=0;
+			gctl_t.gSet_timer_hours ++ ;//disp_t.disp_timer_time_hours++ ;//pro_t.dispTime_minutes = pro_t.dispTime_minutes + 60;
+			if(gctl_t.gSet_timer_hours  > 24){ //if(pro_t.dispTime_minutes > 59){
+
+			gctl_t.gSet_timer_hours =0;//pro_t.dispTime_hours =0;
+
+
+			}
+			add_timer =1;
+
+		   pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+			
+
+		break;
+
+		
+
+		case mode_key_select:
+			
+			//pro_t.buzzer_sound_flag = 1;
+	
+		    Device_Action_Led_OnOff_Handler();
+            Mode_Key_Confirm_Fun();
+			pro_t.mode_key_select_label=0;
+			 pro_t.mode_key_run_item_step = mode_key_set_temp;
+			 pro_t.gTimer_pro_mode_long_key=6;
+			 gctl_t.mode_longk_key_flag =0;
+			  pro_t.gTimer_pro_temp_delay=100; //at once run ptc of compare temperature value .
+           
+			// Buzzer_KeySound();
+			
+			
+		
+        break; 
+		
+
+		}	
+	}
+	
+    if(disp_temp_value ==1){
+		disp_temp_value =2;
+		gctl_t.local_set_temp_value = 1;
+    	TFT_Disp_Temp_SwitchSet_Value(0,gctl_t.gSet_temperature_value);
+	    gctl_t.gTimer_ctl_publish_set_temperature_value = 0;
+		if(gctl_t.gSet_temperature_value > gctl_t.dht11_temp_value){
+
+		    if(ptc_state()==0){
+				gctl_t.ptc_flag =1;
+				Ptc_On();
+				LED_PTC_ICON_ON();
+		    }
+
+		}
+		else{
+		   if(ptc_state()==1){
+			   gctl_t.ptc_flag =0;
+			   Ptc_Off();
+			   LED_PTC_ICON_OFF();
+
+		   }
+
+
+		}
+
+    }
+	if(add_timer==1){
+		add_timer =0;
+		pro_t.mode_key_run_item_step = mode_key_set_timer_value;
+        mode_longkey_settimer();
+
+	}
+	}
+   
+}
+
+
+/************************************************************************
+	*
 	*Function Name: static void DEC_Key_Fun(void)
 	*Function : KEY OF decrease
 	*Input Ref:NO
@@ -487,7 +476,7 @@ void DEC_Key_Fun(void)
 		   case mode_key_set_temp:  //default tempearture value 
 	  
 	  
-			 	 mode_key_counter=0;
+			 	
 		      //  pro_t.buzzer_sound_flag = 1;// Buzzer_KeySound();
 				 gctl_t.gSet_temperature_value--;
 				if( gctl_t.gSet_temperature_value<20)  gctl_t.gSet_temperature_value=40;
@@ -502,7 +491,7 @@ void DEC_Key_Fun(void)
 			break;
 
 			case mode_key_set_timer_value: //timer timing set "decrease -down"
-			       mode_key_counter=0;
+			       
 			  //  pro_t.buzzer_sound_flag = 1;
 	            gctl_t.mode_longk_key_flag =0;  //this is mode key be used to "short key"
 			    pro_t.gTimer_pro_mode_long_key=0;
@@ -532,20 +521,18 @@ void DEC_Key_Fun(void)
 				Device_Action_Led_OnOff_Handler();
                  Mode_Key_Confirm_Fun();
 		    
-			         pro_t.mode_key_select_label=0;
-					  pro_t.mode_key_run_item_step = mode_key_set_temp;
-					  pro_t.add_or_dec_is_cofirm_key_flag =1;
-					  pro_t.gTimer_pro_mode_long_key=6;
+			      pro_t.mode_key_select_label=0;
+				   pro_t.mode_key_run_item_step = mode_key_set_temp;
+					 
+				    pro_t.gTimer_pro_mode_long_key=6;
+					gctl_t.mode_longk_key_flag =0;
+					 pro_t.gTimer_pro_temp_delay=100; //at once run ptc of compare temperature value .
 			 
 
            
 		//	 Buzzer_KeySound();
 			 
-				
-
-			   
-			
-			break;
+				break;
 
 
 	    	}
@@ -553,9 +540,9 @@ void DEC_Key_Fun(void)
 		if(disp_temp_value ==1){
 		    disp_temp_value =2;
 			gctl_t.local_set_temp_value =1;
-    		TFT_Disp_Temp_Value(0,gctl_t.gSet_temperature_value);
+    		TFT_Disp_Temp_SwitchSet_Value(0,gctl_t.gSet_temperature_value);
 		    gctl_t.gTimer_ctl_publish_set_temperature_value = 0;
-			pro_t.add_or_dec_is_cofirm_key_flag =0;
+		
 			if(gctl_t.gSet_temperature_value > gctl_t.dht11_temp_value){
 
 		    	if(ptc_state()==0){

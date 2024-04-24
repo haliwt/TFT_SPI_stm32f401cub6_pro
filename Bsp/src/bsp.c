@@ -205,7 +205,7 @@ void TFT_Process_Handler(void)
 void TFT_Pocess_Command_Handler(void)
 {
   
-   static uint8_t set_timer_value=0xff ;
+  
 	if(power_on_state() == power_on){
   
     switch(pro_t.run_process_step){
@@ -225,7 +225,7 @@ void TFT_Pocess_Command_Handler(void)
 	    Fan_Run();
 		Device_Action_No_Wifi_Power_On_Handler();
 
-		TFT_BACKLIGHT_ON();
+		//TFT_BACKLIGHT_ON();
 
 
 		pro_t.run_process_step=pro_disp_dht11_value;
@@ -237,8 +237,7 @@ void TFT_Pocess_Command_Handler(void)
 		pro_t.gTimer_pro_action_publis=0;
 		wifi_t.gTimer_get_beijing_time=0;
 		wifi_t.get_rx_beijing_time_enable=0;
-		//if(wifi_t.smartphone_app_power_on_flag==0)
-		/// pro_t.add_or_dec_is_cofirm_key_flag =0; //key set example "ptc,kill,driver rat" function. don't compart tempartur value
+		
 
        
 		

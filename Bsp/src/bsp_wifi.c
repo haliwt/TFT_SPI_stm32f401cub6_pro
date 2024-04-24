@@ -156,7 +156,7 @@ static void MainBoard_Self_Inspection_PowerOn_Fun(void)
 static void RunWifi_Command_Handler(void)
 {
   
-   static uint8_t  update_data_to_tencent_cloud_flag;
+  
    static uint8_t receive_beijing_time,link_beijing_times_flag; 
    static uint16_t three_times_link_beijing;
    
