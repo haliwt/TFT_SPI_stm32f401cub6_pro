@@ -303,7 +303,10 @@ static void RunWifi_Command_Handler(void)
 
 			gctl_t.beijing_time_flag = 1; //WT.2024.04.25
 
-			TFT_Display_WorksTime_Voice();
+			if(pro_t.timer_mode_flag==works_time){
+				TFT_Display_WorksTime_Voice();
+
+			}
 
 		}
 	}

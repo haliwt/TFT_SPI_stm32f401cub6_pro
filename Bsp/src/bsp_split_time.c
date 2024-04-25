@@ -44,7 +44,7 @@ void TimeTimer_Pro_Handler(void)
 
 			}
 			TFT_Disp_Set_TimerTime(0);
-			}
+		}
 		
 		TFT_DonnotDisp_Works_Time();
 
