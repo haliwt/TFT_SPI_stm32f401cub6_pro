@@ -390,14 +390,14 @@ void ADD_Key_Fun(void)
 		case mode_key_select:
 			
 			//pro_t.buzzer_sound_flag = 1;
-	
+	        pro_t.gTimer_pro_temp_delay=0;
 		    Device_Action_Led_OnOff_Handler();
             Mode_Key_Confirm_Fun();
 			pro_t.mode_key_select_label=0;
 			 pro_t.mode_key_run_item_step = mode_key_set_temp;
 			 pro_t.gTimer_pro_mode_long_key=6;
 			 gctl_t.mode_longk_key_flag =0;
-			  pro_t.gTimer_pro_temp_delay=100; //at once run ptc of compare temperature value .
+			  pro_t.gTimer_pro_temp_delay=70; //at once run ptc of compare temperature value .
            
 			// Buzzer_KeySound();
 			
@@ -756,10 +756,11 @@ void Mode_Key_Confirm_Fun(void)
 				
 		    }
 			else{
+				pro_t.add_or_dec_is_cofirm_key_flag =1;
 				LED_PTC_ICON_OFF() ;
 				Ptc_Off();
 				gctl_t.ptc_flag = 0;
-				 pro_t.add_or_dec_is_cofirm_key_flag =1;
+				 
 				
             }
 

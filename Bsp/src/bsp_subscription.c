@@ -806,6 +806,7 @@ void Json_Parse_Command_Fun(void)
 	  if(power_on_state() ==power_on && ptc_error_state()==0 && fan_error_state()==0){
 	  	    buzzer_sound();
 	        gctl_t.mode_flag=timer_time;
+	        
             MqttData_Publish_SetState(2); //timer model  = 2
 			HAL_Delay(350);
             //do someting

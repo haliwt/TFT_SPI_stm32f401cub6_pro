@@ -161,9 +161,9 @@ void TFT_Display_WorksTime(void)
 
 	
 
-   if(disp_works !=pro_t.works_or_timer_disp_timing_flag){
-
-        disp_works =pro_t.works_or_timer_disp_timing_flag;
+//   if(disp_works !=pro_t.works_or_timer_disp_timing_flag){
+//
+//        disp_works =pro_t.works_or_timer_disp_timing_flag;
    	
 //	    TFT_Disp_WorksTime_24_24_onBlack(112,150,0,0);//works one "工"
 //		TFT_Disp_WorksTime_24_24_onBlack(136,150,0,1);//works tow "作"
@@ -188,7 +188,7 @@ void TFT_Display_WorksTime(void)
 		}
 	 
 
-    }
+  //  }
 	
 	//works time value
 	
@@ -543,14 +543,11 @@ void TFT_Disp_Set_TimerTime_Init(void)
     timer_decade_hours = gctl_t.gSet_timer_hours /10;
 	timer_unit_hours = gctl_t.gSet_timer_hours % 10;
 
-
-
-		
-    //display works of words of chinese 
-//    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
-//	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
-//	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
-//	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
+	//display works of words of chinese 
+	//    TFT_Disp_WorksTime_24_24_onBlack(112,150,1,0);//works one "定"
+	//	TFT_Disp_WorksTime_24_24_onBlack(136,150,1,1);//"时"
+	//	TFT_Disp_WorksTime_24_24_onBlack(160,150,1,2);//“时”
+	//	TFT_Disp_WorksTime_24_24_onBlack(184,150,1,3);//“间”
 	//TFT_DontDisp_Chinese_SencondWord_96_24(100, 150);
 
 	//TFT_Disp_Chinese_Timer_96_24(100,150);
@@ -558,10 +555,6 @@ void TFT_Disp_Set_TimerTime_Init(void)
 	 TFT_Disp_Chinese_Timer_23_23(TIMER_X1,TIMER_Y,1);
 	 TFT_Disp_Chinese_Timer_23_23(TIMER_X2,TIMER_Y,2);
 	 TFT_Disp_Chinese_Timer_23_23(TIMER_X3,TIMER_Y,3);
-	
-	
-
-    
 	
 	//works time value
 	if(set_timer_hours != gctl_t.gSet_timer_hours){
@@ -610,21 +603,13 @@ void TFT_Disp_Voice_Set_TimerTime_Init(void)
 	 TFT_Disp_Chinese_Timer_23_23(TIMER_X2,TIMER_Y,2);
 	 TFT_Disp_Chinese_Timer_23_23(TIMER_X3,TIMER_Y,3);
 	
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(80,190,bc,timer_decade_hours);
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(114,190,bc,timer_unit_hours);
 
+	TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(166,190,bc,timer_decade_minutes);
+    TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(200,190,bc,timer_unit_minutes);
     
-	    TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(80,190,bc,timer_decade_hours);
-		TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(114,190,bc,timer_unit_hours);
-
-
-    
-        TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(166,190,bc,timer_decade_minutes);
-        TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(200,190,bc,timer_unit_minutes);
-    
-
-
-  }
-
-
+}
 /********************************************************************************
  * 
  * Function Name: void TFT_Disp_Timer_Split_Symbol(void)
@@ -635,6 +620,7 @@ void TFT_Disp_Voice_Set_TimerTime_Init(void)
 *********************************************************************************/
 void TFT_Disp_Timer_Split_Symbol(void)
 {
+	static uint8_t split_times;
     if(pro_t.gPower_On==power_on){  
 
 	     #if 0
@@ -649,15 +635,22 @@ void TFT_Disp_Timer_Split_Symbol(void)
 		  }
 		 #endif 
 
-		 if(  pro_t.gTimer_pro_time_split_symbol > 1 && pro_t.gTimer_pro_time_split_symbol< 3){
+		 if(pro_t.gTimer_pro_time_split_symbol > 0 && pro_t.gTimer_pro_time_split_symbol< 2){
              
               //.TFT_Disp_Time_Split_Symbol(160,173,0); //时间分割符号,turn on
-              TFT_Disp_Time_Split_Symbol(140,173,0); //时间分割符号,turn on
+			  if(split_times ==0){
+				 split_times++;
+                TFT_Disp_Time_Split_Symbol(140,173,0); //时间分割符号,turn on
+			  }
 		 }
-		 else if(pro_t.gTimer_pro_time_split_symbol >3 ){
+		 else if(pro_t.gTimer_pro_time_split_symbol >1 ){
                 pro_t.gTimer_pro_time_split_symbol=0;
-		        //TFT_Disp_Time_Split_Symbol(160,173,1); //时间分割符号 turn off
+				if(split_times ==1){
+		       
+				split_times =0;
+				 //TFT_Disp_Time_Split_Symbol(160,173,1); //时间分割符号 turn off
 		        TFT_Disp_Time_Split_Symbol(140,173,1); //时间分割符号 turn off
+				}
 		 }
 
      }
@@ -711,7 +704,14 @@ void TFT_Disp_Temp_Value(uint8_t bc,uint8_t temp_value)
    }
 
 }
-
+/****************************************************************************************
+ *  *
+    *Function Name: void TFT_Disp_Temp_SwitchSet_Value(uint8_t bc,uint8_t temp_value)
+    *Function:  temperature of value 
+    *Input Ref: *pta is array ,look up key data
+    *Return Ref:  NO
+    * 
+*****************************************************************************************/
 void TFT_Disp_Temp_SwitchSet_Value(uint8_t bc,uint8_t temp_value)
 {
 
@@ -779,10 +779,7 @@ void TFT_Disp_Only_Temp_Numbers(uint8_t bc,uint8_t temp_value)
 
   static uint8_t temp_unit,temp_decade;
 
-
-   
-
-   temp_decade = temp_value /10;
+	temp_decade = temp_value /10;
 
    temp_unit= temp_value%10; 
   
@@ -795,12 +792,7 @@ void TFT_Disp_Only_Temp_Numbers(uint8_t bc,uint8_t temp_value)
 
 
 	#endif 
-
-
-   
-
-	 
-   //__disable_irq();
+	//__disable_irq();
    #if NORMAL_DISPLA
    TFT_Disp_Numbers_Pic_413(63,40,bc,temp_unit);//63 -> 60
    #else 
@@ -808,12 +800,7 @@ void TFT_Disp_Only_Temp_Numbers(uint8_t bc,uint8_t temp_value)
 
    #endif 
 
-  
-
 }
-
-
-
 /***********************************************************************************************
 	*
 	*Function Name:void TFT_Disp_Voice_Temp_Value(uint8_t bc,uint8_t temp_value)
@@ -841,11 +828,7 @@ void TFT_Disp_Voice_Temp_Value(uint8_t bc,uint8_t temp_value)
 
 
    #endif 
-   
-
-
 }
-
 /***********************************************************************************************
 	*
 	*Function Name:void TFT_Disp_Humidity_Value(uint8_t hum_value)
@@ -913,11 +896,7 @@ void TFT_Disp_Only_Humidity_Numbers(uint8_t hum_value)
 
    #endif 
   
-
-   
-
-   
-   #if NORMAL_DISPLAY
+  #if NORMAL_DISPLAY
    TFT_Disp_Numbers_Pic_413(226,40,0, hum_unit);
    #else 
    TFT_MainDisp_Numbers_Pic_354(214,40,0,hum_unit);
@@ -970,7 +949,7 @@ void TFT_SetWindow(uint16_t xstart,uint16_t ystart,uint16_t xend,uint16_t yend)
     LCD_Write_Data(ystart >>8);
    LCD_Write_Data(ystart);
    
-     LCD_Write_Data(yend >>8);
+   LCD_Write_Data(yend >>8);
    LCD_Write_Data(yend);                     //Row start
 
    LCD_Write_Cmd(0x2c);

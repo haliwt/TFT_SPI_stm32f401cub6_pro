@@ -303,10 +303,7 @@ static void RunWifi_Command_Handler(void)
 
 			gctl_t.beijing_time_flag = 1; //WT.2024.04.25
 
-			TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X0,TIMER_Y,0);
-			TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X1,TIMER_Y,1);
-			TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X2,TIMER_Y,2);
-			TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X3,TIMER_Y,3);
+			TFT_Display_WorksTime_Voice();
 
 		}
 	}
@@ -416,7 +413,7 @@ static void RunWifi_Command_Handler(void)
 
 	if(beijing_step ==2 && wifi_t.gTimer_read_beijing_time > 2){
 
-		beijing_step =3;
+		
 		wifi_t.beijing_time_flag = 1;
 
 		wifi_t.real_hours = (wifi_t.wifi_data[134]-0x30)*10 + wifi_t.wifi_data[135]-0x30;
@@ -428,9 +425,12 @@ static void RunWifi_Command_Handler(void)
 
 
 		wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
+		beijing_step =3;
 		
 	}
-	else if(beijing_step== 3){
+
+	
+	if(beijing_step== 3){
 	    wifi_t.runCommand_order_lable=wifi_publish_update_tencent_cloud_data;
 		wifi_t.get_rx_beijing_time_enable=0; //enable beijing times
 	}
