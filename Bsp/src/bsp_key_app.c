@@ -39,6 +39,8 @@ void Key_Speical_Power_Fun_Handler(void)
 			wifi_t.link_tencent_step_counter=0;
 			wifi_t.gTimer_linking_tencent_duration=0; //166s -2分7秒
 			buzzer_sound();
+			wifi_FastLed_Blink_Init();
+			
 
 		 }
 			
@@ -61,11 +63,10 @@ void Key_Speical_Power_Fun_Handler(void)
             pro_t.run_process_step=0;
 			//pro_t.buzzer_sound_flag = 1;
 
-			LED_Mode_Key_On();
+			  LED_Mode_Key_On();
 			  LED_Power_Key_On();
 			  Power_On_Led_Init();
-			  
-		     TFT_BACKLIGHT_ON();
+			  TFT_BACKLIGHT_ON();
 			
 			buzzer_sound();
 			

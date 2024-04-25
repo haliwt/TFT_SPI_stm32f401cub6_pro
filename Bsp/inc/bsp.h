@@ -222,7 +222,7 @@ void bsp_Idle(void);
 void Key_Process_Handler(uint8_t keyvalue);
 void TFT_Process_Handler(void);
 
-
+void wifi_FastLed_Blink_Init(void);
 
 
 void Wifi_Fast_Led_Blink(void);

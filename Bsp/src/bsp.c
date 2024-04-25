@@ -323,7 +323,7 @@ void TFT_Pocess_Command_Handler(void)
 
     case pro_set_temperature:
 
-
+       Wifi_Fast_Led_Blink();
 	   Temperature_Ptc_Pro_Handler();
 		
     
@@ -332,6 +332,7 @@ void TFT_Pocess_Command_Handler(void)
 	break;
 
 	case pro_disp_wifi_led: //4
+	      Wifi_Fast_Led_Blink();
 	
 		  if(wifi_link_net_state() ==0){
 		  
@@ -388,7 +389,7 @@ void TFT_Pocess_Command_Handler(void)
 		  
       // handler of wifi 
 	  case pro_wifi_publish_init: //7
-
+		Wifi_Fast_Led_Blink();
 	   if(wifi_link_net_state()==1 && wifi_t.smartphone_app_power_on_flag==0 && wifi_t.power_on_thefirst_times==0){
              wifi_t.power_on_thefirst_times++;
 		     pro_t.gTimer_pro_action_publis=0;
@@ -408,7 +409,7 @@ void TFT_Pocess_Command_Handler(void)
 	 break;
 
 	  case pro_wifi_subscriber_init:
-
+		Wifi_Fast_Led_Blink();
 	   if(wifi_link_net_state()==1 && wifi_t.power_on_thefirst_times==2 && pro_t.gTimer_pro_pub_set_timer > 4){
 	   	 
 	   	 pro_t.gTimer_pro_pub_set_timer=0;
@@ -577,6 +578,21 @@ wifi_led: if(pro_t.gTimer_pro_wifi_led < 166){//2'46s
 
   }
   
+}
+
+void wifi_FastLed_Blink_Init(void)
+{
+   uint8_t i;
+   for(i=0;i< 10;i++){
+   LED_WIFI_ICON_OFF();
+   HAL_Delay(100);
+   LED_WIFI_ICON_ON();
+    HAL_Delay(100);
+
+   }
+
+
+
 }
 	
 

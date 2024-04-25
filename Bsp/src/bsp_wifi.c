@@ -171,17 +171,19 @@ static void RunWifi_Command_Handler(void)
 
 		Wifi_Fast_Led_Blink(); 
 		Wifi_SoftAP_Config_Handler();
+		Wifi_Fast_Led_Blink();
 		SmartPhone_LinkTencent_Cloud();
+		Wifi_Fast_Led_Blink();
 
-	
 	}
-
+	
 	if(wifi_link_net_state()==0){
 		if(wifi_t.gTimer_linking_tencent_duration < 166){
-		wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
+			Wifi_Fast_Led_Blink();
+		   wifi_t.runCommand_order_lable = wifi_link_tencent_cloud;
 		}
 		else{
-		wifi_t.runCommand_order_lable = wifi_null;
+		  wifi_t.runCommand_order_lable = wifi_null;
 
 		}
 

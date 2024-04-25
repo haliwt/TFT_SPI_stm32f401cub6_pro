@@ -258,8 +258,14 @@ static void voice_cmd_fun(uint8_t cmd)
 	  }
 	  else{
 	  	  pro_t.gPower_On = power_on;
+		   
+
 		  pro_t.run_process_step=0;
 		  voice_send_power_on_cmd();
+		  LED_Mode_Key_On();
+			LED_Power_Key_On();
+			Power_On_Led_Init();
+			TFT_BACKLIGHT_ON();
 
 	  }
 
@@ -274,6 +280,9 @@ static void voice_cmd_fun(uint8_t cmd)
 		pro_t.power_off_flag = 1;
 		
 		 voice_send_power_off_cmd();
+		  TFT_BACKLIGHT_OFF();
+				LED_Mode_Key_Off();
+			    LED_Power_Key_Off();
 		
 	
 	}
