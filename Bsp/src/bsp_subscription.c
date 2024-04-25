@@ -810,13 +810,13 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetState(2); //timer model  = 2
 			HAL_Delay(350);
             //do someting
-			if(pro_t.timer_mode_flag == timer_time){
+			if(pro_t.timer_mode_item == timer_time){
 				
 				TFT_Disp_Set_TimerTime(0);
 			}
 			else{
      
-				pro_t.timer_mode_flag=timer_set_time;
+				pro_t.timer_mode_item=timer_set_time;
 				pro_t.gTimer_pro_mode_key_be_select =4;
 			}
 			
@@ -835,7 +835,7 @@ void Json_Parse_Command_Fun(void)
             MqttData_Publish_SetState(1); //beijing timing = 1
 			HAL_Delay(350);
 			//do something
-			 pro_t.timer_mode_flag=works_time;//pro_t.timer_mode_flag
+			 pro_t.timer_mode_item=works_time;//pro_t.timer_mode_item
 			 pro_t.works_or_timer_disp_timing_flag =works_time;
 			 TFT_Display_WorksTime();
           

@@ -475,7 +475,7 @@ static void Power_On_Fun(void)
    //timer timing
    gctl_t.mode_flag = works_time;
   
-    pro_t.timer_mode_flag=works_time;
+    pro_t.timer_mode_item=works_time;
 	 gctl_t.gSet_timer_hours =0;
 	 gctl_t.gSet_timer_minutes =0;
 
@@ -515,7 +515,7 @@ static void Power_Off_Fun(void)
    gctl_t.ultrasonic_flag =0;
    gctl_t.ptc_flag = 0;
    //timer timing flag
-     pro_t.timer_mode_flag=works_time;
+     pro_t.timer_mode_item=works_time;
 	
 	pro_t.wifi_led_fast_blink_flag=0;
 	gctl_t.gSet_timer_hours =0;

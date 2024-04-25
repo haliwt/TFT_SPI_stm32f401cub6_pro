@@ -204,7 +204,7 @@ void Mode_Key_Config_Fun_Handler(void)
 				if(gctl_t.select_main_fun_numbers == 0){
 					gctl_t.select_main_fun_numbers = 5;
 				}
-				pro_t.add_or_dec_is_cofirm_key_flag =0;
+				//pro_t.add_or_dec_is_cofirm_key_flag =0;
 				
                 Device_Action_Led_OnOff_Handler();
 			 }
@@ -238,7 +238,7 @@ void Mode_Long_Key_Fun(void)  //MODE_KEY_LONG_TIME_KEY://case model_long_key:
 {
 	  
 	pro_t.mode_key_run_item_step = mode_key_set_timer_value;
-	pro_t.timer_mode_flag=timer_set_time; //set timer mode enable,
+	pro_t.timer_mode_item=timer_set_time; //set timer mode enable,
 	gctl_t.gTimer_ctl_disp_works_time_second=0;
 
 	pro_t.gTimer_pro_mode_long_key=0; //this current time counter.
@@ -391,8 +391,9 @@ void ADD_Key_Fun(void)
 			
 			//pro_t.buzzer_sound_flag = 1;
 	        pro_t.gTimer_pro_temp_delay=0;
-		    Device_Action_Led_OnOff_Handler();
+		   
             Mode_Key_Confirm_Fun();
+		    Device_Action_Led_OnOff_Handler();
 			pro_t.mode_key_select_label=0;
 			 pro_t.mode_key_run_item_step = mode_key_set_temp;
 			 pro_t.gTimer_pro_mode_long_key=6;
@@ -824,7 +825,7 @@ static void mode_longkey_settimer(void)
      
 		  TFT_Disp_Onley_Set_TimerTime_Value();
        
-//	   if(pro_t.gTimer_pro_mode_long_key <4  && pro_t.timer_mode_flag==timer_set_time){
+//	   if(pro_t.gTimer_pro_mode_long_key <4  && pro_t.timer_mode_item==timer_set_time){
 //			
 //                if(gctl_t.gTimer_ctl_set_timer_value < 1){
 //				    TFT_Only_Disp_Set_Timer_Blink();

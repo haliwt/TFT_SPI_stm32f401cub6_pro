@@ -6,7 +6,7 @@ void TimeTimer_Pro_Handler(void)
 {
  
   
-  switch(pro_t.timer_mode_flag){
+  switch(pro_t.timer_mode_item){
 
 
    case works_time://1
@@ -61,7 +61,7 @@ void TimeTimer_Pro_Handler(void)
 		
 			if(gctl_t.gSet_timer_hours >0 ){
            
-				pro_t.timer_mode_flag = timer_time;
+				pro_t.timer_mode_item = timer_time;
 				pro_t.mode_key_run_item_step =0xff;
 				gctl_t.gTimer_ctl_set_timer_time_senconds =0;
 			
@@ -82,7 +82,7 @@ void TimeTimer_Pro_Handler(void)
 		  
 				if(wifi_link_net_state()==1 && gctl_t.beijing_time_flag==1){
 					pro_t.mode_key_run_item_step =0xff;
-					pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
+					pro_t.timer_mode_item = works_time;//pro_t.timer_mode_item
 					TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X0,TIMER_Y,0);
 					TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X1,TIMER_Y,1);
 					TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X2,TIMER_Y,2);
@@ -93,7 +93,7 @@ void TimeTimer_Pro_Handler(void)
 				else{
 
 					pro_t.mode_key_run_item_step =0xff;
-					pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
+					pro_t.timer_mode_item = works_time;//pro_t.timer_mode_item
 					//TFT_Disp_Chinese_WorksTime_96_24(100,150);
 					TFT_Disp_Chinese_WorkTime_23_23(TIMER_X0,TIMER_Y,0);
 					TFT_Disp_Chinese_WorkTime_23_23(TIMER_X1,TIMER_Y,1);
@@ -134,7 +134,7 @@ void TimeTimer_Pro_Handler(void)
 #if 0
 static void TFT_Donnot_Set_Timer_Time(void)
 {
-    if(pro_t.timer_mode_flag == timer_time ){
+    if(pro_t.timer_mode_item == timer_time ){
 
 	if(gctl_t.gTimer_ctl_set_timer_time_senconds >59){
 		gctl_t.gTimer_ctl_set_timer_time_senconds =0;

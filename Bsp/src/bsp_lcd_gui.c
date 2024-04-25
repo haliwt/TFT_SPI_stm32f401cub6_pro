@@ -28,7 +28,7 @@ void TFT_Display_Handler(void)
 
 	TFT_Display_Humidity_Symbol();
 
-	if(pro_t.timer_mode_flag==works_time){
+	if(pro_t.timer_mode_item==works_time){
 
 
 	    //TFT_Disp_Chinese_WorksTime_96_24(100,150);
@@ -565,7 +565,7 @@ void TFT_Disp_Set_TimerTime_Init(void)
 
      }
 
-	if( pro_t.timer_mode_flag == timer_time){
+	if( pro_t.timer_mode_item == timer_time){
         timer_decade_minutes= gctl_t.gSet_timer_minutes / 10;
 	    timer_unit_minutes = gctl_t.gSet_timer_minutes % 10;
         TFT_Disp_Pic_WorkTime_Value_48_48_onBlack(166,190,bc,timer_decade_minutes);
@@ -595,7 +595,7 @@ void TFT_Disp_Voice_Set_TimerTime_Init(void)
 	    timer_decade_minutes=0;
 	    timer_unit_minutes =0;
 
-    pro_t.timer_mode_flag=timer_time;
+    pro_t.timer_mode_item=timer_time;
  
 	//TFT_Disp_Chinese_Timer_96_24(100,150);
 	 TFT_Disp_Chinese_Timer_23_23(TIMER_X0,TIMER_Y,0);

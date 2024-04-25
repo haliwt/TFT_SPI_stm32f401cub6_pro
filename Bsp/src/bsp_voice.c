@@ -651,7 +651,7 @@ static void  voice_set_temperature_value(uint8_t value)
 		
 			gctl_t.gSet_temperature_value_item=set_temp_value_item;
 	        v_t.voice_set_temperature_value_flag=1;
-			pro_t.add_or_dec_is_cofirm_key_flag=0;
+		//	
 	       TFT_Disp_Voice_Temp_Value(0,gctl_t.gSet_temperature_value);
 
 		   pro_t.gTimer_pro_set_tem_value_blink=0;
@@ -662,6 +662,7 @@ static void  voice_set_temperature_value(uint8_t value)
 					gctl_t.ptc_flag =1;
 					Ptc_On();
 					LED_PTC_ICON_ON();
+					pro_t.add_or_dec_is_cofirm_key_flag=0;
 		    	}
 
 			}
@@ -670,6 +671,7 @@ static void  voice_set_temperature_value(uint8_t value)
                     gctl_t.ptc_flag = 0;
 			   		Ptc_Off();
 			   		LED_PTC_ICON_OFF();
+					pro_t.add_or_dec_is_cofirm_key_flag=1;
 				}
 			}
        }
@@ -714,7 +716,7 @@ static void voice_set_timer_timing_value(uint8_t set_hours)
 		gctl_t.gSet_timer_hours = set_value ;
 
         gctl_t.gTimer_ctl_set_timer_time_senconds =0;
-		pro_t.timer_mode_flag=timer_time;
+		pro_t.timer_mode_item=timer_time;
 		pro_t.works_or_timer_disp_timing_flag = timer_time;
 		TFT_Disp_Voice_Set_TimerTime_Init();
 		
@@ -733,11 +735,11 @@ static void voice_cancel_timer_timing(void)
 
 	     voice_send_function_cmd(0x3F,0xE1);
 
-		 if(pro_t.timer_mode_flag==timer_time){
+		 if(pro_t.timer_mode_item==timer_time){
 	  
 			pro_t.works_or_timer_disp_timing_flag = works_time;
 			
-			pro_t.timer_mode_flag= works_time;
+			pro_t.timer_mode_item= works_time;
 		
 			TFT_Display_WorksTime_Voice();
 	   	}

@@ -239,8 +239,6 @@ static void RunWifi_Command_Handler(void)
         
 			wifi_t.gTimer_get_beijing_time=0;
 		    link_beijing_times_flag =1;
-			
-		     TFT_Display_Handler();
 		
 		//wifi_t.set_beijing_time_flag =1;
 	 }
@@ -303,7 +301,7 @@ static void RunWifi_Command_Handler(void)
 
 			gctl_t.beijing_time_flag = 1; //WT.2024.04.25
 
-			if(pro_t.timer_mode_flag==works_time){
+			if(pro_t.timer_mode_item==works_time){
 				TFT_Display_WorksTime_Voice();
 
 			}
