@@ -729,25 +729,24 @@ static void voice_set_timer_timing_value(uint8_t set_hours)
 
 static void voice_cancel_timer_timing(void)
 {
- 
- 
-       if(pro_t.gPower_On == power_on){
+ 	if(pro_t.gPower_On == power_on){
 
 	     voice_send_function_cmd(0x3F,0xE1);
+
+		 if(pro_t.timer_mode_flag==timer_time){
 	  
-        pro_t.works_or_timer_disp_timing_flag = works_time;
+			pro_t.works_or_timer_disp_timing_flag = works_time;
+			
+			pro_t.timer_mode_flag= works_time;
 		
-	    pro_t.timer_mode_flag= works_time;
-	
-		TFT_Display_WorksTime_Voice();
+			TFT_Display_WorksTime_Voice();
+	   	}
        }
 	   else{
 
            voice_send_turn_on_power_on_cmd();
-
-	   }
-   }
-
+		}
+}
 /****************************************************************************************
  *  *
     *Function Name: static int8_t BinarySearch_Voice_Data(const uint8_t *pta,uint8_t key)
