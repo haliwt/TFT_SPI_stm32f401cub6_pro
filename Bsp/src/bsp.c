@@ -15,9 +15,6 @@ static void Power_Off_Fun(void);
 void bsp_Init(void);
 
 
-
-
-
 /*
 *********************************************************************************************************
 *	函 数 名: bsp_Idle
@@ -135,7 +132,7 @@ void TFT_Process_Handler(void)
 		//LED_Mode_Key_Off();
 		
 		//TFT_Disp_Fan_RunIcon(0,0);
-		
+		wifi_t.smartphone_app_power_on_flag=0;
 		
 	}
 	if(wifi_link_net_state() ==1 && wifi_t.gTimer_wifi_pub_power_off >2  && power_off_wifi_login==0 ){
@@ -455,9 +452,7 @@ void TFT_Pocess_Command_Handler(void)
 static void Power_On_Fun(void)
 {
   //led on 
-  LED_Mode_Key_On();
-  LED_Power_Key_On();
-  Power_On_Led_Init();
+  
   //smart phone control power on 
   if(wifi_t.smartphone_app_power_on_flag==0){
 	  gctl_t.ptc_flag = 1;
@@ -468,10 +463,15 @@ static void Power_On_Fun(void)
   else{
       if(gctl_t.ptc_flag ==0){ //don't auto turn off heater plate.
       	  pro_t.add_or_dec_is_cofirm_key_flag =1;
+		 
       }
+	   LED_Mode_Key_On();
+	   LED_Power_Key_On();
+	   Power_On_Led_Init();
+	   TFT_BACKLIGHT_ON();
+	  
  }
 
- 
    //timer timing
    gctl_t.mode_flag = works_time;
   
@@ -482,11 +482,7 @@ static void Power_On_Fun(void)
 	 //mode key long times 
 	  pro_t.mode_key_run_item_step=0xff;
 	 pro_t.long_key_flag =0;
-	
-
-
-    
-     //works time
+	//works time
 	gctl_t.gTimer_ctl_total_continue_time =0; //works total is two hours recoder.
 	gctl_t.gTimer_ctl_disp_works_time_second=0; //works time seconds 
     pro_t.gTimer_pro_display_dht11_temp = 30; //powe on display sensoe dht11 of value .
@@ -503,8 +499,13 @@ static void Power_On_Fun(void)
 
 static void Power_Off_Fun(void)
 {
+
+	if(wifi_t.smartphone_app_power_on_flag==1){
+    TFT_BACKLIGHT_OFF();
 	LED_Mode_Key_Off();
 	LED_Power_Key_Off();
+
+	}
 
 	Power_Off_Led();
    gctl_t.mode_flag = 0;

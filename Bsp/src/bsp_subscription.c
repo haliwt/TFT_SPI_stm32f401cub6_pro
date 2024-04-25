@@ -1088,45 +1088,45 @@ static void smartphone_app_timer_power_on_handler(void)
 
     if(app_step==0 ){
 
-	   app_step=1;
-    if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
+		app_step=1;
+		if(strstr((char *)TCMQTTRCVPUB,"open\":1")){
 		wifi_t.smartphone_app_power_on_flag=1;
-     }
+		}
 
-	 if(wifi_t.smartphone_app_power_on_flag==1){
+		if(wifi_t.smartphone_app_power_on_flag==1){
 
-	 if(strstr((char *)TCMQTTRCVPUB,"ptc\":1")){
-			
-			gctl_t.ptc_flag=1;
-	 }
-	 else{ //if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
-			
-			gctl_t.ptc_flag=0;
-			pro_t.gTimer_pro_temp_delay =0;
-		    pro_t.add_or_dec_is_cofirm_key_flag =1;
-	 }
+		if(strstr((char *)TCMQTTRCVPUB,"ptc\":1")){
 
-	 if(strstr((char *)TCMQTTRCVPUB,"sonic\":1")){
+		gctl_t.ptc_flag=1;
+		}
+		else{ //if(strstr((char *)TCMQTTRCVPUB,"ptc\":0")){
 
-			 gctl_t.ultrasonic_flag=1;
+		gctl_t.ptc_flag=0;
+		pro_t.gTimer_pro_temp_delay =0;
+		pro_t.add_or_dec_is_cofirm_key_flag =1;
+		}
+
+		if(strstr((char *)TCMQTTRCVPUB,"sonic\":1")){
+
+		gctl_t.ultrasonic_flag=1;
 
 		}
-        else{// if(strstr((char *)TCMQTTRCVPUB,"sonic\":0")){
+		else{// if(strstr((char *)TCMQTTRCVPUB,"sonic\":0")){
 
-             gctl_t.ultrasonic_flag=0;
+		gctl_t.ultrasonic_flag=0;
 
 		}
 
 		if(strstr((char *)TCMQTTRCVPUB,"Anion\":1")){
-			 gctl_t.plasma_flag=1;
-        }
+		gctl_t.plasma_flag=1;
+		}
 		else{ // if(strstr((char *)TCMQTTRCVPUB,"Anion\":0")){
-			 gctl_t.plasma_flag=0;
-        }
+		gctl_t.plasma_flag=0;
+		}
 
-		
-     
-      }
+
+
+		}
     }
    
 

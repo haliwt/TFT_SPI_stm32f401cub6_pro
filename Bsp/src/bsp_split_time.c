@@ -1,6 +1,6 @@
 #include "bsp.h"
 
-static void TFT_Donnot_Set_Timer_Time(void);
+//static void TFT_Donnot_Set_Timer_Time(void);
 
 void TimeTimer_Pro_Handler(void)
 {
@@ -113,6 +113,7 @@ void TimeTimer_Pro_Handler(void)
     *Return Ref:NO
     *
 *********************************************************************************************************/
+#if 0
 static void TFT_Donnot_Set_Timer_Time(void)
 {
     if(pro_t.timer_mode_flag == timer_time ){
@@ -139,3 +140,4 @@ static void TFT_Donnot_Set_Timer_Time(void)
    }
 
 }
+#endif
