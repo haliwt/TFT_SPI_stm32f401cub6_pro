@@ -1,12 +1,7 @@
 #include "bsp_esp8266.h"
 #include "bsp.h"
 
-
-
-
-
-
- uint8_t *sub_buf;
+uint8_t *sub_buf;
 
 char *CloudInfo="+TCMQTTCONN:OK";
 char *usart2_tx;

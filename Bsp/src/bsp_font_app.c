@@ -249,6 +249,65 @@ void TFT_Disp_Chinese_Timer_23_23(uint16_t x,uint16_t y,uint8_t num)
 
 /****************************************************************************************
 	*
+	*Function  Name :void TFT_Disp_Chinese_BeiJing_Time_23_23(uint16_t x,uint16_t y,uint8_t num)
+	*Function: "北京时间"
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+****************************************************************************************/
+void TFT_Disp_Chinese_BeiJing_Time_23_23(uint16_t x,uint16_t y,uint8_t num)
+{
+    uint16_t temp, t, tbit;
+    uint16_t x0=x;
+   
+	static uint16_t color;
+
+	for(t = 0; t < 69; t++)	/*遍历打印所有像素点到LCD */
+	{   
+	
+		temp = font2323_chinese_beijing_time[num][t]; 
+		
+		for(tbit = 0; tbit < 8; tbit++)	/* 打印一个像素点到液晶 */
+		{	
+			
+			
+		    if(temp & 0x80)	color = BLACK;//WHITE;
+			else color = WHITE;
+			
+			
+
+			
+			TFT_DrawPoint(x, y,color );
+			
+			temp <<= 1;			
+			//y++; // 垂直扫描
+			x++;//水平扫描
+
+			if(x >= LCD_Width){
+                    pro_t.lcd_over_width_flag =1;
+					return;	/* 超区域了 */
+
+			}
+			
+			if((x - x0) == 22){
+				x = x0;
+				y++;
+				
+			    if(y >= LCD_Height){
+				pro_t.lcd_over_height_flag=1;
+				return;		/* 超区域了 */
+
+			     }
+ 
+				break;
+			}
+		}  	 
+	}  
+
+}
+
+/****************************************************************************************
+	*
 	*Function  Name :void TFT_Disp_Chinese_WorkTime_23_23(uint16_t x,uint16_t y,uint8_t num)
 	*Function: "工作时间"
 	*Input Ref: x, y ,bc-0 display ,bc=1 -> don't display 

@@ -50,6 +50,7 @@ typedef struct _bsp_ctl{
 
  
    uint8_t local_set_temp_value;
+   uint8_t beijing_time_flag;
 
    
  

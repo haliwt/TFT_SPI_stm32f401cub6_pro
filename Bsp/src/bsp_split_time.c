@@ -76,15 +76,30 @@ void TimeTimer_Pro_Handler(void)
 			}
 			else{
 				
-		
-				pro_t.mode_key_run_item_step =0xff;
-				pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
-				//TFT_Disp_Chinese_WorksTime_96_24(100,150);
-				 TFT_Disp_Chinese_WorkTime_23_23(TIMER_X0,TIMER_Y,0);
-				TFT_Disp_Chinese_WorkTime_23_23(TIMER_X1,TIMER_Y,1);
-				TFT_Disp_Chinese_WorkTime_23_23(TIMER_X2,TIMER_Y,2);
-				TFT_Disp_Chinese_WorkTime_23_23(TIMER_X3,TIMER_Y,3);
-				TFT_Display_WorksTime();
+		  
+				if(wifi_link_net_state()==1 && gctl_t.beijing_time_flag==1){
+					pro_t.mode_key_run_item_step =0xff;
+					pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
+					TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X0,TIMER_Y,0);
+					TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X1,TIMER_Y,1);
+					TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X2,TIMER_Y,2);
+					TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X3,TIMER_Y,3);
+					TFT_Display_WorksTime();
+
+				}
+				else{
+
+					pro_t.mode_key_run_item_step =0xff;
+					pro_t.timer_mode_flag = works_time;//pro_t.timer_mode_flag
+					//TFT_Disp_Chinese_WorksTime_96_24(100,150);
+					TFT_Disp_Chinese_WorkTime_23_23(TIMER_X0,TIMER_Y,0);
+					TFT_Disp_Chinese_WorkTime_23_23(TIMER_X1,TIMER_Y,1);
+					TFT_Disp_Chinese_WorkTime_23_23(TIMER_X2,TIMER_Y,2);
+					TFT_Disp_Chinese_WorkTime_23_23(TIMER_X3,TIMER_Y,3);
+					TFT_Display_WorksTime();
+
+
+				}
 
 
 

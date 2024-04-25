@@ -54,6 +54,8 @@ extern const uint8_t font2323_chinese_timer_time[4][69];
 
 extern const uint8_t font2323_chinese_works_time[4][69];
 
+extern const uint8_t font2323_chinese_beijing_time[4][69];
+
 
 
 

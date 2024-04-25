@@ -400,7 +400,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 		 rx_counter ++;
 		 if(strstr((char*)wifi_t.wifi_temp_data,"+CME ERROR:208")){
 			rx_counter =0;
-			wifi_t.gTimer_wifi_rx_error >30;
+		
 			wifi_t.esp8266_login_cloud_success =0;
 			wifi_t.rx_error_codes_flag= 1;
 			wifi_t.rx_setup_hardware_counter=0;
@@ -716,7 +716,7 @@ void Json_Parse_Command_Fun(void)
          MqttData_Publish_SetPtc(0);
 		 HAL_Delay(350);
 
-		  buzzer_sound()	;
+		 buzzer_sound()	;
 		 Ptc_Off();
 	     LED_PTC_ICON_OFF();
 		 gctl_t.ptc_flag=0;
@@ -724,9 +724,8 @@ void Json_Parse_Command_Fun(void)
 	    
 
 		wifi_t.response_wifi_signal_label = 0xff;
-		 wifi_t.gTimer_auto_detected_net_state_times=0;
-		 	
-			 wifi_t.linking_tencent_cloud_doing =0;
+		wifi_t.gTimer_auto_detected_net_state_times=0;
+		wifi_t.linking_tencent_cloud_doing =0;
 
 
 	  	}
@@ -955,16 +954,9 @@ void Json_Parse_Command_Fun(void)
 
 		for(i=0;i<20;i++){
 		   wifi_t.wifi_data[i]=0;
-		   
-
-        }
-      
-		
-	}
-
-  
-
-  }
+		}
+    }
+}
 void Wifi_Rx_Beijing_Time_Handler(void)
 {
 
@@ -1045,19 +1037,14 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 		break;
 		  
 		case 8:
-			 if(wifi_t.usart1_dataBuf[0]==20){
-                wifi_t.get_rx_beijing_time_enable=0 ;
-				wifi_t.rx_data_state=0; //=1
-				  
-		     }
-			 
+		if(wifi_t.usart1_dataBuf[0]==20){
+			wifi_t.get_rx_beijing_time_enable=0 ;
+			wifi_t.rx_data_state=0; //=1
 			
-			
+		}
 		break;
         
-        
-
-        default:
+      default:
          
          
        break;

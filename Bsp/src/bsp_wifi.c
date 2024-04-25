@@ -300,6 +300,14 @@ static void RunWifi_Command_Handler(void)
 			gctl_t.disp_works_minutes = wifi_t.real_minutes;
 
 			gctl_t.gTimer_ctl_disp_works_time_second= wifi_t.real_seconds;
+
+			gctl_t.beijing_time_flag = 1; //WT.2024.04.25
+
+			TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X0,TIMER_Y,0);
+			TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X1,TIMER_Y,1);
+			TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X2,TIMER_Y,2);
+			TFT_Disp_Chinese_BeiJing_Time_23_23(TIMER_X3,TIMER_Y,3);
+
 		}
 	}
 
